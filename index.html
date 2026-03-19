@@ -112,20 +112,35 @@ text-align: center;
 padding: 18px 16px 8px;
 position: relative;
 z-index: 10;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 .title {
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
 font-size: 2.2rem;
 color: white;
-text-shadow: 3px 3px 0 #5a3a1a, 0 0 20px rgba(255,200,100,0.5);
+text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
 letter-spacing: 1px;
+display: inline-block;
+background: rgba(0, 20, 50, 0.55);
+padding: 6px 22px 8px;
+border-radius: 18px;
+box-shadow: 0 4px 18px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.08) inset;
+backdrop-filter: blur(4px);
 }
 .subtitle {
-font-size: 0.85rem;
-color: #e8f4ff;
+font-size: 0.82rem;
+color: white;
 font-weight: 700;
-margin-top: 2px;
-text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+margin-top: 7px;
+text-shadow: none;
+display: inline-block;
+background: rgba(0, 20, 50, 0.45);
+padding: 4px 16px 5px;
+border-radius: 14px;
+box-shadow: 0 3px 10px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.07) inset;
+backdrop-filter: blur(4px);
 }
 
 /* Stats bar */
@@ -580,10 +595,10 @@ animation: floatHint 2s ease-in-out infinite;
 
 /* Mute button */
 .mute-btn {
-position: absolute;
-top: 10px;
+position: fixed;
+bottom: 145px;
 left: 16px;
-background: rgba(255,255,255,0.9);
+background: rgba(10, 30, 55, 0.75);
 border: none;
 border-radius: 50%;
 width: 38px; height: 38px;
@@ -630,10 +645,13 @@ z-index: 10;
 <!-- Header -->
 
 <div class="header" style="position:relative;">
-  <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
-  <div class="title">🦣 Baby Mammoth</div>
+  <div class="title">Baby Mammoth</div>
   <div class="subtitle">Feed him. Clean up after him. Love him.</div>
 </div>
+
+<!-- Mute button - fixed bottom left -->
+
+<button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
 
 <!-- Stats -->
 
