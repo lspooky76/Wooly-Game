@@ -6,497 +6,556 @@
 <title>Baby Mammoth 🦣</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-:root {
---sky: #87CEEB;
---grass: #5DBB63;
---dark-grass: #3d8c42;
---brown: #8B5E3C;
---mammoth-body: #6B4F3A;
---mammoth-light: #8B6B50;
---tusk: #FFF8DC;
---poop: #6B3A2A;
---snow: #F0F8FF;
-}
+  :root {
+    --sky-top: #0d1b2e;
+    --sky-mid: #1a3a5c;
+    --sky-low: #2e5f8a;
+    --horizon: #7ab3d4;
+    --snow-top: #c8dff0;
+    --snow-deep: #8ab4cc;
+    --tusk: #FFF8DC;
+    --poop: #6B3A2A;
+  }
 
-body {
-font-family: 'Nunito', sans-serif;
-background: linear-gradient(180deg, #87CEEB 0%, #B0E0FF 40%, #5DBB63 40%, #3d8c42 100%);
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-overflow: hidden;
-position: relative;
-max-width: 430px;
-margin: 0 auto;
-}
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(180deg,
+      #0d1b2e 0%,
+      #1a3a5c 30%,
+      #2e5f8a 55%,
+      #7ab3d4 65%,
+      #a8cfe0 65%,
+      #c8dff0 80%,
+      #ddeef8 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    max-width: 430px;
+    margin: 0 auto;
+  }
 
-/* Sky decoration */
-.cloud {
-position: absolute;
-background: white;
-border-radius: 50px;
-opacity: 0.85;
-animation: drift linear infinite;
-}
-.cloud::before, .cloud::after {
-content: '';
-position: absolute;
-background: white;
-border-radius: 50%;
-}
-.cloud1 { width: 80px; height: 28px; top: 8%; left: -90px; animation-duration: 22s; animation-delay: 0s; }
-.cloud1::before { width: 40px; height: 40px; top: -18px; left: 10px; }
-.cloud1::after { width: 30px; height: 30px; top: -12px; left: 35px; }
-.cloud2 { width: 60px; height: 22px; top: 16%; left: -70px; animation-duration: 30s; animation-delay: 8s; }
-.cloud2::before { width: 30px; height: 30px; top: -14px; left: 8px; }
-.cloud2::after { width: 22px; height: 22px; top: -9px; left: 28px; }
-.cloud3 { width: 100px; height: 32px; top: 5%; left: -110px; animation-duration: 18s; animation-delay: 4s; }
-.cloud3::before { width: 50px; height: 50px; top: -24px; left: 14px; }
-.cloud3::after { width: 38px; height: 38px; top: -16px; left: 46px; }
+  /* Storm clouds - dark and heavy, blown by wind */
+  .cloud {
+    position: absolute;
+    background: #2a3f55;
+    border-radius: 50px;
+    opacity: 0.75;
+    animation: blizzardDrift linear infinite;
+    z-index: 3;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #2a3f55;
+    border-radius: 50%;
+  }
+  .cloud1 { width: 110px; height: 32px; top: 10%; left: -120px; animation-duration: 8s; animation-delay: 0s; }
+  .cloud1::before { width: 55px; height: 55px; top: -24px; left: 12px; }
+  .cloud1::after { width: 40px; height: 40px; top: -16px; left: 52px; }
+  .cloud2 { width: 80px; height: 24px; top: 20%; left: -90px; animation-duration: 11s; animation-delay: 3s; opacity: 0.6; }
+  .cloud2::before { width: 40px; height: 40px; top: -18px; left: 10px; }
+  .cloud2::after { width: 28px; height: 28px; top: -11px; left: 38px; }
+  .cloud3 { width: 140px; height: 38px; top: 6%; left: -150px; animation-duration: 7s; animation-delay: 1.5s; }
+  .cloud3::before { width: 65px; height: 65px; top: -28px; left: 18px; }
+  .cloud3::after { width: 48px; height: 48px; top: -20px; left: 62px; }
+  .cloud4 { width: 90px; height: 26px; top: 28%; left: -100px; animation-duration: 9s; animation-delay: 5s; opacity: 0.5; }
+  .cloud4::before { width: 44px; height: 44px; top: -20px; left: 12px; }
+  .cloud4::after { width: 32px; height: 32px; top: -12px; left: 44px; }
 
-@keyframes drift { from { transform: translateX(-10px); } to { transform: translateX(calc(100vw + 200px)); } }
+  @keyframes blizzardDrift {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 250px)); }
+  }
 
-/* Snowflakes */
-.snowflake {
-position: absolute;
-color: white;
-font-size: 14px;
-opacity: 0.7;
-animation: snowfall linear infinite;
-pointer-events: none;
-user-select: none;
-}
-@keyframes snowfall {
-0% { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
-100% { transform: translateY(40vh) rotate(360deg); opacity: 0; }
-}
+  /* Wind streaks */
+  .wind-streak {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,230,255,0.4), transparent);
+    border-radius: 2px;
+    animation: windBlow linear infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+  @keyframes windBlow {
+    from { transform: translateX(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { transform: translateX(110vw); opacity: 0; }
+  }
 
-/* Header */
-.header {
-text-align: center;
-padding: 18px 16px 8px;
-position: relative;
-z-index: 10;
-}
-.title {
-font-family: 'Fredoka One', cursive;
-font-size: 2.2rem;
-color: white;
-text-shadow: 3px 3px 0 #5a3a1a, 0 0 20px rgba(255,200,100,0.5);
-letter-spacing: 1px;
-}
-.subtitle {
-font-size: 0.85rem;
-color: #e8f4ff;
-font-weight: 700;
-margin-top: 2px;
-text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-}
+  /* Snowflakes - blown sideways by wind */
+  .snowflake {
+    position: absolute;
+    color: rgba(220, 240, 255, 0.9);
+    pointer-events: none;
+    user-select: none;
+    animation: blizzardSnow linear infinite;
+    z-index: 3;
+  }
+  @keyframes blizzardSnow {
+    0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 0.8; }
+    100% { transform: translate(180px, 100vh) rotate(720deg); opacity: 0; }
+  }
 
-/* Stats bar */
-.stats {
-display: flex;
-gap: 12px;
-padding: 8px 16px;
-position: relative;
-z-index: 10;
-width: 100%;
-max-width: 380px;
-}
-.stat-card {
-flex: 1;
-background: rgba(255,255,255,0.9);
-border-radius: 16px;
-padding: 8px 10px;
-text-align: center;
-box-shadow: 0 3px 10px rgba(0,0,0,0.15), 0 0 0 2px rgba(255,255,255,0.5);
-}
-.stat-label {
-font-size: 0.65rem;
-font-weight: 800;
-color: #888;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-.stat-value {
-font-family: 'Fredoka One', cursive;
-font-size: 1.4rem;
-line-height: 1;
-margin-top: 2px;
-}
-.stat-bar {
-height: 6px;
-background: #e0e0e0;
-border-radius: 3px;
-margin-top: 4px;
-overflow: hidden;
-}
-.stat-fill {
-height: 100%;
-border-radius: 3px;
-transition: width 0.4s ease;
-}
-.hunger-fill { background: linear-gradient(90deg, #ff6b6b, #ffa500); }
-.happy-fill { background: linear-gradient(90deg, #ffd700, #ff69b4); }
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 18px 16px 8px;
+    position: relative;
+    z-index: 10;
+  }
+  .title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    color: white;
+    text-shadow: 3px 3px 0 #5a3a1a, 0 0 20px rgba(255,200,100,0.5);
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    font-size: 0.85rem;
+    color: #e8f4ff;
+    font-weight: 700;
+    margin-top: 2px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  }
 
-/* Main game area */
-.game-area {
-position: relative;
-width: 100%;
-max-width: 430px;
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-}
+  /* Stats bar */
+  .stats {
+    display: flex;
+    gap: 12px;
+    padding: 8px 16px;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 380px;
+  }
+  .stat-card {
+    flex: 1;
+    background: rgba(10, 30, 55, 0.75);
+    border-radius: 16px;
+    padding: 8px 10px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(150,200,255,0.2);
+    backdrop-filter: blur(4px);
+  }
+  .stat-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: rgba(180,215,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .stat-bar {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .stat-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .hunger-fill { background: linear-gradient(90deg, #ff6b6b, #ffa500); }
+  .happy-fill { background: linear-gradient(90deg, #ffd700, #ff69b4); }
 
-/* Ground */
-.ground {
-position: absolute;
-bottom: 0;
-left: 0;
-right: 0;
-height: 120px;
-background: linear-gradient(180deg, #5DBB63 0%, #3d8c42 100%);
-}
-.ground::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-height: 20px;
-background: radial-gradient(ellipse at 50% 0%, #6FCC6F 0%, transparent 70%);
-}
+  /* Main game area */
+  .game-area {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-/* Trees */
-.tree {
-position: absolute;
-bottom: 80px;
-display: flex;
-flex-direction: column;
-align-items: center;
-pointer-events: none;
-}
-.tree-top {
-width: 0; height: 0;
-border-left: 20px solid transparent;
-border-right: 20px solid transparent;
-border-bottom: 35px solid #2d6e2d;
-}
-.tree-top2 {
-width: 0; height: 0;
-border-left: 26px solid transparent;
-border-right: 26px solid transparent;
-border-bottom: 40px solid #3a8a3a;
-margin-top: -18px;
-}
-.tree-trunk {
-width: 10px; height: 20px;
-background: #5C3317;
-border-radius: 2px;
-}
-.tree1 { left: 20px; transform: scale(0.7); }
-.tree2 { right: 25px; transform: scale(0.85); }
-.tree3 { right: 60px; transform: scale(0.5); bottom: 90px; }
+  /* Frozen tundra ground */
+  .ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(180deg, #c8dff0 0%, #a0c0d8 40%, #7a9db8 100%);
+  }
+  .ground::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 30px;
+    background: linear-gradient(180deg, #e8f4fb 0%, transparent 100%);
+    border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+  }
+  /* Snow drifts on ground */
+  .ground::after {
+    content: '';
+    position: absolute;
+    top: 5px; left: -10%; right: -10%;
+    height: 25px;
+    background: radial-gradient(ellipse at 30% 0%, #f0f8ff 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 0%, #e8f4fb 0%, transparent 35%),
+                radial-gradient(ellipse at 50% 0%, #ddeef8 0%, transparent 50%);
+  }
 
-/* Mammoth container */
-.mammoth-scene {
-position: relative;
-width: 100%;
-height: 340px;
-display: flex;
-justify-content: center;
-align-items: flex-end;
-padding-bottom: 30px;
-}
+  /* Frozen ice age trees - bare/snow-capped */
+  .tree {
+    position: absolute;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+  .tree-top {
+    width: 0; height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 35px solid #2a3d2a;
+  }
+  .tree-top2 {
+    width: 0; height: 0;
+    border-left: 26px solid transparent;
+    border-right: 26px solid transparent;
+    border-bottom: 40px solid #1e2e1e;
+    margin-top: -18px;
+  }
+  /* Snow cap on tree */
+  .tree-snow {
+    width: 32px; height: 10px;
+    background: #ddeef8;
+    border-radius: 50%;
+    margin-top: -40px;
+    margin-bottom: 28px;
+    opacity: 0.9;
+  }
+  .tree-trunk {
+    width: 10px; height: 20px;
+    background: #3a2a1a;
+    border-radius: 2px;
+  }
+  .tree1 { left: 20px; transform: scale(0.7); }
+  .tree2 { right: 25px; transform: scale(0.85); }
+  .tree3 { right: 60px; transform: scale(0.5); bottom: 90px; }
+  .tree4 { left: 55px; transform: scale(0.45); bottom: 92px; z-index: 1; }
+  .tree5 { left: 5px; transform: scale(0.55); bottom: 88px; z-index: 1; }
+  .tree6 { right: 5px; transform: scale(0.6); bottom: 86px; z-index: 1; }
 
-/* Poop items on ground */
-.poop-item {
-position: absolute;
-bottom: 25px;
-font-size: 28px;
-cursor: pointer;
-animation: poopAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-z-index: 5;
-transition: transform 0.1s;
-user-select: none;
-}
-.poop-item:active { transform: scale(1.4) rotate(20deg); }
-@keyframes poopAppear {
-0% { transform: scale(0) translateY(-20px); opacity: 0; }
-100% { transform: scale(1) translateY(0); opacity: 1; }
-}
-.poop-remove {
-animation: poopClean 0.3s ease forwards;
-}
-@keyframes poopClean {
-0% { transform: scale(1); opacity: 1; }
-50% { transform: scale(1.5) rotate(30deg); }
-100% { transform: scale(0); opacity: 0; }
-}
+  /* Mammoth container */
+  .mammoth-scene {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 30px;
+  }
 
-/* SVG Mammoth */
-.mammoth-wrapper {
-position: relative;
-z-index: 6;
-transition: transform 0.3s ease;
-}
-.mammoth-wrapper.eating {
-animation: munchBounce 0.3s ease 3;
-}
-.mammoth-wrapper.pooping {
-animation: poopSquat 0.6s ease;
-}
-.mammoth-wrapper.happy {
-animation: happyWiggle 0.4s ease 2;
-}
-@keyframes munchBounce {
-0%, 100% { transform: scaleY(1); }
-50% { transform: scaleY(0.9) translateY(5px); }
-}
-@keyframes poopSquat {
-0%, 100% { transform: translateY(0); }
-30% { transform: translateY(10px) scaleY(0.85); }
-60% { transform: translateY(8px) scaleY(0.88); }
-}
-@keyframes happyWiggle {
-0%, 100% { transform: rotate(0deg); }
-25% { transform: rotate(-5deg) scale(1.05); }
-75% { transform: rotate(5deg) scale(1.05); }
-}
+  /* Poop items on ground */
+  .poop-item {
+    position: absolute;
+    bottom: 25px;
+    font-size: 28px;
+    cursor: pointer;
+    animation: poopAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+    z-index: 5;
+    transition: transform 0.1s;
+    user-select: none;
+  }
+  .poop-item:active { transform: scale(1.4) rotate(20deg); }
+  @keyframes poopAppear {
+    0% { transform: scale(0) translateY(-20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .poop-remove {
+    animation: poopClean 0.3s ease forwards;
+  }
+  @keyframes poopClean {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5) rotate(30deg); }
+    100% { transform: scale(0); opacity: 0; }
+  }
 
-/* Speech bubble */
-.speech-bubble {
-position: absolute;
-top: 20px;
-right: 20px;
-background: white;
-border-radius: 20px;
-padding: 10px 16px;
-font-family: 'Fredoka One', cursive;
-font-size: 1rem;
-color: #333;
-box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-opacity: 0;
-transform: scale(0);
-transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-z-index: 20;
-white-space: nowrap;
-pointer-events: none;
-}
-.speech-bubble::after {
-content: '';
-position: absolute;
-bottom: -10px;
-left: 24px;
-width: 0; height: 0;
-border-left: 10px solid transparent;
-border-right: 10px solid transparent;
-border-top: 12px solid white;
-}
-.speech-bubble.show {
-opacity: 1;
-transform: scale(1);
-}
+  /* SVG Mammoth */
+  .mammoth-wrapper {
+    position: relative;
+    z-index: 6;
+    transition: transform 0.3s ease;
+  }
+  .mammoth-wrapper.eating {
+    animation: munchBounce 0.3s ease 3;
+  }
+  .mammoth-wrapper.pooping {
+    animation: poopSquat 0.6s ease;
+  }
+  .mammoth-wrapper.happy {
+    animation: happyWiggle 0.4s ease 2;
+  }
+  @keyframes munchBounce {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.9) translateY(5px); }
+  }
+  @keyframes poopSquat {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(10px) scaleY(0.85); }
+    60% { transform: translateY(8px) scaleY(0.88); }
+  }
+  @keyframes happyWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg) scale(1.05); }
+    75% { transform: rotate(5deg) scale(1.05); }
+  }
 
-/* Eye blink */
-.mammoth-eye {
-animation: blink 4s infinite;
-}
-@keyframes blink {
-0%, 95%, 100% { transform: scaleY(1); }
-97% { transform: scaleY(0.1); }
-}
+  /* Speech bubble */
+  .speech-bubble {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 20;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 24px;
+    width: 0; height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 12px solid white;
+  }
+  .speech-bubble.show {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-/* Trunk wiggle */
-.mammoth-trunk {
-transform-origin: top center;
-}
-.trunk-moving {
-animation: trunkWiggle 0.5s ease infinite;
-}
-@keyframes trunkWiggle {
-0%, 100% { transform: rotate(0deg); }
-25% { transform: rotate(15deg); }
-75% { transform: rotate(-10deg); }
-}
+  /* Eye blink */
+  .mammoth-eye {
+    animation: blink 4s infinite;
+  }
+  @keyframes blink {
+    0%, 95%, 100% { transform: scaleY(1); }
+    97% { transform: scaleY(0.1); }
+  }
 
-/* Buttons area */
-.actions {
-position: relative;
-z-index: 10;
-width: 100%;
-max-width: 380px;
-padding: 12px 16px;
-display: flex;
-flex-direction: column;
-gap: 10px;
-}
+  /* Trunk - gentle idle sway, always anchored to face */
+  .mammoth-trunk {
+    transform-origin: 74px 103px;
+    animation: trunkSway 3s ease-in-out infinite;
+  }
+  .trunk-moving {
+    animation: trunkEat 0.6s ease-in-out infinite;
+  }
+  @keyframes trunkSway {
+    0%, 100% { transform: rotate(0deg); }
+    35%       { transform: rotate(6deg); }
+    65%       { transform: rotate(-5deg); }
+  }
+  @keyframes trunkEat {
+    0%, 100% { transform: rotate(0deg); }
+    30%      { transform: rotate(10deg); }
+    70%      { transform: rotate(-8deg); }
+  }
 
-.feed-btn {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 10px;
-padding: 16px 24px;
-border: none;
-border-radius: 20px;
-font-family: 'Fredoka One', cursive;
-font-size: 1.3rem;
-cursor: pointer;
-transition: all 0.15s ease;
-box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.15);
-position: relative;
-overflow: hidden;
-user-select: none;
--webkit-user-select: none;
-}
-.feed-btn:active {
-transform: translateY(4px);
-box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
-}
-.feed-btn::after {
-content: '';
-position: absolute;
-inset: 0;
-background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
-border-radius: 20px;
-pointer-events: none;
-}
+  /* Buttons area */
+  .actions {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 380px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.btn-hay { background: linear-gradient(135deg, #F5C842, #E8A820); color: #5C3A00; }
-.btn-berries { background: linear-gradient(135deg, #E84393, #C01F72); color: white; }
+  .feed-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .feed-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .feed-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+    border-radius: 20px;
+    pointer-events: none;
+  }
 
-.btn-row {
-display: flex;
-gap: 10px;
-}
-.btn-row .feed-btn {
-flex: 1;
-font-size: 1.1rem;
-padding: 14px 12px;
-}
+  .btn-hay { background: linear-gradient(135deg, #F5C842, #E8A820); color: #5C3A00; }
+  .btn-berries { background: linear-gradient(135deg, #E84393, #C01F72); color: white; }
 
-/* Hint text */
-.hint {
-text-align: center;
-font-size: 0.75rem;
-font-weight: 700;
-color: rgba(255,255,255,0.85);
-text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-padding-bottom: 6px;
-}
+  .btn-row {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-row .feed-btn {
+    flex: 1;
+    font-size: 1.1rem;
+    padding: 14px 12px;
+  }
 
-/* Score popup */
-.score-popup {
-position: fixed;
-pointer-events: none;
-font-family: 'Fredoka One', cursive;
-font-size: 1.8rem;
-color: white;
-text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
-z-index: 999;
-animation: scoreFloat 1.2s ease forwards;
-}
-@keyframes scoreFloat {
-0% { transform: translateY(0) scale(0.5); opacity: 1; }
-100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
-}
+  /* Hint text */
+  .hint {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    padding-bottom: 6px;
+  }
 
-/* Particle effects */
-.particle {
-position: fixed;
-pointer-events: none;
-font-size: 20px;
-z-index: 998;
-animation: particleBurst 0.8s ease forwards;
-}
-@keyframes particleBurst {
-0% { transform: translate(0,0) scale(1); opacity: 1; }
-100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-}
+  /* Score popup */
+  .score-popup {
+    position: fixed;
+    pointer-events: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+    z-index: 999;
+    animation: scoreFloat 1.2s ease forwards;
+  }
+  @keyframes scoreFloat {
+    0% { transform: translateY(0) scale(0.5); opacity: 1; }
+    100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+  }
 
-/* Full poop warning */
-.poop-warning {
-position: absolute;
-top: 60px;
-left: 50%;
-transform: translateX(-50%);
-background: rgba(255, 80, 80, 0.95);
-color: white;
-font-family: 'Fredoka One', cursive;
-font-size: 0.9rem;
-padding: 8px 18px;
-border-radius: 30px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-z-index: 30;
-white-space: nowrap;
-opacity: 0;
-transition: opacity 0.3s;
-pointer-events: none;
-}
-.poop-warning.show { opacity: 1; }
+  /* Particle effects */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    z-index: 998;
+    animation: particleBurst 0.8s ease forwards;
+  }
+  @keyframes particleBurst {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
 
-/* Tap to clean label - now in the sky above mammoth */
-.clean-label {
-position: absolute;
-top: 18px;
-left: 50%;
-transform: translateX(-50%);
-background: rgba(255,255,255,0.97);
-color: #5C3A00;
-font-family: 'Fredoka One', cursive;
-font-size: 1rem;
-padding: 7px 18px;
-border-radius: 24px;
-box-shadow: 0 3px 12px rgba(0,0,0,0.25);
-z-index: 25;
-opacity: 0;
-transition: opacity 0.4s;
-pointer-events: none;
-white-space: nowrap;
-animation: floatHint 2s ease-in-out infinite;
-}
-.clean-label.show { opacity: 1; }
-@keyframes floatHint {
-0%, 100% { transform: translateX(-50%) translateY(0px); }
-50% { transform: translateX(-50%) translateY(-5px); }
-}
+  /* Full poop warning */
+  .poop-warning {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 80, 80, 0.95);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 30;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .poop-warning.show { opacity: 1; }
 
-/* Mute button */
-.mute-btn {
-position: absolute;
-top: 10px;
-left: 16px;
-background: rgba(255,255,255,0.9);
-border: none;
-border-radius: 50%;
-width: 38px; height: 38px;
-font-size: 1.2rem;
-cursor: pointer;
-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-z-index: 50;
-display: flex; align-items: center; justify-content: center;
-transition: transform 0.1s;
-}
-.mute-btn:active { transform: scale(0.9); }
+  /* Tap to clean label - now in the sky above mammoth */
+  .clean-label {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.97);
+    color: #5C3A00;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 7px 18px;
+    border-radius: 24px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    z-index: 25;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: floatHint 2s ease-in-out infinite;
+  }
+  .clean-label.show { opacity: 1; }
+  @keyframes floatHint {
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-5px); }
+  }
 
-/* Score display */
-.score-display {
-position: absolute;
-top: 5px;
-right: 16px;
-font-family: 'Fredoka One', cursive;
-font-size: 1.5rem;
-color: white;
-text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-z-index: 10;
-}
+  /* Mute button */
+  .mute-btn {
+    position: absolute;
+    top: 10px;
+    left: 16px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s;
+  }
+  .mute-btn:active { transform: scale(0.9); }
+
+  /* Score display */
+  .score-display {
+    position: absolute;
+    top: 5px;
+    right: 16px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    z-index: 10;
+  }
 
 </style>
 </head>
@@ -506,668 +565,950 @@ z-index: 10;
 <div class="cloud cloud1"></div>
 <div class="cloud cloud2"></div>
 <div class="cloud cloud3"></div>
+<div class="cloud cloud4"></div>
+
+<!-- Wind streaks -->
+<div id="windContainer"></div>
 
 <!-- Snowflakes -->
 <div id="snowContainer"></div>
 
 <!-- Header -->
 <div class="header" style="position:relative;">
-<button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
-<div class="title">🦣 Baby Mammoth</div>
-<div class="subtitle">Feed him. Clean up after him. Love him.</div>
+  <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
+  <div class="title">🦣 Baby Mammoth</div>
+  <div class="subtitle">Feed him. Clean up after him. Love him.</div>
 </div>
 
 <!-- Stats -->
 <div class="stats">
-<div class="stat-card">
-<div class="stat-label">🍖 Hunger</div>
-<div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
-<div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
-</div>
-<div class="stat-card">
-<div class="stat-label">😊 Happy</div>
-<div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
-<div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
-</div>
-<div class="stat-card">
-<div class="stat-label">✨ Score</div>
-<div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
-<div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
-</div>
+  <div class="stat-card">
+    <div class="stat-label">🍖 Hunger</div>
+    <div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
+    <div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">😊 Happy</div>
+    <div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
+    <div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">✨ Score</div>
+    <div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
+    <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
+  </div>
 </div>
 
 <!-- Game area -->
 <div class="game-area" id="gameArea">
 
-<div class="poop-warning" id="poopWarning">🚨 Too much poop! Clean up!</div>
+  <div class="poop-warning" id="poopWarning">🚨 Too much poop! Clean up!</div>
 
-<!-- Mammoth scene -->
-<div class="mammoth-scene">
-<!-- Trees -->
-<div class="tree tree1">
-<div class="tree-top"></div>
-<div class="tree-top2"></div>
-<div class="tree-trunk"></div>
-</div>
-<div class="tree tree2">
-<div class="tree-top"></div>
-<div class="tree-top2"></div>
-<div class="tree-trunk"></div>
-</div>
-<div class="tree tree3">
-<div class="tree-top"></div>
-<div class="tree-top2"></div>
-<div class="tree-trunk"></div>
-</div>
+  <!-- Mammoth scene -->
+  <div class="mammoth-scene">
 
-<!-- Speech bubble -->
-<div class="speech-bubble" id="speechBubble">Mrooooo!</div>
+    <!-- BIG SNOWY MOUNTAIN - behind everything -->
+    <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg"
+         style="position:absolute;bottom:78px;right:-10px;width:580px;height:auto;z-index:1;pointer-events:none;left:50%;transform:translateX(-50%)">
 
-<!-- Clean up hint -->
-<div class="clean-label" id="cleanLabel">👆 Tap poop to clean!</div>
+      <!-- Mountain shadow/base -->
+      <ellipse cx="150" cy="255" rx="140" ry="10" fill="rgba(0,0,60,0.18)"/>
 
-<!-- Mammoth SVG -->
-<div class="mammoth-wrapper" id="mammothWrapper">
-<svg width="190" height="200" viewBox="0 0 190 200" xmlns="http://www.w3.org/2000/svg">
-<!-- Shadow -->
-<ellipse cx="95" cy="196" rx="60" ry="8" fill="rgba(0,0,0,0.15)"/>
+      <!-- Back face of mountain (darker, gives depth) -->
+      <polygon points="150,8 295,258 5,258" fill="#3a5068"/>
 
-<!-- Body -->
-<ellipse cx="95" cy="130" rx="65" ry="52" fill="#7B5B42"/>
-<!-- Fur texture lines -->
-<path d="M45 110 Q50 100 55 110" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<path d="M60 95 Q65 85 70 95" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<path d="M80 88 Q85 78 90 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<path d="M100 88 Q105 78 110 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<path d="M120 93 Q125 83 130 93" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<path d="M135 108 Q140 98 145 108" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
-<!-- Belly lighter patch -->
-<ellipse cx="95" cy="145" rx="38" ry="30" fill="#9B7B5A" opacity="0.5"/>
+      <!-- Main mountain body -->
+      <polygon points="150,8 280,258 20,258" fill="#4a6882"/>
 
-<!-- Back legs -->
-<rect x="110" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
-<rect x="138" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
-<!-- Back feet -->
-<ellipse cx="121" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-<ellipse cx="149" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-<!-- Toe lines back -->
-<line x1="113" y1="193" x2="113" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="121" y1="195" x2="121" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="129" y1="193" x2="129" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="141" y1="193" x2="141" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="149" y1="195" x2="149" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="157" y1="193" x2="157" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+      <!-- Left face lighter -->
+      <polygon points="150,8 20,258 90,258" fill="#5a7e9a"/>
 
-<!-- Front legs -->
-<rect x="38" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
-<rect x="65" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
-<!-- Front feet -->
-<ellipse cx="49" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-<ellipse cx="76" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-<!-- Toe lines front -->
-<line x1="41" y1="193" x2="41" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="49" y1="195" x2="49" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="57" y1="193" x2="57" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="68" y1="193" x2="68" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="76" y1="195" x2="76" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
-<line x1="84" y1="193" x2="84" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+      <!-- Snow coverage - large sweeping snow fields -->
+      <!-- Main snow cap covering upper third -->
+      <path d="M150,8 Q120,30 100,55 Q85,72 80,90 Q95,78 110,70 Q125,55 140,45 Q148,38 150,35
+               Q152,38 160,45 Q175,55 190,70 Q205,78 220,90 Q215,72 200,55 Q180,30 150,8 Z"
+            fill="#e8f2f8"/>
+      <!-- Bright peak highlight -->
+      <path d="M150,8 Q142,20 138,32 Q144,26 150,22 Q156,26 162,32 Q158,20 150,8 Z"
+            fill="#f5faff"/>
 
-<!-- Head -->
-<ellipse cx="78" cy="88" rx="40" ry="36" fill="#7B5B42"/>
-<!-- Head fur -->
-<path d="M50 65 Q55 55 60 65" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
-<path d="M68 56 Q73 46 78 56" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
-<path d="M86 57 Q91 47 96 57" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <!-- Mid-mountain snow patches -->
+      <path d="M82,108 Q95,95 112,100 Q105,112 95,118 Q88,115 82,108 Z" fill="#ddeef8" opacity="0.85"/>
+      <path d="M188,112 Q200,98 215,104 Q210,118 200,124 Q193,120 188,112 Z" fill="#ddeef8" opacity="0.8"/>
+      <path d="M118,145 Q130,134 145,138 Q140,150 132,155 Q124,152 118,145 Z" fill="#ddeef8" opacity="0.75"/>
+      <path d="M165,138 Q178,130 190,136 Q186,148 178,153 Q170,150 165,138 Z" fill="#ddeef8" opacity="0.7"/>
 
-<!-- Big fluffy forehead fur bump -->
-<ellipse cx="78" cy="58" rx="22" ry="14" fill="#8B6B50"/>
-<ellipse cx="78" cy="52" rx="16" ry="10" fill="#9B7B5A"/>
+      <!-- Snow streaks / ridges running down slopes -->
+      <path d="M150,35 Q138,60 125,90 Q115,115 110,145" stroke="#c8e0f0" stroke-width="2.5" fill="none" opacity="0.6" stroke-linecap="round"/>
+      <path d="M150,35 Q162,60 175,90 Q185,115 190,145" stroke="#c8e0f0" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+      <path d="M150,22 Q144,42 136,68 Q128,95 122,125" stroke="#ddeef8" stroke-width="1.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+      <path d="M150,22 Q156,42 164,68 Q172,95 178,125" stroke="#ddeef8" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
 
-<!-- Ears -->
-<ellipse cx="42" cy="80" rx="12" ry="16" fill="#7B5B42"/>
-<ellipse cx="42" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
-<ellipse cx="114" cy="80" rx="12" ry="16" fill="#7B5B42"/>
-<ellipse cx="114" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
+      <!-- Rock outcroppings on slopes -->
+      <path d="M75,180 Q82,168 92,172 Q88,182 80,186 Z" fill="#3a5060" opacity="0.7"/>
+      <path d="M210,175 Q218,163 228,168 Q224,178 215,182 Z" fill="#3a5060" opacity="0.65"/>
+      <path d="M108,215 Q115,205 123,208 Q120,218 112,221 Z" fill="#3a5060" opacity="0.6"/>
+      <path d="M178,210 Q186,200 194,204 Q190,215 183,218 Z" fill="#3a5060" opacity="0.6"/>
 
-<!-- Tusks -->
-<path d="M62 108 Q50 120 48 130 Q46 140 52 138 Q58 136 60 126 Q62 116 70 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
-<path d="M88 108 Q85 120 84 130 Q82 140 88 138 Q94 136 92 126 Q90 116 90 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
+      <!-- Trees on left slope -->
+      <!-- Tree group left lower -->
+      <g opacity="0.9">
+        <!-- Tree L1 -->
+        <polygon points="58,210 65,188 72,210" fill="#1a2e1a"/>
+        <polygon points="55,218 65,194 75,218" fill="#1e361e"/>
+        <rect x="63" y="218" width="4" height="10" fill="#2a1a0e"/>
+        <!-- Snow on L1 -->
+        <ellipse cx="65" cy="190" rx="8" ry="4" fill="#ddeef8" opacity="0.8"/>
+      </g>
+      <g opacity="0.85">
+        <!-- Tree L2 -->
+        <polygon points="38,220 46,200 54,220" fill="#1a2e1a"/>
+        <polygon points="35,228 46,206 57,228" fill="#1e361e"/>
+        <rect x="44" y="228" width="4" height="9" fill="#2a1a0e"/>
+        <ellipse cx="46" cy="202" rx="7" ry="3.5" fill="#ddeef8" opacity="0.75"/>
+      </g>
+      <g opacity="0.8">
+        <!-- Tree L3 smaller behind -->
+        <polygon points="72,198 78,180 84,198" fill="#162a16"/>
+        <polygon points="70,206 78,185 86,206" fill="#1a301a"/>
+        <rect x="76" y="206" width="4" height="8" fill="#2a1a0e"/>
+        <ellipse cx="78" cy="182" rx="6" ry="3" fill="#ddeef8" opacity="0.7"/>
+      </g>
 
-<!-- Eyes -->
-<g class="mammoth-eye" style="transform-origin:66px 80px">
-<circle cx="66" cy="80" r="9" fill="#2C1A0E"/>
-<circle cx="66" cy="80" r="7" fill="#4A2C12"/>
-<circle cx="66" cy="80" r="4" fill="#1a0a04"/>
-<circle cx="63" cy="77" r="2.5" fill="white" opacity="0.9"/>
-<circle cx="62.5" cy="76.5" r="1.2" fill="white"/>
-</g>
-<!-- Right eye doesn't blink for asymmetry -->
-<circle cx="91" cy="80" r="9" fill="#2C1A0E"/>
-<circle cx="91" cy="80" r="7" fill="#4A2C12"/>
-<circle cx="91" cy="80" r="4" fill="#1a0a04"/>
-<circle cx="88" cy="77" r="2.5" fill="white" opacity="0.9"/>
-<circle cx="87.5" cy="76.5" r="1.2" fill="white"/>
+      <!-- Trees on right slope -->
+      <g opacity="0.9">
+        <!-- Tree R1 -->
+        <polygon points="228,208 236,186 244,208" fill="#1a2e1a"/>
+        <polygon points="225,216 236,192 247,216" fill="#1e361e"/>
+        <rect x="234" y="216" width="4" height="10" fill="#2a1a0e"/>
+        <ellipse cx="236" cy="188" rx="8" ry="4" fill="#ddeef8" opacity="0.8"/>
+      </g>
+      <g opacity="0.85">
+        <!-- Tree R2 -->
+        <polygon points="248,220 257,198 266,220" fill="#1a2e1a"/>
+        <polygon points="245,228 257,204 269,228" fill="#1e361e"/>
+        <rect x="255" y="228" width="4" height="9" fill="#2a1a0e"/>
+        <ellipse cx="257" cy="200" rx="7" ry="3.5" fill="#ddeef8" opacity="0.75"/>
+      </g>
+      <g opacity="0.8">
+        <!-- Tree R3 smaller behind -->
+        <polygon points="212,196 219,177 226,196" fill="#162a16"/>
+        <polygon points="210,204 219,182 228,204" fill="#1a301a"/>
+        <rect x="217" y="204" width="4" height="8" fill="#2a1a0e"/>
+        <ellipse cx="219" cy="179" rx="6" ry="3" fill="#ddeef8" opacity="0.7"/>
+      </g>
 
-<!-- Eyebrows (cute) -->
-<path d="M59 70 Q66 66 73 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-<path d="M84 70 Q91 66 98 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- A couple trees near the base center -->
+      <g opacity="0.85">
+        <polygon points="132,238 140,218 148,238" fill="#1a2e1a"/>
+        <polygon points="129,246 140,224 151,246" fill="#1e361e"/>
+        <rect x="138" y="246" width="4" height="9" fill="#2a1a0e"/>
+        <ellipse cx="140" cy="220" rx="7" ry="3.5" fill="#ddeef8" opacity="0.75"/>
+      </g>
+      <g opacity="0.8">
+        <polygon points="155,235 163,215 171,235" fill="#1a2e1a"/>
+        <polygon points="152,243 163,221 174,243" fill="#1e361e"/>
+        <rect x="161" y="243" width="4" height="9" fill="#2a1a0e"/>
+        <ellipse cx="163" cy="217" rx="7" ry="3.5" fill="#ddeef8" opacity="0.7"/>
+      </g>
 
-<!-- Rosy cheeks -->
-<circle cx="52" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
-<circle cx="104" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
+      <!-- Base snow drift -->
+      <path d="M20,258 Q80,244 150,250 Q220,244 280,258 Z" fill="#c8dff0" opacity="0.6"/>
+      <path d="M20,258 Q80,250 150,254 Q220,250 280,258 Z" fill="#ddeef8" opacity="0.5"/>
+    </svg>
 
-<!-- Nostril -->
-<circle cx="75" cy="100" r="4" fill="#5C3A22"/>
-<circle cx="75" cy="100" r="2" fill="#3a2010"/>
+    <!-- Ice Cabin SVG in background -->
+    <svg class="ice-cabin" viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:85px;right:0px;width:145px;height:auto;z-index:2;pointer-events:none;">
+      <!-- Cabin shadow -->
+      <ellipse cx="80" cy="128" rx="55" ry="6" fill="rgba(0,0,50,0.18)"/>
 
-<!-- Trunk outline (drawn behind, slightly larger, dark) -->
-<g class="mammoth-trunk" id="trunkGroup">
-<!-- Outline path (dark stroke, no fill, drawn first so it sits behind) -->
-<path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
-fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155"
-fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-<!-- Trunk body fill -->
-<path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
-fill="#7B5B42"/>
-<path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155" fill="#6B4B32"/>
-<!-- Highlight stripe down trunk -->
-<path d="M72 108 Q64 122 60 136 Q57 148 61 153"
-stroke="#D4A882" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-<!-- Trunk tip -->
-<ellipse cx="70" cy="163" rx="8" ry="5" fill="#5C3A22" stroke="#2a1508" stroke-width="2"/>
-<!-- Nostrils on trunk tip -->
-<circle cx="67" cy="163" r="2.2" fill="#1a0a04"/>
-<circle cx="73" cy="163" r="2.2" fill="#1a0a04"/>
-</g>
+      <!-- Log walls -->
+      <rect x="18" y="62" width="124" height="62" rx="3" fill="#4a3220"/>
+      <!-- Log lines -->
+      <line x1="18" y1="72" x2="142" y2="72" stroke="#3a2515" stroke-width="2.5"/>
+      <line x1="18" y1="82" x2="142" y2="82" stroke="#3a2515" stroke-width="2.5"/>
+      <line x1="18" y1="92" x2="142" y2="92" stroke="#3a2515" stroke-width="2.5"/>
+      <line x1="18" y1="102" x2="142" y2="102" stroke="#3a2515" stroke-width="2.5"/>
+      <line x1="18" y1="112" x2="142" y2="112" stroke="#3a2515" stroke-width="2.5"/>
+      <!-- Log end knots left -->
+      <circle cx="20" cy="72" r="3" fill="#2e1c0e"/>
+      <circle cx="20" cy="82" r="3" fill="#2e1c0e"/>
+      <circle cx="20" cy="92" r="3" fill="#2e1c0e"/>
+      <circle cx="20" cy="102" r="3" fill="#2e1c0e"/>
+      <circle cx="20" cy="112" r="3" fill="#2e1c0e"/>
+      <!-- Log end knots right -->
+      <circle cx="140" cy="72" r="3" fill="#2e1c0e"/>
+      <circle cx="140" cy="82" r="3" fill="#2e1c0e"/>
+      <circle cx="140" cy="92" r="3" fill="#2e1c0e"/>
+      <circle cx="140" cy="102" r="3" fill="#2e1c0e"/>
+      <circle cx="140" cy="112" r="3" fill="#2e1c0e"/>
 
-<!-- Tiny tail (back) -->
-<path d="M155 125 Q165 118 162 128 Q158 138 160 142" stroke="#6B4B32" stroke-width="4" fill="none" stroke-linecap="round"/>
-<circle cx="160" cy="143" r="4" fill="#5C3A22"/>
-</svg>
-</div>
+      <!-- Door -->
+      <rect x="60" y="88" width="30" height="36" rx="3" fill="#2a1a0a"/>
+      <rect x="62" y="90" width="26" height="32" rx="2" fill="#1a0e06"/>
+      <!-- Door arch top -->
+      <ellipse cx="75" cy="90" rx="13" ry="6" fill="#2a1a0a"/>
+      <!-- Door handle -->
+      <circle cx="84" cy="107" r="2.5" fill="#c8a84a"/>
+      <!-- Door light glow -->
+      <ellipse cx="75" cy="106" rx="10" ry="12" fill="#ff9a20" opacity="0.07"/>
 
-<!-- Ground -->
-<div class="ground"></div>
-</div>
+      <!-- Window left -->
+      <rect x="25" y="74" width="22" height="18" rx="2" fill="#0a1a2e"/>
+      <rect x="27" y="76" width="18" height="14" rx="1" fill="#1a3a5c"/>
+      <!-- Window cross -->
+      <line x1="36" y1="76" x2="36" y2="90" stroke="#2a4a6a" stroke-width="1.5"/>
+      <line x1="27" y1="83" x2="45" y2="83" stroke="#2a4a6a" stroke-width="1.5"/>
+      <!-- Warm glow inside window -->
+      <rect x="27" y="76" width="18" height="14" rx="1" fill="#ff9a20" opacity="0.12"/>
 
-<!-- Action buttons -->
-<div class="actions">
-<button class="feed-btn btn-hay" id="feedHayBtn" onclick="feedMammoth('hay')">
-🌾 Feed Hay
-</button>
-<div class="btn-row">
-<button class="feed-btn btn-berries" onclick="feedMammoth('berries')">
-🫐 Berries
-</button>
-<button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="feedMammoth('leaves')">
-🌿 Leaves
-</button>
-</div>
-<div class="hint" id="hintText">👆 Feed your baby mammoth!</div>
-</div>
+      <!-- Window right -->
+      <rect x="112" y="74" width="22" height="18" rx="2" fill="#0a1a2e"/>
+      <rect x="114" y="76" width="18" height="14" rx="1" fill="#1a3a5c"/>
+      <line x1="123" y1="76" x2="123" y2="90" stroke="#2a4a6a" stroke-width="1.5"/>
+      <line x1="114" y1="83" x2="132" y2="83" stroke="#2a4a6a" stroke-width="1.5"/>
+      <rect x="114" y="76" width="18" height="14" rx="1" fill="#ff9a20" opacity="0.12"/>
+
+      <!-- Roof -->
+      <polygon points="5,65 80,8 155,65" fill="#3a2a1a"/>
+      <!-- Roof planks -->
+      <line x1="5" y1="65" x2="80" y2="8" stroke="#2a1c10" stroke-width="2" opacity="0.6"/>
+      <line x1="155" y1="65" x2="80" y2="8" stroke="#2a1c10" stroke-width="2" opacity="0.6"/>
+      <line x1="25" y1="65" x2="80" y2="18" stroke="#2a1c10" stroke-width="1.5" opacity="0.4"/>
+      <line x1="135" y1="65" x2="80" y2="18" stroke="#2a1c10" stroke-width="1.5" opacity="0.4"/>
+      <line x1="45" y1="64" x2="80" y2="30" stroke="#2a1c10" stroke-width="1.5" opacity="0.3"/>
+      <line x1="115" y1="64" x2="80" y2="30" stroke="#2a1c10" stroke-width="1.5" opacity="0.3"/>
+
+      <!-- Snow on roof -->
+      <polygon points="5,65 80,8 155,65" fill="none" stroke="#ddeef8" stroke-width="1" opacity="0.3"/>
+      <!-- Heavy snow drifts on roof -->
+      <path d="M5,65 Q20,58 35,62 Q50,56 65,60 Q72,54 80,57 Q88,54 95,60 Q110,56 125,62 Q140,58 155,65" fill="#ddeef8" opacity="0.85"/>
+      <path d="M10,64 Q25,57 40,61 Q55,55 70,59 Q75,53 80,56 Q85,53 90,59 Q105,55 120,61 Q135,57 150,64" fill="#eef6fc" opacity="0.6"/>
+      <!-- Snow peak on roof -->
+      <ellipse cx="80" cy="10" rx="12" ry="6" fill="#f0f8ff" opacity="0.9"/>
+
+      <!-- Chimney -->
+      <rect x="98" y="18" width="16" height="28" rx="2" fill="#3a2a1a"/>
+      <rect x="96" y="16" width="20" height="6" rx="2" fill="#2a1c10"/>
+      <!-- Smoke puffs -->
+      <circle cx="106" cy="10" r="5" fill="#aaaaaa" opacity="0.35"/>
+      <circle cx="110" cy="4" r="4" fill="#bbbbbb" opacity="0.25"/>
+      <circle cx="103" cy="1" r="3" fill="#cccccc" opacity="0.2"/>
+
+      <!-- Snow drift at base of cabin -->
+      <path d="M0,124 Q30,115 60,120 Q80,112 100,118 Q125,110 160,118 L160,130 L0,130 Z" fill="#c8dff0" opacity="0.8"/>
+    </svg>
+
+    <!-- Icebergs in background -->
+    <svg viewBox="0 0 430 160" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:78px;left:0;width:100%;height:auto;z-index:1;pointer-events:none;">
+
+      <!-- Far background icebergs (smaller, more blue) -->
+      <polygon points="30,130 55,70 80,130" fill="#8ab8d4" opacity="0.55"/>
+      <polygon points="38,130 55,76 72,130" fill="#a8cfe4" opacity="0.45"/>
+      <!-- Snow cap far left -->
+      <polygon points="46,82 55,70 64,82 58,78 55,74 52,78" fill="#ddeef8" opacity="0.8"/>
+
+      <polygon points="340,130 372,58 404,130" fill="#7aafc8" opacity="0.5"/>
+      <polygon points="348,130 372,65 396,130" fill="#9ac4dc" opacity="0.4"/>
+      <!-- Snow cap far right -->
+      <polygon points="358,70 372,58 386,70 378,64 372,62 366,64" fill="#ddeef8" opacity="0.8"/>
+
+      <polygon points="170,130 188,88 206,130" fill="#8ab8d4" opacity="0.4"/>
+      <polygon points="176,130 188,92 200,130" fill="#a8cfe4" opacity="0.35"/>
+      <polygon points="182,94 188,88 194,94 190,90" fill="#eef6fc" opacity="0.7"/>
+
+      <!-- Mid icebergs (larger, more prominent) -->
+      <!-- Left mid iceberg -->
+      <polygon points="0,140 32,55 70,140" fill="#6a9db8" opacity="0.75"/>
+      <polygon points="6,140 32,62 60,140" fill="#8bbcd4" opacity="0.6"/>
+      <!-- Crevice line -->
+      <line x1="32" y1="62" x2="20" y2="100" stroke="#5a8daa" stroke-width="1.5" opacity="0.6"/>
+      <line x1="32" y1="62" x2="44" y2="95" stroke="#5a8daa" stroke-width="1" opacity="0.5"/>
+      <!-- Snow on left berg -->
+      <path d="M15,80 Q32,55 49,80 Q42,68 32,64 Q22,68 15,80 Z" fill="#e8f4fb" opacity="0.85"/>
+      <path d="M20,76 Q32,60 44,76 Q38,66 32,63 Q26,66 20,76 Z" fill="#f4faff" opacity="0.6"/>
+
+      <!-- Right mid iceberg -->
+      <polygon points="360,140 398,48 436,140" fill="#5e90aa" opacity="0.7"/>
+      <polygon points="367,140 398,56 430,140" fill="#82b2cc" opacity="0.55"/>
+      <line x1="398" y1="56" x2="384" y2="98" stroke="#5080a0" stroke-width="1.5" opacity="0.55"/>
+      <line x1="398" y1="56" x2="412" y2="92" stroke="#5080a0" stroke-width="1" opacity="0.45"/>
+      <path d="M380,68 Q398,48 416,68 Q408,56 398,52 Q388,56 380,68 Z" fill="#e8f4fb" opacity="0.85"/>
+      <path d="M385,65 Q398,52 411,65 Q405,56 398,53 Q391,56 385,65 Z" fill="#f4faff" opacity="0.6"/>
+
+      <!-- Center background iceberg (partially hidden, distant) -->
+      <polygon points="195,130 220,72 245,130" fill="#7aafc8" opacity="0.45"/>
+      <polygon points="202,130 220,78 238,130" fill="#96c4da" opacity="0.35"/>
+      <path d="M210,82 Q220,72 230,82 Q225,76 220,74 Q215,76 210,82 Z" fill="#ddeef8" opacity="0.75"/>
+
+      <!-- Water/ice reflection at base -->
+      <path d="M0,138 Q108,128 215,134 Q322,128 430,138 L430,145 L0,145 Z" fill="#a0c8e0" opacity="0.35"/>
+      <path d="M0,143 Q108,136 215,140 Q322,136 430,143 L430,148 L0,148 Z" fill="#b8d8ec" opacity="0.25"/>
+    </svg>
+
+    <!-- Trees -->
+    <div class="tree tree1">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+    <div class="tree tree2">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+    <div class="tree tree3">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+    <div class="tree tree4">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+    <div class="tree tree5">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+    <div class="tree tree6">
+      <div class="tree-top"></div>
+      <div class="tree-top2"></div>
+      <div class="tree-snow"></div>
+      <div class="tree-trunk"></div>
+    </div>
+
+    <!-- Speech bubble -->
+    <div class="speech-bubble" id="speechBubble">Mrooooo!</div>
+
+    <!-- Clean up hint -->
+    <div class="clean-label" id="cleanLabel">👆 Tap poop to clean!</div>
+
+    <!-- Mammoth SVG -->
+    <!-- Mammoth SVG -->
+    <div class="mammoth-wrapper" id="mammothWrapper">
+      <svg width="190" height="200" viewBox="0 0 190 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow -->
+        <ellipse cx="95" cy="196" rx="60" ry="8" fill="rgba(0,0,0,0.15)"/>
+
+        <!-- Body -->
+        <ellipse cx="95" cy="130" rx="65" ry="52" fill="#7B5B42"/>
+        <!-- Fur texture lines -->
+        <path d="M45 110 Q50 100 55 110" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M60 95 Q65 85 70 95" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M80 88 Q85 78 90 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M100 88 Q105 78 110 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M120 93 Q125 83 130 93" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M135 108 Q140 98 145 108" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <!-- Belly lighter patch -->
+        <ellipse cx="95" cy="145" rx="38" ry="30" fill="#9B7B5A" opacity="0.5"/>
+
+        <!-- Back legs -->
+        <rect x="110" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+        <rect x="138" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+        <!-- Back feet -->
+        <ellipse cx="121" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+        <ellipse cx="149" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+        <!-- Toe lines back -->
+        <line x1="113" y1="193" x2="113" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="121" y1="195" x2="121" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="129" y1="193" x2="129" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="141" y1="193" x2="141" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="149" y1="195" x2="149" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="157" y1="193" x2="157" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+
+        <!-- Front legs -->
+        <rect x="38" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+        <rect x="65" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+        <!-- Front feet -->
+        <ellipse cx="49" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+        <ellipse cx="76" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+        <!-- Toe lines front -->
+        <line x1="41" y1="193" x2="41" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="49" y1="195" x2="49" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="57" y1="193" x2="57" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="68" y1="193" x2="68" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="76" y1="195" x2="76" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+        <line x1="84" y1="193" x2="84" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+
+        <!-- Head -->
+        <ellipse cx="78" cy="88" rx="40" ry="36" fill="#7B5B42"/>
+        <!-- Head fur -->
+        <path d="M50 65 Q55 55 60 65" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M68 56 Q73 46 78 56" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M86 57 Q91 47 96 57" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+        <!-- Big fluffy forehead fur bump -->
+        <ellipse cx="78" cy="58" rx="22" ry="14" fill="#8B6B50"/>
+        <ellipse cx="78" cy="52" rx="16" ry="10" fill="#9B7B5A"/>
+
+        <!-- Ears -->
+        <ellipse cx="42" cy="80" rx="12" ry="16" fill="#7B5B42"/>
+        <ellipse cx="42" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
+        <ellipse cx="114" cy="80" rx="12" ry="16" fill="#7B5B42"/>
+        <ellipse cx="114" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
+
+        <!-- Tusks -->
+        <path d="M62 108 Q50 120 48 130 Q46 140 52 138 Q58 136 60 126 Q62 116 70 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
+        <path d="M88 108 Q85 120 84 130 Q82 140 88 138 Q94 136 92 126 Q90 116 90 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
+
+        <!-- Eyes -->
+        <g class="mammoth-eye" style="transform-origin:66px 80px">
+          <circle cx="66" cy="80" r="9" fill="#2C1A0E"/>
+          <circle cx="66" cy="80" r="7" fill="#4A2C12"/>
+          <circle cx="66" cy="80" r="4" fill="#1a0a04"/>
+          <circle cx="63" cy="77" r="2.5" fill="white" opacity="0.9"/>
+          <circle cx="62.5" cy="76.5" r="1.2" fill="white"/>
+        </g>
+        <!-- Right eye -->
+        <circle cx="91" cy="80" r="9" fill="#2C1A0E"/>
+        <circle cx="91" cy="80" r="7" fill="#4A2C12"/>
+        <circle cx="91" cy="80" r="4" fill="#1a0a04"/>
+        <circle cx="88" cy="77" r="2.5" fill="white" opacity="0.9"/>
+        <circle cx="87.5" cy="76.5" r="1.2" fill="white"/>
+
+        <!-- Eyebrows -->
+        <path d="M59 70 Q66 66 73 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M84 70 Q91 66 98 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Rosy cheeks -->
+        <circle cx="52" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
+        <circle cx="104" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
+
+        <!-- Nostril -->
+        <circle cx="75" cy="100" r="4" fill="#5C3A22"/>
+        <circle cx="75" cy="100" r="2" fill="#3a2010"/>
+
+        <!-- Trunk - smooth gentle sway (transform-origin set in CSS) -->
+        <g class="mammoth-trunk" id="trunkGroup">
+          <!-- Outline -->
+          <path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
+                fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155"
+                fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+          <!-- Fill -->
+          <path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
+                fill="#7B5B42"/>
+          <path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155" fill="#6B4B32"/>
+          <!-- Highlight -->
+          <path d="M72 108 Q64 122 60 136 Q57 148 61 153"
+                stroke="#D4A882" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <!-- Tip -->
+          <ellipse cx="70" cy="163" rx="8" ry="5" fill="#5C3A22" stroke="#2a1508" stroke-width="2"/>
+          <circle cx="67" cy="163" r="2.2" fill="#1a0a04"/>
+          <circle cx="73" cy="163" r="2.2" fill="#1a0a04"/>
+        </g>
+
+        <!-- Tail -->
+        <path d="M155 125 Q165 118 162 128 Q158 138 160 142" stroke="#6B4B32" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="160" cy="143" r="4" fill="#5C3A22"/>
+      </svg>
+    </div>
+
+    <!-- Ground -->
+    <div class="ground"></div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="actions">
+    <button class="feed-btn btn-hay" id="feedHayBtn" onclick="feedMammoth('hay')">
+      🌾 Feed Hay
+    </button>
+    <div class="btn-row">
+      <button class="feed-btn btn-berries" onclick="feedMammoth('berries')">
+        🫐 Berries
+      </button>
+      <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="feedMammoth('leaves')">
+        🌿 Leaves
+      </button>
+    </div>
+    <div class="hint" id="hintText">👆 Feed your baby mammoth!</div>
+  </div>
 </div>
 
 <script>
-// ─── AUDIO ENGINE ───────────────────────────────────────────────
-let audioCtx = null;
-let masterGain = null;
-let muted = false;
+  // ─── AUDIO ENGINE ───────────────────────────────────────────────
+  let audioCtx = null;
+  let masterGain = null;
+  let muted = false;
 
-function initAudio() {
-if (audioCtx) return;
-audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-masterGain = audioCtx.createGain();
-masterGain.gain.value = 1.0;
-masterGain.connect(audioCtx.destination);
-}
+  function initAudio() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+  }
 
-function getCtx() {
-initAudio();
-if (audioCtx.state === 'suspended') audioCtx.resume();
-return audioCtx;
-}
+  function getCtx() {
+    initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
 
-function out() { return (muted || !masterGain) ? null : masterGain; }
+  function out() { return (muted || !masterGain) ? null : masterGain; }
 
-// Unlock audio on very first interaction anywhere on page
-function unlockAudio() {
-initAudio();
-if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-}
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('mousedown', unlockAudio, { once: true });
+  // Unlock audio on very first interaction anywhere on page
+  function unlockAudio() {
+    initAudio();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('mousedown', unlockAudio, { once: true });
 
-// Wire mute button (runs after DOM is ready since script is at bottom)
-document.getElementById('muteBtn').addEventListener('click', () => {
-initAudio();
-muted = !muted;
-masterGain.gain.value = muted ? 0 : 1;
-document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
-});
+  // Wire mute button (runs after DOM is ready since script is at bottom)
+  document.getElementById('muteBtn').addEventListener('click', () => {
+    initAudio();
+    muted = !muted;
+    masterGain.gain.value = muted ? 0 : 1;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+  });
 
-// Low rumbling mammoth trumpet / moan
-function soundMammothCall() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-[[80,'sawtooth',0.18],[160,'sawtooth',0.10],[40,'sine',0.22],[320,'square',0.04]].forEach(([freq,type,vol],i) => {
-const osc = ctx.createOscillator();
-const g = ctx.createGain();
-const filter = ctx.createBiquadFilter();
-filter.type = 'lowpass'; filter.frequency.value = 600;
-osc.type = type;
-osc.frequency.setValueAtTime(freq*0.85,now);
-osc.frequency.linearRampToValueAtTime(freq*1.15,now+0.15);
-osc.frequency.linearRampToValueAtTime(freq*0.95,now+0.5);
-osc.frequency.linearRampToValueAtTime(freq*0.7,now+0.9);
-g.gain.setValueAtTime(0,now);
-g.gain.linearRampToValueAtTime(vol,now+0.05+i*0.02);
-g.gain.setValueAtTime(vol,now+0.5);
-g.gain.linearRampToValueAtTime(0,now+0.95);
-osc.connect(filter); filter.connect(g); g.connect(dest);
-osc.start(now); osc.stop(now+1.0);
-});
-}
+  // Low rumbling mammoth trumpet / moan
+  function soundMammothCall() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    [[80,'sawtooth',0.18],[160,'sawtooth',0.10],[40,'sine',0.22],[320,'square',0.04]].forEach(([freq,type,vol],i) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass'; filter.frequency.value = 600;
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq*0.85,now);
+      osc.frequency.linearRampToValueAtTime(freq*1.15,now+0.15);
+      osc.frequency.linearRampToValueAtTime(freq*0.95,now+0.5);
+      osc.frequency.linearRampToValueAtTime(freq*0.7,now+0.9);
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(vol,now+0.05+i*0.02);
+      g.gain.setValueAtTime(vol,now+0.5);
+      g.gain.linearRampToValueAtTime(0,now+0.95);
+      osc.connect(filter); filter.connect(g); g.connect(dest);
+      osc.start(now); osc.stop(now+1.0);
+    });
+  }
 
-// Cute happy squeaky trumpet
-function soundHappyToot() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-[[220,'sine',0.25],[440,'triangle',0.15],[330,'sine',0.12]].forEach(([freq,type,vol]) => {
-const osc = ctx.createOscillator();
-const g = ctx.createGain();
-osc.type = type;
-osc.frequency.setValueAtTime(freq,now);
-osc.frequency.linearRampToValueAtTime(freq*1.4,now+0.12);
-osc.frequency.linearRampToValueAtTime(freq*1.1,now+0.3);
-g.gain.setValueAtTime(0,now);
-g.gain.linearRampToValueAtTime(vol,now+0.02);
-g.gain.linearRampToValueAtTime(0,now+0.35);
-osc.connect(g); g.connect(dest);
-osc.start(now); osc.stop(now+0.4);
-});
-}
+  // Cute happy squeaky trumpet
+  function soundHappyToot() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    [[220,'sine',0.25],[440,'triangle',0.15],[330,'sine',0.12]].forEach(([freq,type,vol]) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq,now);
+      osc.frequency.linearRampToValueAtTime(freq*1.4,now+0.12);
+      osc.frequency.linearRampToValueAtTime(freq*1.1,now+0.3);
+      g.gain.setValueAtTime(0,now);
+      g.gain.linearRampToValueAtTime(vol,now+0.02);
+      g.gain.linearRampToValueAtTime(0,now+0.35);
+      osc.connect(g); g.connect(dest);
+      osc.start(now); osc.stop(now+0.4);
+    });
+  }
 
-// Crunching / munching sound
-function soundMunch() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-for (let i = 0; i < 3; i++) {
-const t = now + i*0.13;
-const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.08), ctx.sampleRate);
-const data = buf.getChannelData(0);
-for (let j = 0; j < data.length; j++) data[j] = (Math.random()*2-1)*Math.pow(1-j/data.length,1.5);
-const src = ctx.createBufferSource(); src.buffer = buf;
-const g = ctx.createGain();
-const filter = ctx.createBiquadFilter();
-filter.type = 'bandpass'; filter.frequency.value = 800+Math.random()*400; filter.Q.value = 2;
-g.gain.setValueAtTime(0.45,t); g.gain.linearRampToValueAtTime(0,t+0.08);
-src.connect(filter); filter.connect(g); g.connect(dest);
-src.start(t); src.stop(t+0.1);
-}
-const osc = ctx.createOscillator(); const g2 = ctx.createGain();
-osc.type = 'sine';
-osc.frequency.setValueAtTime(120,now+0.38); osc.frequency.linearRampToValueAtTime(60,now+0.55);
-g2.gain.setValueAtTime(0.2,now+0.38); g2.gain.linearRampToValueAtTime(0,now+0.55);
-osc.connect(g2); g2.connect(dest);
-osc.start(now+0.38); osc.stop(now+0.6);
-}
+  // Crunching / munching sound
+  function soundMunch() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    for (let i = 0; i < 3; i++) {
+      const t = now + i*0.13;
+      const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.08), ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random()*2-1)*Math.pow(1-j/data.length,1.5);
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const g = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass'; filter.frequency.value = 800+Math.random()*400; filter.Q.value = 2;
+      g.gain.setValueAtTime(0.45,t); g.gain.linearRampToValueAtTime(0,t+0.08);
+      src.connect(filter); filter.connect(g); g.connect(dest);
+      src.start(t); src.stop(t+0.1);
+    }
+    const osc = ctx.createOscillator(); const g2 = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(120,now+0.38); osc.frequency.linearRampToValueAtTime(60,now+0.55);
+    g2.gain.setValueAtTime(0.2,now+0.38); g2.gain.linearRampToValueAtTime(0,now+0.55);
+    osc.connect(g2); g2.connect(dest);
+    osc.start(now+0.38); osc.stop(now+0.6);
+  }
 
-// Fart / poop sound
-function soundFart() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-const duration = 0.5 + Math.random()*0.4;
-const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*duration), ctx.sampleRate);
-const data = buf.getChannelData(0);
-for (let i = 0; i < data.length; i++) data[i] = Math.random()*2-1;
-const noise = ctx.createBufferSource(); noise.buffer = buf;
-const filter = ctx.createBiquadFilter();
-filter.type = 'bandpass';
-filter.frequency.setValueAtTime(180,now); filter.frequency.linearRampToValueAtTime(80,now+duration);
-filter.Q.value = 3;
-const g = ctx.createGain();
-g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.7,now+0.02);
-g.gain.linearRampToValueAtTime(0.5,now+duration*0.5); g.gain.linearRampToValueAtTime(0,now+duration);
-const osc = ctx.createOscillator(); osc.type = 'sawtooth';
-osc.frequency.setValueAtTime(55+Math.random()*20,now); osc.frequency.linearRampToValueAtTime(30,now+duration);
-const og = ctx.createGain();
-og.gain.setValueAtTime(0.3,now); og.gain.linearRampToValueAtTime(0,now+duration);
-noise.connect(filter); filter.connect(g); g.connect(dest);
-osc.connect(og); og.connect(dest);
-noise.start(now); noise.stop(now+duration+0.1);
-osc.start(now); osc.stop(now+duration+0.1);
-}
+  // Fart / poop sound
+  function soundFart() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    const duration = 0.5 + Math.random()*0.4;
+    const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*duration), ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random()*2-1;
+    const noise = ctx.createBufferSource(); noise.buffer = buf;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(180,now); filter.frequency.linearRampToValueAtTime(80,now+duration);
+    filter.Q.value = 3;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.7,now+0.02);
+    g.gain.linearRampToValueAtTime(0.5,now+duration*0.5); g.gain.linearRampToValueAtTime(0,now+duration);
+    const osc = ctx.createOscillator(); osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(55+Math.random()*20,now); osc.frequency.linearRampToValueAtTime(30,now+duration);
+    const og = ctx.createGain();
+    og.gain.setValueAtTime(0.3,now); og.gain.linearRampToValueAtTime(0,now+duration);
+    noise.connect(filter); filter.connect(g); g.connect(dest);
+    osc.connect(og); og.connect(dest);
+    noise.start(now); noise.stop(now+duration+0.1);
+    osc.start(now); osc.stop(now+duration+0.1);
+  }
 
-// Splat / plop sound
-function soundPlop() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-const osc = ctx.createOscillator(); osc.type = 'sine';
-osc.frequency.setValueAtTime(220,now); osc.frequency.linearRampToValueAtTime(55,now+0.18);
-const g = ctx.createGain();
-g.gain.setValueAtTime(0.5,now); g.gain.linearRampToValueAtTime(0,now+0.2);
-osc.connect(g); g.connect(dest);
-osc.start(now); osc.stop(now+0.22);
-}
+  // Splat / plop sound
+  function soundPlop() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(220,now); osc.frequency.linearRampToValueAtTime(55,now+0.18);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.5,now); g.gain.linearRampToValueAtTime(0,now+0.2);
+    osc.connect(g); g.connect(dest);
+    osc.start(now); osc.stop(now+0.22);
+  }
 
-// Sparkle / clean sound
-function soundClean() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-[880,1100,1320,1760].forEach((freq,i) => {
-const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq;
-const g = ctx.createGain();
-const t = now+i*0.07;
-g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.22,t+0.02); g.gain.linearRampToValueAtTime(0,t+0.2);
-osc.connect(g); g.connect(dest);
-osc.start(t); osc.stop(t+0.24);
-});
-}
+  // Sparkle / clean sound
+  function soundClean() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    [880,1100,1320,1760].forEach((freq,i) => {
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq;
+      const g = ctx.createGain();
+      const t = now+i*0.07;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.22,t+0.02); g.gain.linearRampToValueAtTime(0,t+0.2);
+      osc.connect(g); g.connect(dest);
+      osc.start(t); osc.stop(t+0.24);
+    });
+  }
 
-// Sad / hungry whimper
-function soundHungry() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-[[90,'sine',0.25],[180,'triangle',0.12]].forEach(([freq,type,vol]) => {
-const osc = ctx.createOscillator(); osc.type = type;
-osc.frequency.setValueAtTime(freq*1.1,now); osc.frequency.linearRampToValueAtTime(freq*0.75,now+0.6);
-const g = ctx.createGain();
-g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(vol,now+0.05);
-g.gain.setValueAtTime(vol,now+0.4); g.gain.linearRampToValueAtTime(0,now+0.65);
-osc.connect(g); g.connect(dest);
-osc.start(now); osc.stop(now+0.7);
-});
-}
+  // Sad / hungry whimper
+  function soundHungry() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    [[90,'sine',0.25],[180,'triangle',0.12]].forEach(([freq,type,vol]) => {
+      const osc = ctx.createOscillator(); osc.type = type;
+      osc.frequency.setValueAtTime(freq*1.1,now); osc.frequency.linearRampToValueAtTime(freq*0.75,now+0.6);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(vol,now+0.05);
+      g.gain.setValueAtTime(vol,now+0.4); g.gain.linearRampToValueAtTime(0,now+0.65);
+      osc.connect(g); g.connect(dest);
+      osc.start(now); osc.stop(now+0.7);
+    });
+  }
 
-// Button tap click
-function soundTap() {
-const ctx = getCtx(); const dest = out(); if (!dest) return;
-const now = ctx.currentTime;
-const osc = ctx.createOscillator(); osc.type = 'sine';
-osc.frequency.setValueAtTime(500,now); osc.frequency.linearRampToValueAtTime(250,now+0.06);
-const g = ctx.createGain();
-g.gain.setValueAtTime(0.18,now); g.gain.linearRampToValueAtTime(0,now+0.07);
-osc.connect(g); g.connect(dest);
-osc.start(now); osc.stop(now+0.08);
-}
-// ─────────────────────────────────────────────────────────────────
+  // Button tap click
+  function soundTap() {
+    const ctx = getCtx(); const dest = out(); if (!dest) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(500,now); osc.frequency.linearRampToValueAtTime(250,now+0.06);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.18,now); g.gain.linearRampToValueAtTime(0,now+0.07);
+    osc.connect(g); g.connect(dest);
+    osc.start(now); osc.stop(now+0.08);
+  }
+  // ─────────────────────────────────────────────────────────────────
 
-// Game state
-let state = {
-hunger: 80,
-happiness: 70,
-score: 0,
-poops: [],
-poopCount: 0,
-isAnimating: false,
-feedCount: 0,
-};
+  // Game state
+  let state = {
+    hunger: 80,
+    happiness: 70,
+    score: 0,
+    poops: [],
+    poopCount: 0,
+    isAnimating: false,
+    feedCount: 0,
+  };
 
-const FOOD_DATA = {
-hay: { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 25, happy: 10, poopChance: 0.45 },
-berries: { emoji: '🫐', sounds: ['Ooooh yum!','Mmmberry!','*slurp*','YUMMY!'], hunger: 15, happy: 30, poopChance: 0.6 },
-leaves: { emoji: '🌿', sounds: ['Crunch!','Rustle rustle','Mmm greens!','Chomp!'], hunger: 20, happy: 20, poopChance: 0.5 },
-};
+  const FOOD_DATA = {
+    hay:     { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 25, happy: 10, poopChance: 0.45 },
+    berries: { emoji: '🫐', sounds: ['Ooooh yum!','Mmmberry!','*slurp*','YUMMY!'], hunger: 15, happy: 30, poopChance: 0.6 },
+    leaves:  { emoji: '🌿', sounds: ['Crunch!','Rustle rustle','Mmm greens!','Chomp!'], hunger: 20, happy: 20, poopChance: 0.5 },
+  };
 
-const POOP_SOUNDS = ['Grrrrrp... 💨','Pbbbbbt!💨','Uhhhhhh...','Plop! 💩','Oh no...',];
-const CLEAN_MSGS = ['Ewww +10!','Squeaky clean!','Good job! +10','No more stink!','Spotless! +10'];
-const HUNGRY_SOUNDS = ['I\'m hungry! 😤','Feed me! 😭','*tummy rumble*','Food pls! 🥺'];
+  const POOP_SOUNDS = ['Grrrrrp... 💨','Pbbbbbt!💨','Uhhhhhh...','Plop! 💩','Oh no...',];
+  const CLEAN_MSGS = ['Ewww +10!','Squeaky clean!','Good job! +10','No more stink!','Spotless! +10'];
+  const HUNGRY_SOUNDS = ['I\'m hungry! 😤','Feed me! 😭','*tummy rumble*','Food pls! 🥺'];
 
-// Snowflakes
-function createSnow() {
-const container = document.getElementById('snowContainer');
-for (let i = 0; i < 12; i++) {
-const flake = document.createElement('div');
-flake.className = 'snowflake';
-flake.textContent = '❄';
-flake.style.left = Math.random() * 100 + 'vw';
-flake.style.top = '-20px';
-flake.style.animationDuration = (3 + Math.random() * 5) + 's';
-flake.style.animationDelay = (Math.random() * 8) + 's';
-flake.style.fontSize = (8 + Math.random() * 12) + 'px';
-flake.style.opacity = 0.4 + Math.random() * 0.5;
-container.appendChild(flake);
-}
-}
-createSnow();
+  // Blizzard snowflakes - blown sideways
+  function createSnow() {
+    const container = document.getElementById('snowContainer');
+    const chars = ['•', '·', '∗', '❄', '✦', '⁕', '˙'];
+    for (let i = 0; i < 60; i++) {
+      const flake = document.createElement('div');
+      flake.className = 'snowflake';
+      flake.textContent = chars[Math.floor(Math.random() * chars.length)];
+      flake.style.left = (Math.random() * 120 - 20) + 'vw';
+      flake.style.top = (Math.random() * 100) + 'vh';
+      flake.style.animationDuration = (2 + Math.random() * 4) + 's';
+      flake.style.animationDelay = (Math.random() * 5) + 's';
+      flake.style.fontSize = (4 + Math.random() * 10) + 'px';
+      flake.style.opacity = 0.3 + Math.random() * 0.7;
+      container.appendChild(flake);
+    }
+  }
+  createSnow();
 
-// Update UI
-function updateStats() {
-const h = Math.max(0, Math.min(100, state.hunger));
-const hp = Math.max(0, Math.min(100, state.happiness));
-document.getElementById('hungerVal').textContent = Math.round(h) + '%';
-document.getElementById('happyVal').textContent = Math.round(hp) + '%';
-document.getElementById('scoreVal').textContent = state.score;
-document.getElementById('hungerBar').style.width = h + '%';
-document.getElementById('happyBar').style.width = hp + '%';
-document.getElementById('scoreBar').style.width = Math.min(100, state.score / 5) + '%';
+  // Wind streaks
+  function createWind() {
+    const container = document.getElementById('windContainer');
+    for (let i = 0; i < 18; i++) {
+      const streak = document.createElement('div');
+      streak.className = 'wind-streak';
+      streak.style.top = (Math.random() * 90) + 'vh';
+      streak.style.width = (40 + Math.random() * 120) + 'px';
+      streak.style.animationDuration = (0.8 + Math.random() * 1.5) + 's';
+      streak.style.animationDelay = (Math.random() * 3) + 's';
+      streak.style.opacity = 0.2 + Math.random() * 0.5;
+      container.appendChild(streak);
+    }
+  }
+  createWind();
 
-// Color hunger
-const hungerEl = document.getElementById('hungerVal');
-if (h > 60) hungerEl.style.color = '#4CAF50';
-else if (h > 30) hungerEl.style.color = '#FF9800';
-else hungerEl.style.color = '#f44336';
+  // Update UI
+  function updateStats() {
+    const h = Math.max(0, Math.min(100, state.hunger));
+    const hp = Math.max(0, Math.min(100, state.happiness));
+    document.getElementById('hungerVal').textContent = Math.round(h) + '%';
+    document.getElementById('happyVal').textContent = Math.round(hp) + '%';
+    document.getElementById('scoreVal').textContent = state.score;
+    document.getElementById('hungerBar').style.width = h + '%';
+    document.getElementById('happyBar').style.width = hp + '%';
+    document.getElementById('scoreBar').style.width = Math.min(100, state.score / 5) + '%';
 
-const happyEl = document.getElementById('happyVal');
-if (hp > 60) happyEl.style.color = '#4CAF50';
-else if (hp > 30) happyEl.style.color = '#FF9800';
-else happyEl.style.color = '#f44336';
-}
+    // Color hunger
+    const hungerEl = document.getElementById('hungerVal');
+    if (h > 60) hungerEl.style.color = '#4CAF50';
+    else if (h > 30) hungerEl.style.color = '#FF9800';
+    else hungerEl.style.color = '#f44336';
 
-// Show speech bubble
-let bubbleTimeout;
-function showBubble(text) {
-const bubble = document.getElementById('speechBubble');
-clearTimeout(bubbleTimeout);
-bubble.textContent = text;
-bubble.classList.add('show');
-bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2200);
-}
+    const happyEl = document.getElementById('happyVal');
+    if (hp > 60) happyEl.style.color = '#4CAF50';
+    else if (hp > 30) happyEl.style.color = '#FF9800';
+    else happyEl.style.color = '#f44336';
+  }
 
-// Score popup
-function showScorePopup(text, x, y) {
-const el = document.createElement('div');
-el.className = 'score-popup';
-el.textContent = text;
-el.style.left = x + 'px';
-el.style.top = y + 'px';
-document.body.appendChild(el);
-setTimeout(() => el.remove(), 1200);
-}
+  // Show speech bubble
+  let bubbleTimeout;
+  function showBubble(text) {
+    const bubble = document.getElementById('speechBubble');
+    clearTimeout(bubbleTimeout);
+    bubble.textContent = text;
+    bubble.classList.add('show');
+    bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2200);
+  }
 
-// Particle burst
-function burstParticles(x, y, emojis) {
-emojis.forEach((em, i) => {
-const el = document.createElement('div');
-el.className = 'particle';
-el.textContent = em;
-const angle = (i / emojis.length) * Math.PI * 2;
-const dist = 40 + Math.random() * 60;
-el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-el.style.setProperty('--ty', Math.sin(angle) * dist - 30 + 'px');
-el.style.left = x + 'px';
-el.style.top = y + 'px';
-el.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
-document.body.appendChild(el);
-setTimeout(() => el.remove(), 1000);
-});
-}
+  // Score popup
+  function showScorePopup(text, x, y) {
+    const el = document.createElement('div');
+    el.className = 'score-popup';
+    el.textContent = text;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+  }
 
-// Add poop to scene
-function addPoop() {
-const scene = document.querySelector('.mammoth-scene');
-const poop = document.createElement('div');
-poop.className = 'poop-item';
-poop.textContent = '💩';
-poop.id = 'poop-' + Date.now();
+  // Particle burst
+  function burstParticles(x, y, emojis) {
+    emojis.forEach((em, i) => {
+      const el = document.createElement('div');
+      el.className = 'particle';
+      el.textContent = em;
+      const angle = (i / emojis.length) * Math.PI * 2;
+      const dist = 40 + Math.random() * 60;
+      el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+      el.style.setProperty('--ty', Math.sin(angle) * dist - 30 + 'px');
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    });
+  }
 
-// Random position around mammoth feet area
-const left = 30 + Math.random() * 55;
-poop.style.left = left + '%';
+  // Add poop to scene
+  function addPoop() {
+    const scene = document.querySelector('.mammoth-scene');
+    const poop = document.createElement('div');
+    poop.className = 'poop-item';
+    poop.textContent = '💩';
+    poop.id = 'poop-' + Date.now();
 
-state.poops.push(poop.id);
-scene.appendChild(poop);
+    // Position behind mammoth - his rear/tail is on the right side
+    const left = 58 + Math.random() * 25;
+    poop.style.left = left + '%';
 
-poop.addEventListener('click', (e) => cleanPoop(poop, e));
-poop.addEventListener('touchstart', (e) => {
-e.preventDefault();
-cleanPoop(poop, e.touches[0]);
-}, { passive: false });
+    state.poops.push(poop.id);
+    scene.appendChild(poop);
 
-// Show clean hint
-document.getElementById('cleanLabel').classList.add('show');
+    poop.addEventListener('click', (e) => cleanPoop(poop, e));
+    poop.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      cleanPoop(poop, e.touches[0]);
+    }, { passive: false });
 
-// Check too many poops
-if (state.poops.length >= 4) {
-document.getElementById('poopWarning').classList.add('show');
-state.happiness = Math.max(0, state.happiness - 15);
-updateStats();
-}
+    // Show clean hint
+    document.getElementById('cleanLabel').classList.add('show');
 
-return poop;
-}
+    // Check too many poops
+    if (state.poops.length >= 4) {
+      document.getElementById('poopWarning').classList.add('show');
+      state.happiness = Math.max(0, state.happiness - 15);
+      updateStats();
+    }
 
-// Clean poop
-function cleanPoop(poopEl, event) {
-if (!poopEl || poopEl.dataset.cleaning) return;
-poopEl.dataset.cleaning = 'true';
-poopEl.classList.add('poop-remove');
+    return poop;
+  }
 
-const x = event.clientX || event.pageX;
-const y = event.clientY || event.pageY;
+  // Clean poop
+  function cleanPoop(poopEl, event) {
+    if (!poopEl || poopEl.dataset.cleaning) return;
+    poopEl.dataset.cleaning = 'true';
+    poopEl.classList.add('poop-remove');
 
-state.score += 10;
-state.happiness = Math.min(100, state.happiness + 5);
-state.poops = state.poops.filter(id => id !== poopEl.id);
+    const x = event.clientX || event.pageX;
+    const y = event.clientY || event.pageY;
 
-soundClean();
-const msg = CLEAN_MSGS[Math.floor(Math.random() * CLEAN_MSGS.length)];
-showScorePopup(msg, x - 50, y - 30);
-burstParticles(x, y, ['✨','🌟','⭐','💫','✨']);
+    state.score += 10;
+    state.happiness = Math.min(100, state.happiness + 5);
+    state.poops = state.poops.filter(id => id !== poopEl.id);
 
-if (state.poops.length < 4) {
-document.getElementById('poopWarning').classList.remove('show');
-}
-if (state.poops.length === 0) {
-document.getElementById('cleanLabel').classList.remove('show');
-}
+    soundClean();
+    const msg = CLEAN_MSGS[Math.floor(Math.random() * CLEAN_MSGS.length)];
+    showScorePopup(msg, x - 50, y - 30);
+    burstParticles(x, y, ['✨','🌟','⭐','💫','✨']);
 
-setTimeout(() => {
-poopEl.remove();
-updateStats();
-}, 300);
-}
+    if (state.poops.length < 4) {
+      document.getElementById('poopWarning').classList.remove('show');
+    }
+    if (state.poops.length === 0) {
+      document.getElementById('cleanLabel').classList.remove('show');
+    }
 
-// Feed mammoth
-function feedMammoth(type) {
-if (state.isAnimating) return;
-const wrapper = document.getElementById('mammothWrapper');
-const food = FOOD_DATA[type];
-state.isAnimating = true;
-state.feedCount++;
+    setTimeout(() => {
+      poopEl.remove();
+      updateStats();
+    }, 300);
+  }
 
-// Update stats
-state.hunger = Math.min(100, state.hunger + food.hunger);
-state.happiness = Math.min(100, state.happiness + food.happy);
-state.score += 5;
+  // Feed mammoth
+  function feedMammoth(type) {
+    if (state.isAnimating) return;
+    const wrapper = document.getElementById('mammothWrapper');
+    const food = FOOD_DATA[type];
+    state.isAnimating = true;
+    state.feedCount++;
 
-soundTap();
-// Animate
-wrapper.classList.remove('eating', 'pooping', 'happy');
-void wrapper.offsetWidth;
-wrapper.classList.add('eating');
+    // Update stats
+    state.hunger = Math.min(100, state.hunger + food.hunger);
+    state.happiness = Math.min(100, state.happiness + food.happy);
+    state.score += 5;
 
-// Trunk wiggle
-document.getElementById('trunkGroup').classList.add('trunk-moving');
-setTimeout(() => document.getElementById('trunkGroup').classList.remove('trunk-moving'), 900);
+    soundTap();
+    // Animate
+    wrapper.classList.remove('eating', 'pooping', 'happy');
+    void wrapper.offsetWidth;
+    wrapper.classList.add('eating');
 
-// Munch sound + bubble
-setTimeout(() => soundMunch(), 80);
-setTimeout(() => soundMunch(), 280);
+    // Trunk wiggle
+    document.getElementById('trunkGroup').classList.add('trunk-moving');
+    setTimeout(() => document.getElementById('trunkGroup').classList.remove('trunk-moving'), 900);
 
-// Sound bubble
-const sound = food.sounds[Math.floor(Math.random() * food.sounds.length)];
-showBubble(food.emoji + ' ' + sound);
+    // Munch sound + bubble
+    setTimeout(() => soundMunch(), 80);
+    setTimeout(() => soundMunch(), 280);
 
-// Food particles
-const rect = wrapper.getBoundingClientRect();
-burstParticles(rect.left + 78, rect.top + 50, [food.emoji, food.emoji, '💛', food.emoji]);
+    // Sound bubble
+    const sound = food.sounds[Math.floor(Math.random() * food.sounds.length)];
+    showBubble(food.emoji + ' ' + sound);
 
-updateStats();
+    // Food particles
+    const rect = wrapper.getBoundingClientRect();
+    burstParticles(rect.left + 78, rect.top + 50, [food.emoji, food.emoji, '💛', food.emoji]);
 
-// Maybe poop
-setTimeout(() => {
-wrapper.classList.remove('eating');
-state.isAnimating = false;
+    updateStats();
 
-if (Math.random() < food.poopChance) {
-setTimeout(() => {
-if (state.isAnimating) return;
-state.isAnimating = true;
-wrapper.classList.add('pooping');
-const psound = POOP_SOUNDS[Math.floor(Math.random() * POOP_SOUNDS.length)];
-showBubble(psound);
-setTimeout(() => soundFart(), 150);
+    // Maybe poop
+    setTimeout(() => {
+      wrapper.classList.remove('eating');
+      state.isAnimating = false;
 
-setTimeout(() => {
-soundPlop();
-addPoop();
-wrapper.classList.remove('pooping');
-state.isAnimating = false;
-}, 600);
-}, 600 + Math.random() * 800);
-} else if (state.happiness > 80) {
-wrapper.classList.add('happy');
-setTimeout(() => wrapper.classList.remove('happy'), 800);
-soundHappyToot();
-showBubble('Mrooooo! 💕');
-}
-}, 900);
+      if (Math.random() < food.poopChance) {
+        setTimeout(() => {
+          if (state.isAnimating) return;
+          state.isAnimating = true;
+          wrapper.classList.add('pooping');
+          const psound = POOP_SOUNDS[Math.floor(Math.random() * POOP_SOUNDS.length)];
+          showBubble(psound);
+          setTimeout(() => soundFart(), 150);
 
-// Hint update
-updateHint();
-}
+          setTimeout(() => {
+            soundPlop();
+            addPoop();
+            wrapper.classList.remove('pooping');
+            state.isAnimating = false;
+          }, 600);
+        }, 600 + Math.random() * 800);
+      } else if (state.happiness > 80) {
+        wrapper.classList.add('happy');
+        setTimeout(() => wrapper.classList.remove('happy'), 800);
+        soundHappyToot();
+        showBubble('Mrooooo! 💕');
+      }
+    }, 900);
 
-function updateHint() {
-const hints = [
-'Keep feeding your fluffy friend!',
-'He loves berries! 🫐',
-'Tap poop to clean it up! 💩',
-'Watch his happiness grow! 💛',
-'He\'s getting big and fluffy!',
-];
-document.getElementById('hintText').textContent = '💡 ' + hints[state.feedCount % hints.length];
-}
+    // Hint update
+    updateHint();
+  }
 
-// Hunger decay over time
-setInterval(() => {
-state.hunger = Math.max(0, state.hunger - 2);
-state.happiness = Math.max(0, state.happiness - 1);
+  function updateHint() {
+    const hints = [
+      'Keep feeding your fluffy friend!',
+      'He loves berries! 🫐',
+      'Tap poop to clean it up! 💩',
+      'Watch his happiness grow! 💛',
+      'He\'s getting big and fluffy!',
+    ];
+    document.getElementById('hintText').textContent = '💡 ' + hints[state.feedCount % hints.length];
+  }
 
-if (state.hunger < 20 && Math.random() < 0.3) {
-const sound = HUNGRY_SOUNDS[Math.floor(Math.random() * HUNGRY_SOUNDS.length)];
-showBubble(sound);
-soundHungry();
-// Shake mammoth
-const wrapper = document.getElementById('mammothWrapper');
-wrapper.style.animation = 'none';
-void wrapper.offsetWidth;
-}
+  // Hunger decay over time
+  setInterval(() => {
+    state.hunger = Math.max(0, state.hunger - 2);
+    state.happiness = Math.max(0, state.happiness - 1);
 
-updateStats();
-}, 5000);
+    if (state.hunger < 20 && Math.random() < 0.3) {
+      const sound = HUNGRY_SOUNDS[Math.floor(Math.random() * HUNGRY_SOUNDS.length)];
+      showBubble(sound);
+      soundHungry();
+      // Shake mammoth
+      const wrapper = document.getElementById('mammothWrapper');
+      wrapper.style.animation = 'none';
+      void wrapper.offsetWidth;
+    }
 
-// Occasional random sounds
-setInterval(() => {
-if (Math.random() < 0.15 && state.happiness > 50) {
-const moods = ['Mrooooo! 🦣', 'Toot toot! 🎺', 'Brrrrmph!', '*happy snort*', 'Mmmmmph! 💛'];
-showBubble(moods[Math.floor(Math.random() * moods.length)]);
-if (Math.random() < 0.6) soundMammothCall();
-}
-}, 8000);
+    updateStats();
+  }, 5000);
 
-updateStats();
+  // Occasional random sounds
+  setInterval(() => {
+    if (Math.random() < 0.15 && state.happiness > 50) {
+      const moods = ['Mrooooo! 🦣', 'Toot toot! 🎺', 'Brrrrmph!', '*happy snort*', 'Mmmmmph! 💛'];
+      showBubble(moods[Math.floor(Math.random() * moods.length)]);
+      if (Math.random() < 0.6) soundMammothCall();
+    }
+  }, 8000);
+
+  updateStats();
 </script>
 </body>
 </html>
