@@ -596,49 +596,6 @@ transition: transform 0.1s;
 }
 .mute-btn:active { transform: scale(0.9); }
 
-/* Tap to start audio overlay */
-#audioOverlay {
-position: fixed;
-inset: 0;
-background: rgba(10,25,45,0.88);
-z-index: 9999;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 14px;
-cursor: pointer;
-}
-#audioOverlay .ao-mammoth { font-size: 4rem; animation: aoWiggle 1s ease-in-out infinite; }
-#audioOverlay .ao-title {
-font-family: ‘Fredoka One’, cursive;
-font-size: 1.8rem;
-color: white;
-text-shadow: 2px 2px 0 #1a3a5c;
-}
-#audioOverlay .ao-sub {
-font-family: ‘Nunito’, sans-serif;
-font-size: 1rem;
-color: #a8d4f0;
-font-weight: 700;
-}
-#audioOverlay .ao-btn {
-background: linear-gradient(135deg, #F5C842, #E8A820);
-border: none;
-border-radius: 24px;
-padding: 14px 36px;
-font-family: ‘Fredoka One’, cursive;
-font-size: 1.4rem;
-color: #5C3A00;
-box-shadow: 0 6px 0 rgba(0,0,0,0.25);
-cursor: pointer;
-margin-top: 8px;
-}
-@keyframes aoWiggle {
-0%,100% { transform: rotate(-5deg); }
-50% { transform: rotate(5deg); }
-}
-
 /* Score display */
 .score-display {
 position: absolute;
@@ -654,15 +611,6 @@ z-index: 10;
 </style>
 </head>
 <body>
-
-<!-- Tap to start audio overlay - required for iOS -->
-
-<div id="audioOverlay" onclick="dismissOverlay()">
-  <div class="ao-mammoth">🦣</div>
-  <div class="ao-title">Baby Mammoth</div>
-  <div class="ao-sub">Tap to start with sound!</div>
-  <button class="ao-btn">▶ TAP TO PLAY</button>
-</div>
 
 <!-- Clouds -->
 
@@ -1301,17 +1249,6 @@ z-index: 10;
     osc.connect(g); g.connect(d); osc.start(now); osc.stop(now+0.08);
   }
   // ─────────────────────────────────────────────────────────────────
-
-  // Dismiss start overlay - called directly from user tap (iOS-safe)
-  function dismissOverlay() {
-    startAudio(); // called synchronously inside tap handler = iOS unlocked
-    const overlay = document.getElementById('audioOverlay');
-    if (overlay) {
-      overlay.style.transition = 'opacity 0.3s';
-      overlay.style.opacity = '0';
-      setTimeout(() => overlay.remove(), 300);
-    }
-  }
 
   // Game state
   let state = {
