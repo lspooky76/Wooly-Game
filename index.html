@@ -1104,14 +1104,14 @@ z-index: 10;
   <!-- Action buttons -->
 
   <div class="actions">
-    <button class="feed-btn btn-hay" id="feedHayBtn" onclick="feedMammoth('hay')">
+    <button class="feed-btn btn-hay" id="feedHayBtn" onclick="startAudio();feedMammoth('hay')">
       🌾 Feed Hay
     </button>
     <div class="btn-row">
-      <button class="feed-btn btn-berries" onclick="feedMammoth('berries')">
+      <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
         🫐 Berries
       </button>
-      <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="feedMammoth('leaves')">
+      <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="startAudio();feedMammoth('leaves')">
         🌿 Leaves
       </button>
     </div>
@@ -1130,18 +1130,23 @@ z-index: 10;
 
   function startAudio() {
     if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
-    AC = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = AC.createGain();
-    masterGain.gain.value = 0.9;
-    masterGain.connect(AC.destination);
-    // Play silent buffer - iOS unlock trick
-    const b = AC.createBuffer(1, 1, AC.sampleRate);
-    const s = AC.createBufferSource();
-    s.buffer = b; s.connect(AC.destination); s.start(0);
-    if (AC.state === 'suspended') AC.resume();
+    try {
+      AC = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = AC.createGain();
+      masterGain.gain.value = 0.9;
+      masterGain.connect(AC.destination);
+      // Play silent buffer - mobile unlock trick
+      const b = AC.createBuffer(1, 1, AC.sampleRate);
+      const s = AC.createBufferSource();
+      s.buffer = b; s.connect(AC.destination); s.start(0);
+      if (AC.state === 'suspended') AC.resume();
+    } catch(e) { console.warn('AudioContext error', e); }
   }
 
-  function dest() { return (!muted && masterGain) ? masterGain : null; }
+  function dest() {
+    startAudio(); // ensure AC is always initialized on any interaction
+    return (!muted && masterGain) ? masterGain : null;
+  }
 
   document.getElementById('muteBtn').addEventListener('click', () => {
     startAudio();
@@ -1151,7 +1156,7 @@ z-index: 10;
   });
 
   function soundMammothCall() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     [[80,'sawtooth',0.18],[160,'sawtooth',0.10],[40,'sine',0.22]].forEach(([freq,type,vol],i) => {
       const osc = AC.createOscillator(), g = AC.createGain(), f = AC.createBiquadFilter();
@@ -1167,7 +1172,7 @@ z-index: 10;
   }
 
   function soundHappyToot() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     [[220,'sine',0.25],[440,'triangle',0.15],[330,'sine',0.12]].forEach(([freq,type,vol]) => {
       const osc = AC.createOscillator(), g = AC.createGain();
@@ -1182,7 +1187,7 @@ z-index: 10;
   }
 
   function soundMunch() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     for (let i=0;i<3;i++) {
       const t=now+i*0.13, buf=AC.createBuffer(1,Math.floor(AC.sampleRate*0.08),AC.sampleRate);
@@ -1202,7 +1207,7 @@ z-index: 10;
   }
 
   function soundFart() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime, dur = 0.5+Math.random()*0.4;
     const buf=AC.createBuffer(1,Math.floor(AC.sampleRate*dur),AC.sampleRate);
     const data=buf.getChannelData(0);
@@ -1224,7 +1229,7 @@ z-index: 10;
   }
 
   function soundPlop() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     const osc=AC.createOscillator(); osc.type='sine';
     osc.frequency.setValueAtTime(220,now); osc.frequency.linearRampToValueAtTime(55,now+0.18);
@@ -1234,7 +1239,7 @@ z-index: 10;
   }
 
   function soundClean() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     [880,1100,1320,1760].forEach((freq,i) => {
       const osc=AC.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
@@ -1245,7 +1250,7 @@ z-index: 10;
   }
 
   function soundHungry() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     [[90,'sine',0.25],[180,'triangle',0.12]].forEach(([freq,type,vol]) => {
       const osc=AC.createOscillator(); osc.type=type;
@@ -1258,7 +1263,7 @@ z-index: 10;
   }
 
   function soundTap() {
-    if (!AC) return; const d = dest(); if (!d) return;
+    const d = dest(); if (!d) return;
     const now = AC.currentTime;
     const osc=AC.createOscillator(); osc.type='sine';
     osc.frequency.setValueAtTime(500,now); osc.frequency.linearRampToValueAtTime(250,now+0.06);
