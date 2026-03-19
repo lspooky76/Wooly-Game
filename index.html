@@ -595,21 +595,56 @@ animation: floatHint 2s ease-in-out infinite;
 
 /* Mute button */
 .mute-btn {
-position: fixed;
-bottom: 145px;
-left: 16px;
-background: rgba(10, 30, 55, 0.75);
+position: relative;
+bottom: auto;
+right: auto;
+left: auto;
+background: rgba(255,255,255,0.18);
 border: none;
 border-radius: 50%;
-width: 38px; height: 38px;
-font-size: 1.2rem;
+width: 34px; height: 34px;
+font-size: 1.1rem;
 cursor: pointer;
-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 z-index: 50;
 display: flex; align-items: center; justify-content: center;
 transition: transform 0.1s;
+flex-shrink: 0;
 }
 .mute-btn:active { transform: scale(0.9); }
+
+.hay-row {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.hay-row .feed-btn {
+flex: 1;
+}
+
+/* Food items that appear on ground before eating */
+.food-item {
+position: absolute;
+bottom: 32px;
+left: 5%;
+z-index: 6;
+pointer-events: none;
+animation: foodAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+transform-origin: bottom center;
+filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+}
+@keyframes foodAppear {
+0%   { transform: scale(0) translateY(20px); opacity: 0; }
+100% { transform: scale(1) translateY(0);    opacity: 1; }
+}
+.food-item.food-eaten {
+animation: foodEaten 0.5s ease forwards;
+}
+@keyframes foodEaten {
+0%   { transform: scale(1)   translateY(0);    opacity: 1; }
+50%  { transform: scale(0.7) translateY(-20px); opacity: 0.8; }
+100% { transform: scale(0)   translateY(-50px); opacity: 0; }
+}
 
 /* Score display */
 .score-display {
@@ -648,10 +683,6 @@ z-index: 10;
   <div class="title">Baby Mammoth</div>
   <div class="subtitle">Feed him. Clean up after him. Love him.</div>
 </div>
-
-<!-- Mute button - fixed bottom left -->
-
-<button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
 
 <!-- Stats -->
 
@@ -1104,9 +1135,12 @@ z-index: 10;
   <!-- Action buttons -->
 
   <div class="actions">
-    <button class="feed-btn btn-hay" id="feedHayBtn" onclick="startAudio();feedMammoth('hay')">
-      🌾 Feed Hay
-    </button>
+    <div class="hay-row">
+      <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
+      <button class="feed-btn btn-hay" id="feedHayBtn" onclick="startAudio();feedMammoth('hay')">
+        🌾 Feed Hay
+      </button>
+    </div>
     <div class="btn-row">
       <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
         🫐 Berries
@@ -1270,6 +1304,75 @@ z-index: 10;
     const g=AC.createGain();
     g.gain.setValueAtTime(0.18,now); g.gain.linearRampToValueAtTime(0,now+0.07);
     osc.connect(g); g.connect(d); osc.start(now); osc.stop(now+0.08);
+  }
+
+  // 🌾 Hay - heavy THUD like dropping a bale
+  function soundHay() {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    // Deep boom oscillator dropping fast
+    const osc = AC.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.exponentialRampToValueAtTime(30, now + 0.3);
+    const g = AC.createGain();
+    g.gain.setValueAtTime(1.0, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.connect(g); g.connect(d); osc.start(now); osc.stop(now + 0.4);
+    // Thud click transient
+    const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.05), AC.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random()*2-1) * (1 - i/data.length);
+    const ns = AC.createBufferSource(); ns.buffer = buf;
+    const f = AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value = 200;
+    const g2 = AC.createGain(); g2.gain.value = 0.8;
+    ns.connect(f); f.connect(g2); g2.connect(d); ns.start(now); ns.stop(now+0.06);
+  }
+
+  // 🫐 Berries - magical fairy dust ascending chime
+  function soundBerries() {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    // Ascending bell-like notes
+    [523, 659, 784, 1047, 1319].forEach((freq, i) => {
+      const t = now + i * 0.08;
+      const osc = AC.createOscillator(); osc.type = 'sine';
+      osc.frequency.value = freq;
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.3, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.connect(g); g.connect(d); osc.start(t); osc.stop(t + 0.45);
+      // Harmonic overtone
+      const osc2 = AC.createOscillator(); osc2.type = 'triangle';
+      osc2.frequency.value = freq * 2;
+      const g3 = AC.createGain();
+      g3.gain.setValueAtTime(0, t);
+      g3.gain.linearRampToValueAtTime(0.1, t + 0.01);
+      g3.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      osc2.connect(g3); g3.connect(d); osc2.start(t); osc2.stop(t + 0.3);
+    });
+  }
+
+  // 🌿 Leaves - rapid hi-hat shaker rattling
+  function soundLeaves() {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    // 8 rapid high-freq noise bursts like a shaker
+    for (let i = 0; i < 8; i++) {
+      const t = now + i * 0.045;
+      const dur = 0.035;
+      const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * dur), AC.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = Math.random() * 2 - 1;
+      const src = AC.createBufferSource(); src.buffer = buf;
+      const hp = AC.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 5000;
+      const g = AC.createGain();
+      const vol = i % 2 === 0 ? 0.4 : 0.25;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.linearRampToValueAtTime(0, t + dur);
+      src.connect(hp); hp.connect(g); g.connect(d);
+      src.start(t); src.stop(t + dur + 0.01);
+    }
   }
   // ─────────────────────────────────────────────────────────────────
 
@@ -1470,6 +1573,89 @@ z-index: 10;
     }, 300);
   }
 
+  // Create food SVG and place it on the ground
+  function spawnFood(type) {
+    const scene = document.querySelector('.mammoth-scene');
+    const el = document.createElement('div');
+    el.className = 'food-item';
+
+    let svg = '';
+    if (type === 'hay') {
+      svg = `<svg width="72" height="50" viewBox="0 0 72 50" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bale body -->
+        <rect x="4" y="12" width="64" height="34" rx="8" fill="#D4A017"/>
+        <rect x="4" y="12" width="64" height="34" rx="8" fill="none" stroke="#A07800" stroke-width="2"/>
+        <!-- Hay strands on top -->
+        <path d="M8 12 Q12 2 10 0" stroke="#C8960C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M16 12 Q18 0 20 -2" stroke="#D4A820" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M24 12 Q26 2 27 0" stroke="#B88A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M32 12 Q34 1 36 0" stroke="#C8960C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M40 12 Q42 2 44 1" stroke="#D4A820" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M50 12 Q52 3 53 1" stroke="#B88A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M60 12 Q62 2 63 0" stroke="#C8960C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Bale rope bands -->
+        <line x1="22" y1="12" x2="22" y2="46" stroke="#8B6914" stroke-width="2.5"/>
+        <line x1="50" y1="12" x2="50" y2="46" stroke="#8B6914" stroke-width="2.5"/>
+        <!-- Hay texture lines -->
+        <path d="M6 22 Q20 20 36 22 Q52 24 66 22" stroke="#C8960C" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M6 30 Q20 28 36 30 Q52 32 66 30" stroke="#C8960C" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M6 38 Q20 36 36 38 Q52 40 66 38" stroke="#C8960C" stroke-width="1" fill="none" opacity="0.6"/>
+        <!-- Highlight -->
+        <rect x="6" y="14" width="60" height="8" rx="4" fill="rgba(255,220,80,0.25)"/>
+      </svg>`;
+    } else if (type === 'berries') {
+      svg = `<svg width="64" height="56" viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg">
+        <!-- Leaves -->
+        <ellipse cx="16" cy="28" rx="14" ry="8" fill="#3a8a3a" transform="rotate(-30 16 28)"/>
+        <ellipse cx="48" cy="28" rx="14" ry="8" fill="#2d7a2d" transform="rotate(30 48 28)"/>
+        <ellipse cx="32" cy="20" rx="12" ry="7" fill="#4a9a4a" transform="rotate(0 32 20)"/>
+        <!-- Leaf veins -->
+        <line x1="8" y1="26" x2="22" y2="30" stroke="#2d7a2d" stroke-width="1" opacity="0.7"/>
+        <line x1="42" y1="26" x2="56" y2="30" stroke="#256025" stroke-width="1" opacity="0.7"/>
+        <!-- Berries - cluster -->
+        <circle cx="22" cy="38" r="9" fill="#6a0dad"/>
+        <circle cx="22" cy="38" r="9" fill="none" stroke="#4a0080" stroke-width="1"/>
+        <circle cx="38" cy="40" r="9" fill="#7b1fa2"/>
+        <circle cx="38" cy="40" r="9" fill="none" stroke="#4a0080" stroke-width="1"/>
+        <circle cx="30" cy="34" r="8" fill="#8b2fc9"/>
+        <circle cx="30" cy="34" r="8" fill="none" stroke="#5a0090" stroke-width="1"/>
+        <circle cx="46" cy="34" r="7" fill="#6a0dad"/>
+        <circle cx="14" cy="34" r="7" fill="#7b1fa2"/>
+        <!-- Berry highlights -->
+        <circle cx="19" cy="35" r="3" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="35" cy="37" r="3" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="27" cy="31" r="2.5" fill="rgba(255,255,255,0.3)"/>
+        <!-- Stem -->
+        <path d="M32 20 Q32 26 30 34" stroke="#5a3a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>`;
+    } else if (type === 'leaves') {
+      svg = `<svg width="70" height="54" viewBox="0 0 70 54" xmlns="http://www.w3.org/2000/svg">
+        <!-- Back leaves -->
+        <ellipse cx="20" cy="32" rx="18" ry="9" fill="#2d7a2d" transform="rotate(-40 20 32)" opacity="0.8"/>
+        <ellipse cx="52" cy="30" rx="18" ry="9" fill="#256025" transform="rotate(35 52 30)" opacity="0.8"/>
+        <!-- Mid leaves -->
+        <ellipse cx="14" cy="26" rx="16" ry="8" fill="#3a8a3a" transform="rotate(-20 14 26)"/>
+        <ellipse cx="56" cy="28" rx="16" ry="8" fill="#2d7a2d" transform="rotate(20 56 28)"/>
+        <!-- Front leaves -->
+        <ellipse cx="28" cy="22" rx="18" ry="8" fill="#4aaa4a" transform="rotate(-10 28 22)"/>
+        <ellipse cx="42" cy="24" rx="17" ry="8" fill="#3a9a3a" transform="rotate(10 42 24)"/>
+        <ellipse cx="35" cy="18" rx="16" ry="7" fill="#5aba5a" transform="rotate(0 35 18)"/>
+        <!-- Leaf veins -->
+        <line x1="10" y1="25" x2="24" y2="26" stroke="#256025" stroke-width="1.2" opacity="0.7"/>
+        <line x1="60" y1="26" x2="46" y2="28" stroke="#256025" stroke-width="1.2" opacity="0.7"/>
+        <line x1="22" y1="21" x2="34" y2="22" stroke="#2d7a2d" stroke-width="1.2" opacity="0.7"/>
+        <line x1="48" y1="22" x2="36" y2="22" stroke="#2d7a2d" stroke-width="1.2" opacity="0.7"/>
+        <line x1="28" y1="16" x2="35" y2="18" stroke="#3a8a3a" stroke-width="1" opacity="0.6"/>
+        <!-- Ground shadow -->
+        <ellipse cx="35" cy="50" rx="28" ry="5" fill="rgba(0,0,0,0.12)"/>
+      </svg>`;
+    }
+
+    el.innerHTML = svg;
+    scene.appendChild(el);
+    return el;
+  }
+
   // Feed mammoth
   function feedMammoth(type) {
     if (state.isAnimating) return;
@@ -1478,66 +1664,81 @@ z-index: 10;
     state.isAnimating = true;
     state.feedCount++;
 
-    // Update stats
-    state.hunger = Math.min(100, state.hunger + food.hunger);
-    state.happiness = Math.min(100, state.happiness + food.happy);
-    state.score += 5;
+    // Play food-specific button sound
+    if (type === 'hay') soundHay();
+    else if (type === 'berries') soundBerries();
+    else if (type === 'leaves') soundLeaves();
 
-    soundTap();
-    // Animate
-    wrapper.classList.remove('eating', 'pooping', 'happy');
-    void wrapper.offsetWidth;
-    wrapper.classList.add('eating');
+    // Spawn food on the ground in front of him
+    const foodEl = spawnFood(type);
 
-    // Trunk wiggle
-    document.getElementById('trunkGroup').classList.add('trunk-moving');
-    setTimeout(() => document.getElementById('trunkGroup').classList.remove('trunk-moving'), 900);
+    // Show speech bubble anticipation
+    showBubble(food.emoji + ' Ooh food!');
 
-    // Munch sound + bubble
-    setTimeout(() => soundMunch(), 80);
-    setTimeout(() => soundMunch(), 280);
-
-    // Sound bubble
-    const sound = food.sounds[Math.floor(Math.random() * food.sounds.length)];
-    showBubble(food.emoji + ' ' + sound);
-
-    // Food particles
-    const rect = wrapper.getBoundingClientRect();
-    burstParticles(rect.left + 78, rect.top + 50, [food.emoji, food.emoji, '💛', food.emoji]);
-
-    updateStats();
-
-    // Maybe poop
+    // After 3 seconds, mammoth eats it
     setTimeout(() => {
-      wrapper.classList.remove('eating');
-      state.isAnimating = false;
+      // Animate food being eaten (shrink up)
+      foodEl.classList.add('food-eaten');
+      setTimeout(() => foodEl.remove(), 400);
 
-      if (Math.random() < food.poopChance) {
-        setTimeout(() => {
-          if (state.isAnimating) return;
-          state.isAnimating = true;
-          wrapper.classList.add('pooping');
-          const psound = POOP_SOUNDS[Math.floor(Math.random() * POOP_SOUNDS.length)];
-          showBubble(psound);
-          setTimeout(() => soundFart(), 150);
+      // Update stats
+      state.hunger = Math.min(100, state.hunger + food.hunger);
+      state.happiness = Math.min(100, state.happiness + food.happy);
+      state.score += 5;
 
+      // Animate mammoth eating
+      wrapper.classList.remove('eating', 'pooping', 'happy');
+      void wrapper.offsetWidth;
+      wrapper.classList.add('eating');
+
+      // Trunk wiggle
+      document.getElementById('trunkGroup').classList.add('trunk-moving');
+      setTimeout(() => document.getElementById('trunkGroup').classList.remove('trunk-moving'), 900);
+
+      // Munch sounds
+      setTimeout(() => soundMunch(), 80);
+      setTimeout(() => soundMunch(), 280);
+
+      // Eating bubble
+      const sound = food.sounds[Math.floor(Math.random() * food.sounds.length)];
+      showBubble(food.emoji + ' ' + sound);
+
+      // Food particles
+      const rect = wrapper.getBoundingClientRect();
+      burstParticles(rect.left + 78, rect.top + 50, [food.emoji, food.emoji, '💛', food.emoji]);
+
+      updateStats();
+
+      // Maybe poop after eating
+      setTimeout(() => {
+        wrapper.classList.remove('eating');
+        state.isAnimating = false;
+
+        if (Math.random() < food.poopChance) {
           setTimeout(() => {
-            soundPlop();
-            addPoop();
-            wrapper.classList.remove('pooping');
-            state.isAnimating = false;
-          }, 600);
-        }, 600 + Math.random() * 800);
-      } else if (state.happiness > 80) {
-        wrapper.classList.add('happy');
-        setTimeout(() => wrapper.classList.remove('happy'), 800);
-        soundHappyToot();
-        showBubble('Mrooooo! 💕');
-      }
-    }, 900);
+            if (state.isAnimating) return;
+            state.isAnimating = true;
+            wrapper.classList.add('pooping');
+            const psound = POOP_SOUNDS[Math.floor(Math.random() * POOP_SOUNDS.length)];
+            showBubble(psound);
+            setTimeout(() => soundFart(), 150);
+            setTimeout(() => {
+              soundPlop();
+              addPoop();
+              wrapper.classList.remove('pooping');
+              state.isAnimating = false;
+            }, 600);
+          }, 600 + Math.random() * 800);
+        } else if (state.happiness > 80) {
+          wrapper.classList.add('happy');
+          setTimeout(() => wrapper.classList.remove('happy'), 800);
+          soundHappyToot();
+          showBubble('Mrooooo! 💕');
+        }
+      }, 900);
 
-    // Hint update
-    updateHint();
+      updateHint();
+    }, 3000);
   }
 
   function updateHint() {
