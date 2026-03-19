@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Baby Mammoth 🦣</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+--sky: #87CEEB;
+--grass: #5DBB63;
+--dark-grass: #3d8c42;
+--brown: #8B5E3C;
+--mammoth-body: #6B4F3A;
+--mammoth-light: #8B6B50;
+--tusk: #FFF8DC;
+--poop: #6B3A2A;
+--snow: #F0F8FF;
+}
+
+body {
+font-family: 'Nunito', sans-serif;
+background: linear-gradient(180deg, #87CEEB 0%, #B0E0FF 40%, #5DBB63 40%, #3d8c42 100%);
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+overflow: hidden;
+position: relative;
+max-width: 430px;
+margin: 0 auto;
+}
+
+/* Sky decoration */
+.cloud {
+position: absolute;
+background: white;
+border-radius: 50px;
+opacity: 0.85;
+animation: drift linear infinite;
+}
+.cloud::before, .cloud::after {
+content: '';
+position: absolute;
+background: white;
+border-radius: 50%;
+}
+.cloud1 { width: 80px; height: 28px; top: 8%; left: -90px; animation-duration: 22s; animation-delay: 0s; }
+.cloud1::before { width: 40px; height: 40px; top: -18px; left: 10px; }
+.cloud1::after { width: 30px; height: 30px; top: -12px; left: 35px; }
+.cloud2 { width: 60px; height: 22px; top: 16%; left: -70px; animation-duration: 30s; animation-delay: 8s; }
+.cloud2::before { width: 30px; height: 30px; top: -14px; left: 8px; }
+.cloud2::after { width: 22px; height: 22px; top: -9px; left: 28px; }
+.cloud3 { width: 100px; height: 32px; top: 5%; left: -110px; animation-duration: 18s; animation-delay: 4s; }
+.cloud3::before { width: 50px; height: 50px; top: -24px; left: 14px; }
+.cloud3::after { width: 38px; height: 38px; top: -16px; left: 46px; }
+
+@keyframes drift { from { transform: translateX(-10px); } to { transform: translateX(calc(100vw + 200px)); } }
+
+/* Snowflakes */
+.snowflake {
+position: absolute;
+color: white;
+font-size: 14px;
+opacity: 0.7;
+animation: snowfall linear infinite;
+pointer-events: none;
+user-select: none;
+}
+@keyframes snowfall {
+0% { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
+100% { transform: translateY(40vh) rotate(360deg); opacity: 0; }
+}
+
+/* Header */
+.header {
+text-align: center;
+padding: 18px 16px 8px;
+position: relative;
+z-index: 10;
+}
+.title {
+font-family: 'Fredoka One', cursive;
+font-size: 2.2rem;
+color: white;
+text-shadow: 3px 3px 0 #5a3a1a, 0 0 20px rgba(255,200,100,0.5);
+letter-spacing: 1px;
+}
+.subtitle {
+font-size: 0.85rem;
+color: #e8f4ff;
+font-weight: 700;
+margin-top: 2px;
+text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+}
+
+/* Stats bar */
+.stats {
+display: flex;
+gap: 12px;
+padding: 8px 16px;
+position: relative;
+z-index: 10;
+width: 100%;
+max-width: 380px;
+}
+.stat-card {
+flex: 1;
+background: rgba(255,255,255,0.9);
+border-radius: 16px;
+padding: 8px 10px;
+text-align: center;
+box-shadow: 0 3px 10px rgba(0,0,0,0.15), 0 0 0 2px rgba(255,255,255,0.5);
+}
+.stat-label {
+font-size: 0.65rem;
+font-weight: 800;
+color: #888;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+.stat-value {
+font-family: 'Fredoka One', cursive;
+font-size: 1.4rem;
+line-height: 1;
+margin-top: 2px;
+}
+.stat-bar {
+height: 6px;
+background: #e0e0e0;
+border-radius: 3px;
+margin-top: 4px;
+overflow: hidden;
+}
+.stat-fill {
+height: 100%;
+border-radius: 3px;
+transition: width 0.4s ease;
+}
+.hunger-fill { background: linear-gradient(90deg, #ff6b6b, #ffa500); }
+.happy-fill { background: linear-gradient(90deg, #ffd700, #ff69b4); }
+
+/* Main game area */
+.game-area {
+position: relative;
+width: 100%;
+max-width: 430px;
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+/* Ground */
+.ground {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 120px;
+background: linear-gradient(180deg, #5DBB63 0%, #3d8c42 100%);
+}
+.ground::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 20px;
+background: radial-gradient(ellipse at 50% 0%, #6FCC6F 0%, transparent 70%);
+}
+
+/* Trees */
+.tree {
+position: absolute;
+bottom: 80px;
+display: flex;
+flex-direction: column;
+align-items: center;
+pointer-events: none;
+}
+.tree-top {
+width: 0; height: 0;
+border-left: 20px solid transparent;
+border-right: 20px solid transparent;
+border-bottom: 35px solid #2d6e2d;
+}
+.tree-top2 {
+width: 0; height: 0;
+border-left: 26px solid transparent;
+border-right: 26px solid transparent;
+border-bottom: 40px solid #3a8a3a;
+margin-top: -18px;
+}
+.tree-trunk {
+width: 10px; height: 20px;
+background: #5C3317;
+border-radius: 2px;
+}
+.tree1 { left: 20px; transform: scale(0.7); }
+.tree2 { right: 25px; transform: scale(0.85); }
+.tree3 { right: 60px; transform: scale(0.5); bottom: 90px; }
+
+/* Mammoth container */
+.mammoth-scene {
+position: relative;
+width: 100%;
+height: 340px;
+display: flex;
+justify-content: center;
+align-items: flex-end;
+padding-bottom: 30px;
+}
+
+/* Poop items on ground */
+.poop-item {
+position: absolute;
+bottom: 25px;
+font-size: 28px;
+cursor: pointer;
+animation: poopAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+z-index: 5;
+transition: transform 0.1s;
+user-select: none;
+}
+.poop-item:active { transform: scale(1.4) rotate(20deg); }
+@keyframes poopAppear {
+0% { transform: scale(0) translateY(-20px); opacity: 0; }
+100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.poop-remove {
+animation: poopClean 0.3s ease forwards;
+}
+@keyframes poopClean {
+0% { transform: scale(1); opacity: 1; }
+50% { transform: scale(1.5) rotate(30deg); }
+100% { transform: scale(0); opacity: 0; }
+}
+
+/* SVG Mammoth */
+.mammoth-wrapper {
+position: relative;
+z-index: 6;
+transition: transform 0.3s ease;
+}
+.mammoth-wrapper.eating {
+animation: munchBounce 0.3s ease 3;
+}
+.mammoth-wrapper.pooping {
+animation: poopSquat 0.6s ease;
+}
+.mammoth-wrapper.happy {
+animation: happyWiggle 0.4s ease 2;
+}
+@keyframes munchBounce {
+0%, 100% { transform: scaleY(1); }
+50% { transform: scaleY(0.9) translateY(5px); }
+}
+@keyframes poopSquat {
+0%, 100% { transform: translateY(0); }
+30% { transform: translateY(10px) scaleY(0.85); }
+60% { transform: translateY(8px) scaleY(0.88); }
+}
+@keyframes happyWiggle {
+0%, 100% { transform: rotate(0deg); }
+25% { transform: rotate(-5deg) scale(1.05); }
+75% { transform: rotate(5deg) scale(1.05); }
+}
+
+/* Speech bubble */
+.speech-bubble {
+position: absolute;
+top: 20px;
+right: 20px;
+background: white;
+border-radius: 20px;
+padding: 10px 16px;
+font-family: 'Fredoka One', cursive;
+font-size: 1rem;
+color: #333;
+box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+opacity: 0;
+transform: scale(0);
+transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+z-index: 20;
+white-space: nowrap;
+pointer-events: none;
+}
+.speech-bubble::after {
+content: '';
+position: absolute;
+bottom: -10px;
+left: 24px;
+width: 0; height: 0;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-top: 12px solid white;
+}
+.speech-bubble.show {
+opacity: 1;
+transform: scale(1);
+}
+
+/* Eye blink */
+.mammoth-eye {
+animation: blink 4s infinite;
+}
+@keyframes blink {
+0%, 95%, 100% { transform: scaleY(1); }
+97% { transform: scaleY(0.1); }
+}
+
+/* Trunk wiggle */
+.mammoth-trunk {
+transform-origin: top center;
+}
+.trunk-moving {
+animation: trunkWiggle 0.5s ease infinite;
+}
+@keyframes trunkWiggle {
+0%, 100% { transform: rotate(0deg); }
+25% { transform: rotate(15deg); }
+75% { transform: rotate(-10deg); }
+}
+
+/* Buttons area */
+.actions {
+position: relative;
+z-index: 10;
+width: 100%;
+max-width: 380px;
+padding: 12px 16px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.feed-btn {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+padding: 16px 24px;
+border: none;
+border-radius: 20px;
+font-family: 'Fredoka One', cursive;
+font-size: 1.3rem;
+cursor: pointer;
+transition: all 0.15s ease;
+box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.15);
+position: relative;
+overflow: hidden;
+user-select: none;
+-webkit-user-select: none;
+}
+.feed-btn:active {
+transform: translateY(4px);
+box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+}
+.feed-btn::after {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+border-radius: 20px;
+pointer-events: none;
+}
+
+.btn-hay { background: linear-gradient(135deg, #F5C842, #E8A820); color: #5C3A00; }
+.btn-berries { background: linear-gradient(135deg, #E84393, #C01F72); color: white; }
+
+.btn-row {
+display: flex;
+gap: 10px;
+}
+.btn-row .feed-btn {
+flex: 1;
+font-size: 1.1rem;
+padding: 14px 12px;
+}
+
+/* Hint text */
+.hint {
+text-align: center;
+font-size: 0.75rem;
+font-weight: 700;
+color: rgba(255,255,255,0.85);
+text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+padding-bottom: 6px;
+}
+
+/* Score popup */
+.score-popup {
+position: fixed;
+pointer-events: none;
+font-family: 'Fredoka One', cursive;
+font-size: 1.8rem;
+color: white;
+text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+z-index: 999;
+animation: scoreFloat 1.2s ease forwards;
+}
+@keyframes scoreFloat {
+0% { transform: translateY(0) scale(0.5); opacity: 1; }
+100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+}
+
+/* Particle effects */
+.particle {
+position: fixed;
+pointer-events: none;
+font-size: 20px;
+z-index: 998;
+animation: particleBurst 0.8s ease forwards;
+}
+@keyframes particleBurst {
+0% { transform: translate(0,0) scale(1); opacity: 1; }
+100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* Full poop warning */
+.poop-warning {
+position: absolute;
+top: 60px;
+left: 50%;
+transform: translateX(-50%);
+background: rgba(255, 80, 80, 0.95);
+color: white;
+font-family: 'Fredoka One', cursive;
+font-size: 0.9rem;
+padding: 8px 18px;
+border-radius: 30px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+z-index: 30;
+white-space: nowrap;
+opacity: 0;
+transition: opacity 0.3s;
+pointer-events: none;
+}
+.poop-warning.show { opacity: 1; }
+
+/* Tap to clean label - now in the sky above mammoth */
+.clean-label {
+position: absolute;
+top: 18px;
+left: 50%;
+transform: translateX(-50%);
+background: rgba(255,255,255,0.97);
+color: #5C3A00;
+font-family: 'Fredoka One', cursive;
+font-size: 1rem;
+padding: 7px 18px;
+border-radius: 24px;
+box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+z-index: 25;
+opacity: 0;
+transition: opacity 0.4s;
+pointer-events: none;
+white-space: nowrap;
+animation: floatHint 2s ease-in-out infinite;
+}
+.clean-label.show { opacity: 1; }
+@keyframes floatHint {
+0%, 100% { transform: translateX(-50%) translateY(0px); }
+50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Mute button */
+.mute-btn {
+position: absolute;
+top: 10px;
+left: 16px;
+background: rgba(255,255,255,0.9);
+border: none;
+border-radius: 50%;
+width: 38px; height: 38px;
+font-size: 1.2rem;
+cursor: pointer;
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+z-index: 50;
+display: flex; align-items: center; justify-content: center;
+transition: transform 0.1s;
+}
+.mute-btn:active { transform: scale(0.9); }
+
+/* Score display */
+.score-display {
+position: absolute;
+top: 5px;
+right: 16px;
+font-family: 'Fredoka One', cursive;
+font-size: 1.5rem;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+z-index: 10;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Clouds -->
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="cloud cloud3"></div>
+
+<!-- Snowflakes -->
+<div id="snowContainer"></div>
+
+<!-- Header -->
+<div class="header" style="position:relative;">
+<button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
+<div class="title">🦣 Baby Mammoth</div>
+<div class="subtitle">Feed him. Clean up after him. Love him.</div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+<div class="stat-card">
+<div class="stat-label">🍖 Hunger</div>
+<div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
+<div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
+</div>
+<div class="stat-card">
+<div class="stat-label">😊 Happy</div>
+<div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
+<div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
+</div>
+<div class="stat-card">
+<div class="stat-label">✨ Score</div>
+<div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
+<div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
+</div>
+</div>
+
+<!-- Game area -->
+<div class="game-area" id="gameArea">
+
+<div class="poop-warning" id="poopWarning">🚨 Too much poop! Clean up!</div>
+
+<!-- Mammoth scene -->
+<div class="mammoth-scene">
+<!-- Trees -->
+<div class="tree tree1">
+<div class="tree-top"></div>
+<div class="tree-top2"></div>
+<div class="tree-trunk"></div>
+</div>
+<div class="tree tree2">
+<div class="tree-top"></div>
+<div class="tree-top2"></div>
+<div class="tree-trunk"></div>
+</div>
+<div class="tree tree3">
+<div class="tree-top"></div>
+<div class="tree-top2"></div>
+<div class="tree-trunk"></div>
+</div>
+
+<!-- Speech bubble -->
+<div class="speech-bubble" id="speechBubble">Mrooooo!</div>
+
+<!-- Clean up hint -->
+<div class="clean-label" id="cleanLabel">👆 Tap poop to clean!</div>
+
+<!-- Mammoth SVG -->
+<div class="mammoth-wrapper" id="mammothWrapper">
+<svg width="190" height="200" viewBox="0 0 190 200" xmlns="http://www.w3.org/2000/svg">
+<!-- Shadow -->
+<ellipse cx="95" cy="196" rx="60" ry="8" fill="rgba(0,0,0,0.15)"/>
+
+<!-- Body -->
+<ellipse cx="95" cy="130" rx="65" ry="52" fill="#7B5B42"/>
+<!-- Fur texture lines -->
+<path d="M45 110 Q50 100 55 110" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<path d="M60 95 Q65 85 70 95" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<path d="M80 88 Q85 78 90 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<path d="M100 88 Q105 78 110 88" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<path d="M120 93 Q125 83 130 93" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<path d="M135 108 Q140 98 145 108" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.6"/>
+<!-- Belly lighter patch -->
+<ellipse cx="95" cy="145" rx="38" ry="30" fill="#9B7B5A" opacity="0.5"/>
+
+<!-- Back legs -->
+<rect x="110" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+<rect x="138" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+<!-- Back feet -->
+<ellipse cx="121" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+<ellipse cx="149" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+<!-- Toe lines back -->
+<line x1="113" y1="193" x2="113" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="121" y1="195" x2="121" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="129" y1="193" x2="129" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="141" y1="193" x2="141" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="149" y1="195" x2="149" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="157" y1="193" x2="157" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+
+<!-- Front legs -->
+<rect x="38" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+<rect x="65" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
+<!-- Front feet -->
+<ellipse cx="49" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+<ellipse cx="76" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+<!-- Toe lines front -->
+<line x1="41" y1="193" x2="41" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="49" y1="195" x2="49" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="57" y1="193" x2="57" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="68" y1="193" x2="68" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="76" y1="195" x2="76" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
+<line x1="84" y1="193" x2="84" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+
+<!-- Head -->
+<ellipse cx="78" cy="88" rx="40" ry="36" fill="#7B5B42"/>
+<!-- Head fur -->
+<path d="M50 65 Q55 55 60 65" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+<path d="M68 56 Q73 46 78 56" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+<path d="M86 57 Q91 47 96 57" stroke="#5C3A25" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+<!-- Big fluffy forehead fur bump -->
+<ellipse cx="78" cy="58" rx="22" ry="14" fill="#8B6B50"/>
+<ellipse cx="78" cy="52" rx="16" ry="10" fill="#9B7B5A"/>
+
+<!-- Ears -->
+<ellipse cx="42" cy="80" rx="12" ry="16" fill="#7B5B42"/>
+<ellipse cx="42" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
+<ellipse cx="114" cy="80" rx="12" ry="16" fill="#7B5B42"/>
+<ellipse cx="114" cy="80" rx="7" ry="10" fill="#C49070" opacity="0.7"/>
+
+<!-- Tusks -->
+<path d="M62 108 Q50 120 48 130 Q46 140 52 138 Q58 136 60 126 Q62 116 70 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
+<path d="M88 108 Q85 120 84 130 Q82 140 88 138 Q94 136 92 126 Q90 116 90 110" fill="#FFF8DC" stroke="#DDD0A0" stroke-width="1"/>
+
+<!-- Eyes -->
+<g class="mammoth-eye" style="transform-origin:66px 80px">
+<circle cx="66" cy="80" r="9" fill="#2C1A0E"/>
+<circle cx="66" cy="80" r="7" fill="#4A2C12"/>
+<circle cx="66" cy="80" r="4" fill="#1a0a04"/>
+<circle cx="63" cy="77" r="2.5" fill="white" opacity="0.9"/>
+<circle cx="62.5" cy="76.5" r="1.2" fill="white"/>
+</g>
+<!-- Right eye doesn't blink for asymmetry -->
+<circle cx="91" cy="80" r="9" fill="#2C1A0E"/>
+<circle cx="91" cy="80" r="7" fill="#4A2C12"/>
+<circle cx="91" cy="80" r="4" fill="#1a0a04"/>
+<circle cx="88" cy="77" r="2.5" fill="white" opacity="0.9"/>
+<circle cx="87.5" cy="76.5" r="1.2" fill="white"/>
+
+<!-- Eyebrows (cute) -->
+<path d="M59 70 Q66 66 73 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M84 70 Q91 66 98 70" stroke="#3a1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+<!-- Rosy cheeks -->
+<circle cx="52" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
+<circle cx="104" cy="90" r="8" fill="#E88A8A" opacity="0.4"/>
+
+<!-- Nostril -->
+<circle cx="75" cy="100" r="4" fill="#5C3A22"/>
+<circle cx="75" cy="100" r="2" fill="#3a2010"/>
+
+<!-- Trunk outline (drawn behind, slightly larger, dark) -->
+<g class="mammoth-trunk" id="trunkGroup">
+<!-- Outline path (dark stroke, no fill, drawn first so it sits behind) -->
+<path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
+fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155"
+fill="none" stroke="#2a1508" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- Trunk body fill -->
+<path d="M70 103 Q60 115 55 128 Q50 140 55 150 Q60 158 68 155 Q76 152 74 140 Q72 128 80 115 Q84 107 78 103"
+fill="#7B5B42"/>
+<path d="M68 150 Q62 158 65 163 Q68 166 74 163 Q78 160 76 155" fill="#6B4B32"/>
+<!-- Highlight stripe down trunk -->
+<path d="M72 108 Q64 122 60 136 Q57 148 61 153"
+stroke="#D4A882" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+<!-- Trunk tip -->
+<ellipse cx="70" cy="163" rx="8" ry="5" fill="#5C3A22" stroke="#2a1508" stroke-width="2"/>
+<!-- Nostrils on trunk tip -->
+<circle cx="67" cy="163" r="2.2" fill="#1a0a04"/>
+<circle cx="73" cy="163" r="2.2" fill="#1a0a04"/>
+</g>
+
+<!-- Tiny tail (back) -->
+<path d="M155 125 Q165 118 162 128 Q158 138 160 142" stroke="#6B4B32" stroke-width="4" fill="none" stroke-linecap="round"/>
+<circle cx="160" cy="143" r="4" fill="#5C3A22"/>
+</svg>
+</div>
+
+<!-- Ground -->
+<div class="ground"></div>
+</div>
+
+<!-- Action buttons -->
+<div class="actions">
+<button class="feed-btn btn-hay" id="feedHayBtn" onclick="feedMammoth('hay')">
+🌾 Feed Hay
+</button>
+<div class="btn-row">
+<button class="feed-btn btn-berries" onclick="feedMammoth('berries')">
+🫐 Berries
+</button>
+<button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="feedMammoth('leaves')">
+🌿 Leaves
+</button>
+</div>
+<div class="hint" id="hintText">👆 Feed your baby mammoth!</div>
+</div>
+</div>
+
+<script>
+// ─── AUDIO ENGINE ───────────────────────────────────────────────
+let audioCtx = null;
+let masterGain = null;
+let muted = false;
+
+function initAudio() {
+if (audioCtx) return;
+audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+masterGain = audioCtx.createGain();
+masterGain.gain.value = 1.0;
+masterGain.connect(audioCtx.destination);
+}
+
+function getCtx() {
+initAudio();
+if (audioCtx.state === 'suspended') audioCtx.resume();
+return audioCtx;
+}
+
+function out() { return (muted || !masterGain) ? null : masterGain; }
+
+// Unlock audio on very first interaction anywhere on page
+function unlockAudio() {
+initAudio();
+if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('mousedown', unlockAudio, { once: true });
+
+// Wire mute button (runs after DOM is ready since script is at bottom)
+document.getElementById('muteBtn').addEventListener('click', () => {
+initAudio();
+muted = !muted;
+masterGain.gain.value = muted ? 0 : 1;
+document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+});
+
+// Low rumbling mammoth trumpet / moan
+function soundMammothCall() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+[[80,'sawtooth',0.18],[160,'sawtooth',0.10],[40,'sine',0.22],[320,'square',0.04]].forEach(([freq,type,vol],i) => {
+const osc = ctx.createOscillator();
+const g = ctx.createGain();
+const filter = ctx.createBiquadFilter();
+filter.type = 'lowpass'; filter.frequency.value = 600;
+osc.type = type;
+osc.frequency.setValueAtTime(freq*0.85,now);
+osc.frequency.linearRampToValueAtTime(freq*1.15,now+0.15);
+osc.frequency.linearRampToValueAtTime(freq*0.95,now+0.5);
+osc.frequency.linearRampToValueAtTime(freq*0.7,now+0.9);
+g.gain.setValueAtTime(0,now);
+g.gain.linearRampToValueAtTime(vol,now+0.05+i*0.02);
+g.gain.setValueAtTime(vol,now+0.5);
+g.gain.linearRampToValueAtTime(0,now+0.95);
+osc.connect(filter); filter.connect(g); g.connect(dest);
+osc.start(now); osc.stop(now+1.0);
+});
+}
+
+// Cute happy squeaky trumpet
+function soundHappyToot() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+[[220,'sine',0.25],[440,'triangle',0.15],[330,'sine',0.12]].forEach(([freq,type,vol]) => {
+const osc = ctx.createOscillator();
+const g = ctx.createGain();
+osc.type = type;
+osc.frequency.setValueAtTime(freq,now);
+osc.frequency.linearRampToValueAtTime(freq*1.4,now+0.12);
+osc.frequency.linearRampToValueAtTime(freq*1.1,now+0.3);
+g.gain.setValueAtTime(0,now);
+g.gain.linearRampToValueAtTime(vol,now+0.02);
+g.gain.linearRampToValueAtTime(0,now+0.35);
+osc.connect(g); g.connect(dest);
+osc.start(now); osc.stop(now+0.4);
+});
+}
+
+// Crunching / munching sound
+function soundMunch() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+for (let i = 0; i < 3; i++) {
+const t = now + i*0.13;
+const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.08), ctx.sampleRate);
+const data = buf.getChannelData(0);
+for (let j = 0; j < data.length; j++) data[j] = (Math.random()*2-1)*Math.pow(1-j/data.length,1.5);
+const src = ctx.createBufferSource(); src.buffer = buf;
+const g = ctx.createGain();
+const filter = ctx.createBiquadFilter();
+filter.type = 'bandpass'; filter.frequency.value = 800+Math.random()*400; filter.Q.value = 2;
+g.gain.setValueAtTime(0.45,t); g.gain.linearRampToValueAtTime(0,t+0.08);
+src.connect(filter); filter.connect(g); g.connect(dest);
+src.start(t); src.stop(t+0.1);
+}
+const osc = ctx.createOscillator(); const g2 = ctx.createGain();
+osc.type = 'sine';
+osc.frequency.setValueAtTime(120,now+0.38); osc.frequency.linearRampToValueAtTime(60,now+0.55);
+g2.gain.setValueAtTime(0.2,now+0.38); g2.gain.linearRampToValueAtTime(0,now+0.55);
+osc.connect(g2); g2.connect(dest);
+osc.start(now+0.38); osc.stop(now+0.6);
+}
+
+// Fart / poop sound
+function soundFart() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+const duration = 0.5 + Math.random()*0.4;
+const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate*duration), ctx.sampleRate);
+const data = buf.getChannelData(0);
+for (let i = 0; i < data.length; i++) data[i] = Math.random()*2-1;
+const noise = ctx.createBufferSource(); noise.buffer = buf;
+const filter = ctx.createBiquadFilter();
+filter.type = 'bandpass';
+filter.frequency.setValueAtTime(180,now); filter.frequency.linearRampToValueAtTime(80,now+duration);
+filter.Q.value = 3;
+const g = ctx.createGain();
+g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.7,now+0.02);
+g.gain.linearRampToValueAtTime(0.5,now+duration*0.5); g.gain.linearRampToValueAtTime(0,now+duration);
+const osc = ctx.createOscillator(); osc.type = 'sawtooth';
+osc.frequency.setValueAtTime(55+Math.random()*20,now); osc.frequency.linearRampToValueAtTime(30,now+duration);
+const og = ctx.createGain();
+og.gain.setValueAtTime(0.3,now); og.gain.linearRampToValueAtTime(0,now+duration);
+noise.connect(filter); filter.connect(g); g.connect(dest);
+osc.connect(og); og.connect(dest);
+noise.start(now); noise.stop(now+duration+0.1);
+osc.start(now); osc.stop(now+duration+0.1);
+}
+
+// Splat / plop sound
+function soundPlop() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+const osc = ctx.createOscillator(); osc.type = 'sine';
+osc.frequency.setValueAtTime(220,now); osc.frequency.linearRampToValueAtTime(55,now+0.18);
+const g = ctx.createGain();
+g.gain.setValueAtTime(0.5,now); g.gain.linearRampToValueAtTime(0,now+0.2);
+osc.connect(g); g.connect(dest);
+osc.start(now); osc.stop(now+0.22);
+}
+
+// Sparkle / clean sound
+function soundClean() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+[880,1100,1320,1760].forEach((freq,i) => {
+const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq;
+const g = ctx.createGain();
+const t = now+i*0.07;
+g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.22,t+0.02); g.gain.linearRampToValueAtTime(0,t+0.2);
+osc.connect(g); g.connect(dest);
+osc.start(t); osc.stop(t+0.24);
+});
+}
+
+// Sad / hungry whimper
+function soundHungry() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+[[90,'sine',0.25],[180,'triangle',0.12]].forEach(([freq,type,vol]) => {
+const osc = ctx.createOscillator(); osc.type = type;
+osc.frequency.setValueAtTime(freq*1.1,now); osc.frequency.linearRampToValueAtTime(freq*0.75,now+0.6);
+const g = ctx.createGain();
+g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(vol,now+0.05);
+g.gain.setValueAtTime(vol,now+0.4); g.gain.linearRampToValueAtTime(0,now+0.65);
+osc.connect(g); g.connect(dest);
+osc.start(now); osc.stop(now+0.7);
+});
+}
+
+// Button tap click
+function soundTap() {
+const ctx = getCtx(); const dest = out(); if (!dest) return;
+const now = ctx.currentTime;
+const osc = ctx.createOscillator(); osc.type = 'sine';
+osc.frequency.setValueAtTime(500,now); osc.frequency.linearRampToValueAtTime(250,now+0.06);
+const g = ctx.createGain();
+g.gain.setValueAtTime(0.18,now); g.gain.linearRampToValueAtTime(0,now+0.07);
+osc.connect(g); g.connect(dest);
+osc.start(now); osc.stop(now+0.08);
+}
+// ─────────────────────────────────────────────────────────────────
+
+// Game state
+let state = {
+hunger: 80,
+happiness: 70,
+score: 0,
+poops: [],
+poopCount: 0,
+isAnimating: false,
+feedCount: 0,
+};
+
+const FOOD_DATA = {
+hay: { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 25, happy: 10, poopChance: 0.45 },
+berries: { emoji: '🫐', sounds: ['Ooooh yum!','Mmmberry!','*slurp*','YUMMY!'], hunger: 15, happy: 30, poopChance: 0.6 },
+leaves: { emoji: '🌿', sounds: ['Crunch!','Rustle rustle','Mmm greens!','Chomp!'], hunger: 20, happy: 20, poopChance: 0.5 },
+};
+
+const POOP_SOUNDS = ['Grrrrrp... 💨','Pbbbbbt!💨','Uhhhhhh...','Plop! 💩','Oh no...',];
+const CLEAN_MSGS = ['Ewww +10!','Squeaky clean!','Good job! +10','No more stink!','Spotless! +10'];
+const HUNGRY_SOUNDS = ['I\'m hungry! 😤','Feed me! 😭','*tummy rumble*','Food pls! 🥺'];
+
+// Snowflakes
+function createSnow() {
+const container = document.getElementById('snowContainer');
+for (let i = 0; i < 12; i++) {
+const flake = document.createElement('div');
+flake.className = 'snowflake';
+flake.textContent = '❄';
+flake.style.left = Math.random() * 100 + 'vw';
+flake.style.top = '-20px';
+flake.style.animationDuration = (3 + Math.random() * 5) + 's';
+flake.style.animationDelay = (Math.random() * 8) + 's';
+flake.style.fontSize = (8 + Math.random() * 12) + 'px';
+flake.style.opacity = 0.4 + Math.random() * 0.5;
+container.appendChild(flake);
+}
+}
+createSnow();
+
+// Update UI
+function updateStats() {
+const h = Math.max(0, Math.min(100, state.hunger));
+const hp = Math.max(0, Math.min(100, state.happiness));
+document.getElementById('hungerVal').textContent = Math.round(h) + '%';
+document.getElementById('happyVal').textContent = Math.round(hp) + '%';
+document.getElementById('scoreVal').textContent = state.score;
+document.getElementById('hungerBar').style.width = h + '%';
+document.getElementById('happyBar').style.width = hp + '%';
+document.getElementById('scoreBar').style.width = Math.min(100, state.score / 5) + '%';
+
+// Color hunger
+const hungerEl = document.getElementById('hungerVal');
+if (h > 60) hungerEl.style.color = '#4CAF50';
+else if (h > 30) hungerEl.style.color = '#FF9800';
+else hungerEl.style.color = '#f44336';
+
+const happyEl = document.getElementById('happyVal');
+if (hp > 60) happyEl.style.color = '#4CAF50';
+else if (hp > 30) happyEl.style.color = '#FF9800';
+else happyEl.style.color = '#f44336';
+}
+
+// Show speech bubble
+let bubbleTimeout;
+function showBubble(text) {
+const bubble = document.getElementById('speechBubble');
+clearTimeout(bubbleTimeout);
+bubble.textContent = text;
+bubble.classList.add('show');
+bubbleTimeout = setTimeout(() => bubble.classList.remove('show'), 2200);
+}
+
+// Score popup
+function showScorePopup(text, x, y) {
+const el = document.createElement('div');
+el.className = 'score-popup';
+el.textContent = text;
+el.style.left = x + 'px';
+el.style.top = y + 'px';
+document.body.appendChild(el);
+setTimeout(() => el.remove(), 1200);
+}
+
+// Particle burst
+function burstParticles(x, y, emojis) {
+emojis.forEach((em, i) => {
+const el = document.createElement('div');
+el.className = 'particle';
+el.textContent = em;
+const angle = (i / emojis.length) * Math.PI * 2;
+const dist = 40 + Math.random() * 60;
+el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+el.style.setProperty('--ty', Math.sin(angle) * dist - 30 + 'px');
+el.style.left = x + 'px';
+el.style.top = y + 'px';
+el.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+document.body.appendChild(el);
+setTimeout(() => el.remove(), 1000);
+});
+}
+
+// Add poop to scene
+function addPoop() {
+const scene = document.querySelector('.mammoth-scene');
+const poop = document.createElement('div');
+poop.className = 'poop-item';
+poop.textContent = '💩';
+poop.id = 'poop-' + Date.now();
+
+// Random position around mammoth feet area
+const left = 30 + Math.random() * 55;
+poop.style.left = left + '%';
+
+state.poops.push(poop.id);
+scene.appendChild(poop);
+
+poop.addEventListener('click', (e) => cleanPoop(poop, e));
+poop.addEventListener('touchstart', (e) => {
+e.preventDefault();
+cleanPoop(poop, e.touches[0]);
+}, { passive: false });
+
+// Show clean hint
+document.getElementById('cleanLabel').classList.add('show');
+
+// Check too many poops
+if (state.poops.length >= 4) {
+document.getElementById('poopWarning').classList.add('show');
+state.happiness = Math.max(0, state.happiness - 15);
+updateStats();
+}
+
+return poop;
+}
+
+// Clean poop
+function cleanPoop(poopEl, event) {
+if (!poopEl || poopEl.dataset.cleaning) return;
+poopEl.dataset.cleaning = 'true';
+poopEl.classList.add('poop-remove');
+
+const x = event.clientX || event.pageX;
+const y = event.clientY || event.pageY;
+
+state.score += 10;
+state.happiness = Math.min(100, state.happiness + 5);
+state.poops = state.poops.filter(id => id !== poopEl.id);
+
+soundClean();
+const msg = CLEAN_MSGS[Math.floor(Math.random() * CLEAN_MSGS.length)];
+showScorePopup(msg, x - 50, y - 30);
+burstParticles(x, y, ['✨','🌟','⭐','💫','✨']);
+
+if (state.poops.length < 4) {
+document.getElementById('poopWarning').classList.remove('show');
+}
+if (state.poops.length === 0) {
+document.getElementById('cleanLabel').classList.remove('show');
+}
+
+setTimeout(() => {
+poopEl.remove();
+updateStats();
+}, 300);
+}
+
+// Feed mammoth
+function feedMammoth(type) {
+if (state.isAnimating) return;
+const wrapper = document.getElementById('mammothWrapper');
+const food = FOOD_DATA[type];
+state.isAnimating = true;
+state.feedCount++;
+
+// Update stats
+state.hunger = Math.min(100, state.hunger + food.hunger);
+state.happiness = Math.min(100, state.happiness + food.happy);
+state.score += 5;
+
+soundTap();
+// Animate
+wrapper.classList.remove('eating', 'pooping', 'happy');
+void wrapper.offsetWidth;
+wrapper.classList.add('eating');
+
+// Trunk wiggle
+document.getElementById('trunkGroup').classList.add('trunk-moving');
+setTimeout(() => document.getElementById('trunkGroup').classList.remove('trunk-moving'), 900);
+
+// Munch sound + bubble
+setTimeout(() => soundMunch(), 80);
+setTimeout(() => soundMunch(), 280);
+
+// Sound bubble
+const sound = food.sounds[Math.floor(Math.random() * food.sounds.length)];
+showBubble(food.emoji + ' ' + sound);
+
+// Food particles
+const rect = wrapper.getBoundingClientRect();
+burstParticles(rect.left + 78, rect.top + 50, [food.emoji, food.emoji, '💛', food.emoji]);
+
+updateStats();
+
+// Maybe poop
+setTimeout(() => {
+wrapper.classList.remove('eating');
+state.isAnimating = false;
+
+if (Math.random() < food.poopChance) {
+setTimeout(() => {
+if (state.isAnimating) return;
+state.isAnimating = true;
+wrapper.classList.add('pooping');
+const psound = POOP_SOUNDS[Math.floor(Math.random() * POOP_SOUNDS.length)];
+showBubble(psound);
+setTimeout(() => soundFart(), 150);
+
+setTimeout(() => {
+soundPlop();
+addPoop();
+wrapper.classList.remove('pooping');
+state.isAnimating = false;
+}, 600);
+}, 600 + Math.random() * 800);
+} else if (state.happiness > 80) {
+wrapper.classList.add('happy');
+setTimeout(() => wrapper.classList.remove('happy'), 800);
+soundHappyToot();
+showBubble('Mrooooo! 💕');
+}
+}, 900);
+
+// Hint update
+updateHint();
+}
+
+function updateHint() {
+const hints = [
+'Keep feeding your fluffy friend!',
+'He loves berries! 🫐',
+'Tap poop to clean it up! 💩',
+'Watch his happiness grow! 💛',
+'He\'s getting big and fluffy!',
+];
+document.getElementById('hintText').textContent = '💡 ' + hints[state.feedCount % hints.length];
+}
+
+// Hunger decay over time
+setInterval(() => {
+state.hunger = Math.max(0, state.hunger - 2);
+state.happiness = Math.max(0, state.happiness - 1);
+
+if (state.hunger < 20 && Math.random() < 0.3) {
+const sound = HUNGRY_SOUNDS[Math.floor(Math.random() * HUNGRY_SOUNDS.length)];
+showBubble(sound);
+soundHungry();
+// Shake mammoth
+const wrapper = document.getElementById('mammothWrapper');
+wrapper.style.animation = 'none';
+void wrapper.offsetWidth;
+}
+
+updateStats();
+}, 5000);
+
+// Occasional random sounds
+setInterval(() => {
+if (Math.random() < 0.15 && state.happiness > 50) {
+const moods = ['Mrooooo! 🦣', 'Toot toot! 🎺', 'Brrrrmph!', '*happy snort*', 'Mmmmmph! 💛'];
+showBubble(moods[Math.floor(Math.random() * moods.length)]);
+if (Math.random() < 0.6) soundMammothCall();
+}
+}, 8000);
+
+updateStats();
+</script>
+</body>
+</html>
