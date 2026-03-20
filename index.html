@@ -20,6 +20,11 @@
 –poop: #6B3A2A;
 }
 
+html, body {
+width: 100%;
+height: 100%;
+}
+
 body {
 font-family: ‘Nunito’, sans-serif;
 background: linear-gradient(180deg,
@@ -30,16 +35,14 @@ background: linear-gradient(180deg,
 #a8cfe0 65%,
 #c8dff0 80%,
 #ddeef8 100%);
-min-height: 100vh;
-height: 100vh;
+width: 100vw;
+height: 100dvh;
+min-height: 100dvh;
 display: flex;
 flex-direction: column;
 align-items: center;
-overflow-x: hidden;
-overflow-y: hidden;
+overflow: hidden;
 position: relative;
-max-width: 430px;
-margin: 0 auto;
 }
 
 /* Storm clouds - dark and heavy, blown by wind */
@@ -111,36 +114,38 @@ z-index: 3;
 /* Header */
 .header {
 text-align: center;
-padding: 10px 16px 4px;
+padding: clamp(6px, 1.5vh, 14px) 16px clamp(2px, 0.5vh, 6px);
 position: relative;
 z-index: 10;
 display: flex;
 flex-direction: column;
 align-items: center;
+width: 100%;
+flex-shrink: 0;
 }
 .title {
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
-font-size: 1.1rem;
+font-size: clamp(2.26rem, 7.5vw, 3.3rem);
 color: white;
 text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
 letter-spacing: 1px;
 display: inline-block;
 background: rgba(0, 20, 50, 0.55);
-padding: 4px 14px 5px;
+padding: clamp(2px, 0.5vh, 5px) clamp(8px, 2vw, 14px);
 border-radius: 12px;
 box-shadow: 0 4px 18px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.08) inset;
 backdrop-filter: blur(4px);
 }
 .subtitle {
-font-size: 0.82rem;
+font-size: clamp(0.55rem, 1.8vw, 0.82rem);
 color: white;
 font-weight: 700;
-margin-top: 5px;
+margin-top: clamp(2px, 0.5vh, 5px);
 text-shadow: none;
 display: inline-block;
 background: rgba(0, 20, 50, 0.45);
-padding: 4px 16px 5px;
-border-radius: 14px;
+padding: clamp(2px, 0.4vh, 4px) clamp(8px, 2vw, 16px);
+border-radius: 10px;
 box-shadow: 0 3px 10px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.07) inset;
 backdrop-filter: blur(4px);
 }
@@ -149,31 +154,33 @@ backdrop-filter: blur(4px);
 .stats {
 display: flex;
 gap: 6px;
-padding: 3px 11px 4px;
+padding: 4px 10px;
 position: relative;
 z-index: 10;
 width: 100%;
-max-width: 380px;
+flex-shrink: 0;
 }
 .stat-card {
 flex: 1;
 background: rgba(10, 30, 55, 0.75);
-border-radius: 11px;
-padding: 5px 7px;
+border-radius: 10px;
+padding: 6px 4px;
 text-align: center;
 box-shadow: 0 3px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(150,200,255,0.2);
 backdrop-filter: blur(4px);
+min-width: 0;
 }
 .stat-label {
-font-size: 0.42rem;
+font-size: clamp(0.45rem, 1.8vw, 0.6rem);
 font-weight: 800;
 color: rgba(180,215,255,0.8);
 text-transform: uppercase;
-letter-spacing: 0.5px;
+letter-spacing: 0.3px;
+white-space: nowrap;
 }
 .stat-value {
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
-font-size: 0.9rem;
+font-size: clamp(0.85rem, 3.5vw, 1.1rem);
 line-height: 1;
 margin-top: 2px;
 }
@@ -196,13 +203,13 @@ transition: width 0.4s ease;
 .game-area {
 position: relative;
 width: 100%;
-max-width: 430px;
 flex: 1;
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: space-between;
 min-height: 0;
+overflow: hidden;
 }
 
 /* Frozen tundra ground */
@@ -482,11 +489,11 @@ animation: trunkRaise 0.8s ease-in-out infinite !important;
 position: relative;
 z-index: 10;
 width: 100%;
-max-width: 380px;
-padding: 6px 11px 10px;
+padding: clamp(4px, 1vh, 8px) clamp(8px, 2vw, 14px) clamp(6px, 1.5vh, 12px);
 display: flex;
 flex-direction: column;
-gap: 7px;
+gap: clamp(4px, 1vh, 8px);
+flex-shrink: 0;
 }
 
 .feed-btn {
@@ -494,14 +501,14 @@ display: flex;
 align-items: center;
 justify-content: center;
 gap: 4px;
-padding: 10px 7px;
+padding: clamp(6px, 1.5vh, 11px) clamp(4px, 1vw, 8px);
 border: none;
-border-radius: 13px;
+border-radius: clamp(8px, 2vw, 14px);
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
-font-size: 1.09rem;
+font-size: clamp(0.7rem, 2.5vw, 1.1rem);
 cursor: pointer;
 transition: all 0.15s ease;
-box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.15);
+box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.15);
 position: relative;
 overflow: hidden;
 user-select: none;
@@ -516,7 +523,7 @@ content: ‘’;
 position: absolute;
 inset: 0;
 background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
-border-radius: 11px;
+border-radius: inherit;
 pointer-events: none;
 }
 
@@ -525,10 +532,10 @@ pointer-events: none;
 
 .btn-row {
 display: flex;
-gap: 8px;
+gap: clamp(4px, 1vw, 8px);
 align-items: center;
 }
-.btn-row .feed-btn { flex: 1; font-size: 1.21rem; padding: 7px 5px; }
+.btn-row .feed-btn { flex: 1; font-size: clamp(0.9rem, 3vw, 1.3rem); padding: clamp(5px, 1.2vh, 8px) clamp(3px, 1vw, 6px); }
 
 /* Hint text */
 .hint {
@@ -619,14 +626,12 @@ animation: floatHint 2s ease-in-out infinite;
 /* Mute button */
 .mute-btn {
 position: relative;
-bottom: auto;
-right: auto;
-left: auto;
 background: rgba(255,255,255,0.18);
 border: none;
 border-radius: 50%;
-width: 26px; height: 26px;
-font-size: 0.84rem;
+width: clamp(20px, 5vw, 28px);
+height: clamp(20px, 5vw, 28px);
+font-size: clamp(0.6rem, 1.8vw, 0.85rem);
 cursor: pointer;
 box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 z-index: 50;
