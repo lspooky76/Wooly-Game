@@ -1928,6 +1928,26 @@ z-index: 10;
 
   // Game state
   // ─── PERSISTENCE ────────────────────────────────────────────────
+  // ── CROSS-TAB SYNC ──────────────────────────────────────────────
+  // If another tab resets, reload this tab so stale state doesn't re-save
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'mammoth_save') {
+      if (e.newValue === null) {
+        // Another tab wiped the save — reload to show name popup fresh
+        window.location.reload();
+      } else {
+        // Another tab saved progress — sync in-memory state silently
+        try {
+          const d = JSON.parse(e.newValue);
+          if (d.resetToken && d.resetToken !== state.resetToken) {
+            // Different session — reload to avoid overwriting
+            window.location.reload();
+          }
+        } catch(err) {}
+      }
+    }
+  });
+
   function saveProgress() {
     try {
       localStorage.setItem('mammoth_save', JSON.stringify({
@@ -1940,6 +1960,7 @@ z-index: 10;
         playerName: state.playerName,
         mammothName: state.mammothName,
         animalType: state.animalType,
+        resetToken: state.resetToken,
       }));
     } catch(e) {}
   }
@@ -1949,17 +1970,23 @@ z-index: 10;
       const saved = localStorage.getItem('mammoth_save');
       if (saved) {
         const d = JSON.parse(saved);
-        state.score       = d.score       || 0;
-        state.sizePercent = d.sizePercent || 30;
-        state.hunger      = d.hunger      || 80;
-        state.happiness   = d.happiness   || 70;
-        state.feedCount   = d.feedCount   || 0;
-        state.grownUp     = d.grownUp     || false;
-        state.playerName  = d.playerName  || '';
-        state.mammothName = d.mammothName || '';
-        state.animalType  = d.animalType  || 'mammoth';
+        state.score        = d.score       || 0;
+        state.sizePercent  = d.sizePercent || 30;
+        state.hunger       = d.hunger      || 80;
+        state.happiness    = d.happiness   || 70;
+        state.feedCount    = d.feedCount   || 0;
+        state.grownUp      = d.grownUp     || false;
+        state.playerName   = d.playerName  || '';
+        state.mammothName  = d.mammothName || '';
+        state.animalType   = d.animalType  || 'mammoth';
+        state.resetToken   = d.resetToken  || Date.now().toString();
+      } else {
+        // No save — generate a fresh token for this session
+        state.resetToken = Date.now().toString();
       }
-    } catch(e) {}
+    } catch(e) {
+      state.resetToken = Date.now().toString();
+    }
   }
   // ─────────────────────────────────────────────────────────────────
 
@@ -1976,7 +2003,8 @@ z-index: 10;
     lastGrowthAt: 0,
     playerName: '',
     mammothName: '',
-    animalType: 'mammoth', // 'mammoth' or 'rhino'
+    animalType: 'mammoth',
+    resetToken: Date.now().toString(),
   };
 
   function getActiveWrapper() {
@@ -2951,6 +2979,7 @@ z-index: 10;
 
     // If reset mode, wipe progress
     if (document.getElementById('npCancelBtn').style.display !== 'none') {
+      // Remove save FIRST — this triggers storage event in other tabs → they reload
       localStorage.removeItem('mammoth_save');
       state.score = 0;
       state.sizePercent = 30;
@@ -2959,6 +2988,7 @@ z-index: 10;
       state.feedCount = 0;
       state.grownUp = false;
       state.lastGrowthAt = 0;
+      state.resetToken = Date.now().toString(); // new token = other tabs reload
       const labelEl = document.getElementById('mammothNameDisplay');
       if (labelEl) { labelEl.textContent = ''; labelEl.classList.remove('show'); }
       const playerLabel = document.getElementById('playerNameDisplay');
