@@ -3,8 +3,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Baby Mammoth 🦣</title>
+
+<!-- PWA Manifest -->
+
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS PWA support -->
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Baby Mammoth">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+
+<!-- Android / general PWA -->
+
+<meta name="theme-color" content="#0d1b2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Baby Mammoth">
+
+<!-- Prevent tap highlight and callout -->
+
+<meta name="format-detection" content="telephone=no">
+
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -23,6 +47,8 @@
 html, body {
 width: 100%;
 height: 100%;
+overscroll-behavior: none;
+-webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -43,6 +69,9 @@ flex-direction: column;
 align-items: center;
 overflow: hidden;
 position: relative;
+/* Safe area for notched phones */
+padding-top: env(safe-area-inset-top);
+padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Storm clouds - dark and heavy, blown by wind */
@@ -764,6 +793,30 @@ animation: blinkHint 1s ease-in-out infinite;
 }
 @keyframes blinkHint { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
+/* PWA update banner */
+#updateBanner {
+display: none;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: linear-gradient(135deg, #4dd0e1, #00bcd4);
+color: #0a2a3a;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(0.85rem, 3vw, 1rem);
+padding: 14px 20px;
+text-align: center;
+z-index: 99999;
+cursor: pointer;
+box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+animation: slideUpBanner 0.4s ease forwards;
+}
+#updateBanner.show { display: block; }
+@keyframes slideUpBanner {
+0%   { transform: translateY(100%); }
+100% { transform: translateY(0); }
+}
+
 /* Score popup */
 .score-popup {
 position: fixed;
@@ -1228,6 +1281,12 @@ z-index: 10;
     <button class="np-btn" onclick="submitNames()">Let's Go! ❄️</button>
     <button id="npCancelBtn" onclick="cancelReset()" style="display:none;margin-top:10px;width:100%;padding:10px;border:none;border-radius:14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:1rem;cursor:pointer;">Cancel</button>
   </div>
+</div>
+
+<!-- PWA Update Banner -->
+
+<div id="updateBanner" onclick="applyUpdate()">
+  🆕 Update available! Tap to get the latest version ✨
 </div>
 
 <!-- Asteroid ready screen -->
@@ -3485,6 +3544,47 @@ z-index: 10;
       asteroidState.cooldown = false;
       asteroidState.lastRollAt = Math.floor(state.score / 100); // don't re-trigger on same century
     }, 15000);
+  }
+  // ── SERVICE WORKER + UPDATE DETECTION ──
+  let swRegistration = null;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').then((reg) => {
+        swRegistration = reg;
+
+        // Check for updates every time the page loads
+        reg.update();
+
+        // New SW is waiting — show update banner
+        if (reg.waiting) {
+          document.getElementById('updateBanner').classList.add('show');
+        }
+
+        // New SW installed while page is open
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              document.getElementById('updateBanner').classList.add('show');
+            }
+          });
+        });
+      }).catch(() => {});
+
+      // When SW takes control, reload to apply update
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    });
+  }
+
+  function applyUpdate() {
+    if (swRegistration && swRegistration.waiting) {
+      // Tell the waiting SW to take over
+      swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    } else {
+      window.location.reload();
+    }
   }
   // ─────────────────────────────────────────────────────────────────
 </script>
