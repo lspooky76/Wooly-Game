@@ -611,6 +611,159 @@ text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 padding-bottom: 6px;
 }
 
+/* ── ASTEROID MINI-GAME ── */
+#asteroidOverlay {
+position: absolute;
+inset: 0;
+z-index: 30;
+pointer-events: none;
+overflow: hidden;
+display: none;
+}
+#asteroidOverlay.active { display: block; pointer-events: all; }
+
+/* Screen shake on the whole game area */
+@keyframes screenShake {
+0%,100% { transform: translate(0,0) rotate(0deg); }
+10%  { transform: translate(-4px, -3px) rotate(-0.5deg); }
+20%  { transform: translate( 5px,  2px) rotate( 0.5deg); }
+30%  { transform: translate(-4px,  4px) rotate( 0deg); }
+40%  { transform: translate( 4px, -3px) rotate( 0.5deg); }
+50%  { transform: translate(-5px,  2px) rotate(-0.5deg); }
+60%  { transform: translate( 3px,  4px) rotate( 0deg); }
+70%  { transform: translate(-3px, -2px) rotate(-0.3deg); }
+80%  { transform: translate( 4px,  3px) rotate( 0.3deg); }
+90%  { transform: translate(-2px, -1px) rotate( 0deg); }
+}
+.game-area.shaking { animation: screenShake 0.6s ease; }
+
+/* Ready screen modal */
+#asteroidReadyScreen {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+z-index: 9999;
+background: rgba(5,10,25,0.92);
+align-items: center;
+justify-content: center;
+padding: 20px;
+box-sizing: border-box;
+}
+#asteroidReadyScreen.show { display: flex; }
+.asteroid-ready-box {
+background: linear-gradient(160deg, #1a0a04, #2e1408);
+border: 2px solid rgba(255,120,40,0.7);
+border-radius: 24px;
+padding: 28px 24px;
+max-width: 340px;
+width: 100%;
+text-align: center;
+box-shadow: 0 0 40px rgba(255,80,20,0.4), 0 12px 40px rgba(0,0,0,0.7);
+animation: readyBoxPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+}
+@keyframes readyBoxPop {
+0%   { transform: scale(0.5); opacity: 0; }
+100% { transform: scale(1);   opacity: 1; }
+}
+.asteroid-ready-box .arb-emoji { font-size: 3rem; margin-bottom: 8px; display: block; animation: pulse 0.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.asteroid-ready-box h2 {
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.4rem, 5vw, 1.9rem);
+color: #ff7030;
+text-shadow: 0 0 20px rgba(255,100,30,0.5);
+margin-bottom: 6px;
+}
+.asteroid-ready-box .arb-sub {
+font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+color: rgba(255,200,150,0.9);
+font-weight: 700;
+margin-bottom: 16px;
+line-height: 1.5;
+}
+.asteroid-ready-box .arb-instructions {
+background: rgba(255,255,255,0.07);
+border: 1px solid rgba(255,120,40,0.3);
+border-radius: 14px;
+padding: 12px 16px;
+margin-bottom: 18px;
+font-size: clamp(0.75rem, 2.2vw, 0.88rem);
+color: rgba(255,220,180,0.95);
+font-weight: 700;
+line-height: 1.6;
+text-align: left;
+}
+.asteroid-ready-box .arb-instructions span { display: block; }
+.asteroid-ready-box .arb-penalty {
+color: #ff5533;
+font-size: 0.85rem;
+font-weight: 800;
+margin-bottom: 16px;
+}
+.asteroid-ready-btn {
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 16px;
+background: linear-gradient(135deg, #ff6020, #cc3000);
+color: white;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.1rem, 4vw, 1.4rem);
+cursor: pointer;
+box-shadow: 0 5px 0 rgba(0,0,0,0.4);
+transition: transform 0.1s;
+letter-spacing: 1px;
+}
+.asteroid-ready-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
+
+@keyframes warningPop {
+0%   { transform: translateX(-50%) scale(0); }
+100% { transform: translateX(-50%) scale(1); }
+}
+.asteroid {
+position: absolute;
+pointer-events: none;
+z-index: 32;
+background: radial-gradient(circle at 35% 35%, #a08060, #6a5030 50%, #3a2810);
+box-shadow: inset -4px -4px 8px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+}
+.asteroid-hit-flash {
+position: absolute;
+inset: 0;
+background: rgba(255,60,20,0.35);
+pointer-events: none;
+z-index: 33;
+animation: hitFlash 0.35s ease forwards;
+}
+@keyframes hitFlash { 0%{opacity:1} 100%{opacity:0} }
+.asteroid-float-text {
+position: absolute;
+font-family: ‘Fredoka One’,Arial,sans-serif;
+font-size: 1.1rem;
+pointer-events: none;
+z-index: 36;
+animation: floatUp 1s ease forwards;
+}
+@keyframes floatUp { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-50px);opacity:0} }
+.asteroid-controls-hint {
+position: absolute;
+bottom: 44px;
+left: 50%;
+transform: translateX(-50%);
+color: rgba(255,255,180,0.95);
+font-family: ‘Fredoka One’,Arial,sans-serif;
+font-size: clamp(0.75rem, 3vw, 1rem);
+text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+white-space: nowrap;
+pointer-events: none;
+z-index: 36;
+animation: blinkHint 1s ease-in-out infinite;
+}
+@keyframes blinkHint { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
 /* Score popup */
 .score-popup {
 position: fixed;
@@ -1077,6 +1230,25 @@ z-index: 10;
   </div>
 </div>
 
+<!-- Asteroid ready screen -->
+
+<div id="asteroidReadyScreen">
+  <div class="asteroid-ready-box">
+    <span class="arb-emoji">☄️</span>
+    <h2>ASTEROID ATTACK!</h2>
+    <div class="arb-sub">An asteroid field is heading straight for your animal!</div>
+    <div id="arbIntensity" style="margin-bottom:12px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:1rem;"></div>
+    <div class="arb-instructions">
+      <span>👆 <strong>Drag</strong> across the scene to move</span>
+      <span>◀ Tap <strong>left side</strong> to move left</span>
+      <span>▶ Tap <strong>right side</strong> to move right</span>
+      <span>⏱ Lasts <strong>8 seconds</strong> — dodge everything!</span>
+    </div>
+    <div class="arb-penalty">💥 Each hit = -50 points</div>
+    <button class="asteroid-ready-btn" onclick="launchAsteroidField()">🚀 I'M READY — START!</button>
+  </div>
+</div>
+
 <!-- Clouds -->
 
 <div class="cloud cloud1"></div>
@@ -1137,6 +1309,9 @@ z-index: 10;
   <div class="mammoth-scene">
 
 ```
+<!-- Asteroid mini-game overlay -->
+<div id="asteroidOverlay"></div>
+
 <!-- BIG SNOWY MOUNTAIN - behind everything -->
 <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg"
      style="position:absolute;bottom:70px;right:-10px;width:580px;height:auto;z-index:1;pointer-events:none;left:50%;transform:translateX(-50%)">
@@ -2117,6 +2292,20 @@ z-index: 10;
     else if (hp > 30) happyEl.style.color = '#FF9800';
     else happyEl.style.color = '#f44336';
 
+    // ── ASTEROID MINI-GAME TRIGGER ──
+    // Every 100 points, roll 1-25. If it lands on 7, engage asteroid field.
+    if (!asteroidState.active && !asteroidState.cooldown && !asteroidState.readyScreen) {
+      const century = Math.floor(state.score / 100);
+      if (century > 0 && century !== asteroidState.lastRollAt) {
+        asteroidState.lastRollAt = century;
+        const roll = Math.floor(Math.random() * 25) + 1;
+        if (roll === 7) {
+          asteroidState.cooldown = true; // lock until player clicks Start
+          setTimeout(showAsteroidReadyScreen, 400);
+        }
+      }
+    }
+
     // ── GROWTH SYSTEM ──
     if (!state.grownUp) {
       const newSize = Math.min(500, 30 + Math.floor(state.score / 1000) * 2);
@@ -3008,9 +3197,22 @@ z-index: 10;
     updateStats();
   }
 
-  applyMammothSize();
+  // ── ASTEROID STATE — declared here so updateStats can reference it on load ──
+  const asteroidState = {
+    active: false,
+    cooldown: false,
+    readyScreen: false,
+    lastRollAt: 0,
+    intensity: 1,      // 1-5, rolled when triggered
+    animalX: 50,
+    moveDir: 0,
+    moveInterval: null,
+    spawnInterval: null,
+    hitCooldown: false,
+    duration: 8000,
+  };
 
-  // Show name popup if first time, otherwise restore saved state
+  applyMammothSize();
   if (!state.playerName || !state.mammothName) {
     selectAnimal(state.animalType || 'mammoth');
     document.getElementById('namePopup').style.display = 'flex';
@@ -3020,6 +3222,271 @@ z-index: 10;
   }
 
   updateStats();
+
+  // ── ASTEROID MINI-GAME ────────────────────────────────────────────
+
+  function showAsteroidReadyScreen() {
+    asteroidState.readyScreen = true;
+
+    // Roll intensity 1-5
+    asteroidState.intensity = Math.floor(Math.random() * 5) + 1;
+    const lvl = asteroidState.intensity;
+
+    // Intensity display
+    const stars = '☄️'.repeat(lvl) + '🌑'.repeat(5 - lvl);
+    const labels = ['Gentle Shower','Moderate Storm','Fierce Barrage','Severe Onslaught','APOCALYPTIC!'];
+    const colors = ['#88dd44','#ffcc00','#ff8800','#ff4400','#ff0044'];
+    const intEl = document.getElementById('arbIntensity');
+    if (intEl) {
+      intEl.innerHTML = `<span style="color:${colors[lvl-1]};text-shadow:0 0 10px ${colors[lvl-1]}66;">
+        LEVEL ${lvl} — ${labels[lvl-1]}<br>${stars}
+      </span>`;
+    }
+
+    // Shake the game area
+    const gameArea = document.getElementById('gameArea');
+    gameArea.classList.add('shaking');
+    setTimeout(() => gameArea.classList.remove('shaking'), 650);
+
+    // Show the ready screen
+    document.getElementById('asteroidReadyScreen').classList.add('show');
+  }
+
+  function launchAsteroidField() {
+    document.getElementById('asteroidReadyScreen').classList.remove('show');
+    asteroidState.readyScreen = false;
+    startAsteroidField();
+  }
+
+  function startAsteroidField() {
+    if (asteroidState.active || state.isAnimating) return;
+    asteroidState.active = true;
+    asteroidState.hitCooldown = false;
+
+    const overlay = document.getElementById('asteroidOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+
+    // Warning banner
+    const warn = document.createElement('div');
+    warn.className = 'asteroid-warning';
+    warn.textContent = '☄️ ASTEROID FIELD! DODGE!';
+    overlay.appendChild(warn);
+
+    // Controls hint
+    const hint = document.createElement('div');
+    hint.className = 'asteroid-controls-hint';
+    hint.textContent = '← drag or tap sides to dodge →';
+    overlay.appendChild(hint);
+
+    // Position animal at centre to start
+    asteroidState.animalX = 50;
+    _applyAnimalX();
+
+    // Touch/mouse controls — tap left half = move left, right half = move right
+    overlay.addEventListener('mousemove', _onMove);
+    overlay.addEventListener('touchmove', _onTouch, { passive: false });
+    overlay.addEventListener('mousedown', _onDown);
+    overlay.addEventListener('touchstart', _onTouchStart, { passive: false });
+    overlay.addEventListener('mouseup', _onUp);
+    overlay.addEventListener('touchend', _onUp);
+
+    // Intensity: level 1 = 5 asteroids, each level x2 count and speed
+    // Level 1: 5 asteroids, interval ~1600ms
+    // Level 2: 10 asteroids, interval ~800ms
+    // Level 3: 20 asteroids, interval ~400ms
+    // Level 4: 40 asteroids, interval ~200ms
+    // Level 5: 80 asteroids, interval ~100ms
+    const lvl = asteroidState.intensity;
+    const baseCount  = 5 * Math.pow(2, lvl - 1);   // 5, 10, 20, 40, 80
+    const baseSpeed  = 1 * Math.pow(2, lvl - 1);    // 1, 2, 4, 8, 16 (relative speed multiplier)
+    const spawnInterval = Math.max(80, Math.round(8000 / baseCount)); // spread across 8s
+
+    let spawned = 0;
+    asteroidState.spawnInterval = setInterval(() => {
+      if (!asteroidState.active) return;
+      if (spawned >= baseCount) { clearInterval(asteroidState.spawnInterval); return; }
+      spawned++;
+      _spawnAsteroid(overlay, scene, baseSpeed);
+    }, spawnInterval);
+
+    // Movement tick
+    asteroidState.moveInterval = setInterval(() => {
+      if (asteroidState.moveDir !== 0) {
+        asteroidState.animalX = Math.max(5, Math.min(90, asteroidState.animalX + asteroidState.moveDir * 2.5));
+        _applyAnimalX();
+      }
+    }, 30);
+
+    // End after duration
+    setTimeout(() => endAsteroidField(true), asteroidState.duration);
+  }
+
+  function _applyAnimalX() {
+    const sizer = getActiveSizer();
+    if (!sizer) return;
+    const scene = document.querySelector('.mammoth-scene');
+    const sceneW = scene.getBoundingClientRect().width;
+    const sizerW = sizer.getBoundingClientRect().width;
+    const newLeft = (asteroidState.animalX / 100) * sceneW - sizerW / 2;
+    sizer.style.left = Math.max(0, Math.min(sceneW - sizerW, newLeft)) + 'px';
+    sizer.style.position = 'absolute';
+    sizer.style.bottom = '30px';
+  }
+
+  function _onMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    asteroidState.animalX = Math.max(5, Math.min(90, (x / rect.width) * 100));
+    _applyAnimalX();
+  }
+  function _onTouch(e) {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    asteroidState.animalX = Math.max(5, Math.min(90, (x / rect.width) * 100));
+    _applyAnimalX();
+  }
+  function _onDown(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    asteroidState.moveDir = e.clientX - rect.left < rect.width / 2 ? -1 : 1;
+  }
+  function _onTouchStart(e) {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    asteroidState.moveDir = e.touches[0].clientX - rect.left < rect.width / 2 ? -1 : 1;
+  }
+  function _onUp() { asteroidState.moveDir = 0; }
+
+  function _spawnAsteroid(overlay, scene, speedMult) {
+    speedMult = speedMult || 1;
+    const sceneRect = scene.getBoundingClientRect();
+    // Higher intensity = bigger rocks too
+    const minSize = 24 + speedMult * 2;
+    const size = minSize + Math.random() * (20 + speedMult * 2);
+    const startX = Math.random() * (sceneRect.width - size);
+    const fallDist = sceneRect.height + size + 20;
+    // Higher speed = shorter fall duration
+    const duration = Math.max(350, (1200 + Math.random() * 600) / speedMult);
+    const rotation = Math.random() * 360;
+
+    const el = document.createElement('div');
+    el.className = 'asteroid';
+    el.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${startX}px; top:-${size}px;
+      transform: rotate(${rotation}deg);
+      border-radius: ${35+Math.random()*20}% ${65-Math.random()*20}% ${45+Math.random()*20}% ${55-Math.random()*20}% / ${40+Math.random()*20}% ${50+Math.random()*15}% ${60-Math.random()*15}% ${50+Math.random()*15}%;
+    `;
+    overlay.appendChild(el);
+
+    // Animate with rAF
+    const startTime = performance.now();
+    const startRot = rotation;
+    const rotSpeed = (Math.random() - 0.5) * 400;
+
+    function tick(now) {
+      if (!asteroidState.active) { el.remove(); return; }
+      const p = (now - startTime) / duration;
+      if (p >= 1) { el.remove(); return; }
+      const y = p * fallDist;
+      const rot = startRot + p * rotSpeed;
+      el.style.top = (-size + y) + 'px';
+      el.style.transform = `rotate(${rot}deg)`;
+
+      // Hit detection
+      if (!asteroidState.hitCooldown) {
+        const aRect = el.getBoundingClientRect();
+        const sizer = getActiveSizer();
+        if (sizer) {
+          const mRect = sizer.getBoundingClientRect();
+          const overlap = !(aRect.right < mRect.left + mRect.width*0.15 ||
+                            aRect.left  > mRect.right  - mRect.width*0.15 ||
+                            aRect.bottom < mRect.top  + mRect.height*0.2 ||
+                            aRect.top   > mRect.bottom - mRect.height*0.1);
+          if (overlap) {
+            _asteroidHit(el, overlay);
+            return;
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function _asteroidHit(el, overlay) {
+    el.remove();
+    asteroidState.hitCooldown = true;
+
+    // Flash red
+    const flash = document.createElement('div');
+    flash.className = 'asteroid-hit-flash';
+    overlay.appendChild(flash);
+    setTimeout(() => flash.remove(), 350);
+
+    // Score penalty
+    state.score = Math.max(0, state.score - 50);
+
+    // Float text
+    const txt = document.createElement('div');
+    txt.className = 'asteroid-float-text';
+    txt.style.cssText = `color:#ff4422; left:40%; top:40%;`;
+    txt.textContent = '-50 💥';
+    overlay.appendChild(txt);
+    setTimeout(() => txt.remove(), 1000);
+
+    // Wobble animation
+    const wrapper = getActiveWrapper();
+    if (wrapper) {
+      wrapper.classList.add('catching');
+      setTimeout(() => wrapper.classList.remove('catching'), 500);
+    }
+
+    showBubble('💥 Ouch!');
+    soundSplat();
+    updateStats();
+
+    // Brief invincibility
+    setTimeout(() => { asteroidState.hitCooldown = false; }, 1200);
+  }
+
+  function endAsteroidField(survived) {
+    if (!asteroidState.active) return;
+    asteroidState.active = false;
+    asteroidState.cooldown = true;
+
+    clearInterval(asteroidState.spawnInterval);
+    clearInterval(asteroidState.moveInterval);
+    asteroidState.moveDir = 0;
+
+    const overlay = document.getElementById('asteroidOverlay');
+    overlay.innerHTML = '';
+    overlay.classList.remove('active');
+
+    // Reset animal position back to centre
+    const sizer = getActiveSizer();
+    if (sizer) {
+      sizer.style.position = '';
+      sizer.style.left     = '';
+      sizer.style.bottom   = '';
+    }
+
+    if (survived) {
+      showBubble('🎉 Survived!');
+      state.score += 30;
+      state.happiness = Math.min(100, state.happiness + 10);
+      updateStats();
+    }
+
+    // 15s cooldown — also reset lastRollAt so the randomiser can fire again
+    setTimeout(() => {
+      asteroidState.cooldown = false;
+      asteroidState.lastRollAt = Math.floor(state.score / 100); // don't re-trigger on same century
+    }, 15000);
+  }
+  // ─────────────────────────────────────────────────────────────────
 </script>
 
 </body>
