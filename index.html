@@ -150,15 +150,47 @@ box-shadow: 0 3px 10px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.07) inset;
 backdrop-filter: blur(4px);
 }
 
+/* Stats container with border and mammoth name label */
+.stats-container {
+position: relative;
+width: 100%;
+padding: 0 10px 4px;
+flex-shrink: 0;
+z-index: 10;
+}
+.stats-border-label {
+display: none;
+position: absolute;
+top: -10px;
+left: 50%;
+transform: translateX(-50%);
+background: rgba(10, 30, 55, 0.9);
+border: 1.5px solid rgba(77, 208, 225, 0.5);
+color: #4dd0e1;
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+padding: 2px 14px;
+border-radius: 20px;
+white-space: nowrap;
+z-index: 2;
+letter-spacing: 1px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.stats-border-label.show { display: block; }
+
 /* Stats bar */
 .stats {
 display: flex;
 gap: 6px;
-padding: 4px 10px;
+padding: 10px 0 4px;
 position: relative;
-z-index: 10;
+z-index: 1;
 width: 100%;
-flex-shrink: 0;
+border: 1.5px solid rgba(77, 208, 225, 0.35);
+border-radius: 14px;
+background: rgba(5, 15, 35, 0.3);
+backdrop-filter: blur(4px);
+padding: 8px 6px 6px;
 }
 .stat-card {
 flex: 1;
@@ -485,15 +517,47 @@ animation: trunkRaise 0.8s ease-in-out infinite !important;
 0%, 100% { transform: rotate(-60deg); }
 50%       { transform: rotate(-75deg); }
 }
+/* Actions container with border and player name label */
+.actions-container {
+position: relative;
+width: 100%;
+padding: 0 10px 6px;
+flex-shrink: 0;
+z-index: 10;
+}
+.actions-border-label {
+display: none;
+position: absolute;
+top: -10px;
+left: 50%;
+transform: translateX(-50%);
+background: rgba(10, 30, 55, 0.9);
+border: 1.5px solid rgba(245, 200, 66, 0.6);
+color: #F5C842;
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+padding: 2px 14px;
+border-radius: 20px;
+white-space: nowrap;
+z-index: 2;
+letter-spacing: 1px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.actions-border-label.show { display: block; }
+
 .actions {
 position: relative;
-z-index: 10;
+z-index: 1;
 width: 100%;
-padding: clamp(4px, 1vh, 8px) clamp(8px, 2vw, 14px) clamp(6px, 1.5vh, 12px);
+padding: clamp(10px, 2vh, 14px) clamp(8px, 2vw, 12px) clamp(6px, 1.5vh, 10px);
 display: flex;
 flex-direction: column;
 gap: clamp(4px, 1vh, 8px);
 flex-shrink: 0;
+border: 1.5px solid rgba(245, 200, 66, 0.35);
+border-radius: 14px;
+background: rgba(5, 15, 35, 0.3);
+backdrop-filter: blur(4px);
 }
 
 .feed-btn {
@@ -923,31 +987,33 @@ z-index: 10;
 
 <div class="header" style="position:relative;">
   <div class="title">Baby Mammoth</div>
-  <div class="subtitle" id="subtitleText">Feed. Clean Up After. Love.</div>
 </div>
 
 <!-- Stats -->
 
-<div class="stats">
-  <div class="stat-card">
-    <div class="stat-label">🍖 Hunger</div>
-    <div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
-    <div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">😊 Happy</div>
-    <div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
-    <div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">✨ Score</div>
-    <div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
-    <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">🦣 Size</div>
-    <div class="stat-value" id="sizeVal" style="color:#4dd0e1">30%</div>
-    <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#4dd0e1,#00bcd4);width:2%" id="sizeBar"></div></div>
+<div class="stats-container">
+  <div class="stats-border-label" id="mammothNameDisplay"></div>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">🍖 Hunger</div>
+      <div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
+      <div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">😊 Happy</div>
+      <div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
+      <div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">✨ Score</div>
+      <div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
+      <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">🦣 Size</div>
+      <div class="stat-value" id="sizeVal" style="color:#4dd0e1">30%</div>
+      <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#4dd0e1,#00bcd4);width:2%" id="sizeBar"></div></div>
+    </div>
   </div>
 </div>
 
@@ -1081,64 +1147,6 @@ z-index: 10;
   <!-- Base snow drift -->
   <path d="M20,258 Q80,244 150,250 Q220,244 280,258 Z" fill="#c8dff0" opacity="0.6"/>
   <path d="M20,258 Q80,250 150,254 Q220,250 280,258 Z" fill="#ddeef8" opacity="0.5"/>
-
-  <!-- Mammoth name etched into mountain face -->
-  <!-- Outer glow -->
-  <text x="150" y="118"
-        text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="11"
-        font-weight="bold"
-        fill="none"
-        stroke="#ddeeff"
-        stroke-width="4"
-        stroke-linejoin="round"
-        stroke-linecap="round"
-        opacity="0.18"
-        filter="url(#snowGlow)"
-        textLength="110"
-        lengthAdjust="spacingAndGlyphs"
-        id="mountainNameGlow">
-  </text>
-  <!-- Snow border (white stroke) -->
-  <text x="150" y="118"
-        text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="11"
-        font-weight="bold"
-        fill="none"
-        stroke="#e8f4ff"
-        stroke-width="2.5"
-        stroke-linejoin="round"
-        opacity="0.55"
-        textLength="110"
-        lengthAdjust="spacingAndGlyphs"
-        id="mountainNameBorder">
-  </text>
-  <!-- Main engraved text -->
-  <text id="mountainName" x="150" y="118"
-        text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="11"
-        font-weight="bold"
-        fill="#1e3448"
-        opacity="0.7"
-        letter-spacing="1"
-        textLength="110"
-        lengthAdjust="spacingAndGlyphs">
-  </text>
-  <!-- Subtle highlight for etched look -->
-  <text id="mountainNameShadow" x="150" y="119"
-        text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="11"
-        font-weight="bold"
-        fill="#a8cce0"
-        opacity="0.3"
-        letter-spacing="1"
-        textLength="110"
-        lengthAdjust="spacingAndGlyphs">
-  </text>
 </svg>
 
 <!-- Ice Cabin SVG in background -->
@@ -1451,29 +1459,32 @@ z-index: 10;
 
   <!-- Action buttons -->
 
-  <div class="actions">
-    <div class="btn-row">
-      <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
-      <button class="feed-btn btn-hay" onclick="startAudio();feedMammoth('hay')">
-        🌾
+  <div class="actions-container">
+    <div class="actions-border-label" id="playerNameDisplay"></div>
+    <div class="actions">
+      <div class="btn-row">
+        <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
+        <button class="feed-btn btn-hay" onclick="startAudio();feedMammoth('hay')">
+          🌾
+        </button>
+        <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
+          🫐
+        </button>
+        <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="startAudio();feedMammoth('leaves')">
+          🌿
+        </button>
+      </div>
+      <button class="feed-btn btn-snowball" id="snowballBtn"
+              onmousedown="startThrow(event)" ontouchstart="startThrow(event)"
+              onmouseup="releaseThrow(event)" ontouchend="releaseThrow(event)">
+        ❄️ Hold to Throw Snowball
       </button>
-      <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
-        🫐
-      </button>
-      <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="startAudio();feedMammoth('leaves')">
-        🌿
-      </button>
+      <div class="power-bar-wrap" id="powerBarWrap">
+        <div class="power-bar-fill" id="powerBarFill"></div>
+        <span class="power-label">POWER</span>
+      </div>
+      <button onclick="resetGame()" style="background:rgba(200,40,40,0.7);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:8px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;width:100%;border-radius:12px;box-shadow:0 3px 0 rgba(0,0,0,0.3);">↺ Reset Progress</button>
     </div>
-    <button class="feed-btn btn-snowball" id="snowballBtn"
-            onmousedown="startThrow(event)" ontouchstart="startThrow(event)"
-            onmouseup="releaseThrow(event)" ontouchend="releaseThrow(event)">
-      ❄️ Hold to Throw Snowball
-    </button>
-    <div class="power-bar-wrap" id="powerBarWrap">
-      <div class="power-bar-fill" id="powerBarFill"></div>
-      <span class="power-label">POWER</span>
-    </div>
-    <button onclick="resetGame()" style="background:rgba(200,40,40,0.7);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:8px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;width:100%;border-radius:12px;box-shadow:0 3px 0 rgba(0,0,0,0.3);">↺ Reset Progress</button>
   </div>
 </div>
 
@@ -1753,14 +1764,18 @@ z-index: 10;
   function applyNames() {
     const p = state.playerName;
     const m = state.mammothName || '';
-    const subEl = document.getElementById('subtitleText');
-    if (p) subEl.textContent = `${p}! Feed. Clean Up After. Love.`;
-    // Etch mammoth name into mountain
-    const display = m.slice(0, 10).toUpperCase();
-    ['mountainName','mountainNameShadow','mountainNameBorder','mountainNameGlow'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = display;
-    });
+    // Player name on button border
+    const playerLabel = document.getElementById('playerNameDisplay');
+    if (playerLabel && p) {
+      playerLabel.textContent = p;
+      playerLabel.classList.add('show');
+    }
+    // Mammoth name on score border
+    const mammothLabel = document.getElementById('mammothNameDisplay');
+    if (mammothLabel && m) {
+      mammothLabel.textContent = m;
+      mammothLabel.classList.add('show');
+    }
   }
 
   // Load saved progress
@@ -2534,11 +2549,15 @@ z-index: 10;
       state.feedCount = 0;
       state.grownUp = false;
       state.lastGrowthAt = 0;
-      // Clear mountain name
+      // Clear mountain name and border label
       ['mountainName','mountainNameShadow','mountainNameBorder','mountainNameGlow'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '';
       });
+      const labelEl = document.getElementById('mammothNameDisplay');
+      if (labelEl) { labelEl.textContent = ''; labelEl.classList.remove('show'); }
+      const playerLabel = document.getElementById('playerNameDisplay');
+      if (playerLabel) { playerLabel.textContent = ''; playerLabel.classList.remove('show'); }
       applyMammothSize();
     }
 
