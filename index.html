@@ -711,6 +711,75 @@ gap: 8px;
 align-items: center;
 }
 
+/* Crosshairs */
+#crosshairs {
+position: absolute;
+width: 44px;
+height: 44px;
+pointer-events: none;
+z-index: 25;
+display: none;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+#crosshairs.show { display: block; }
+#crosshairs svg { width: 100%; height: 100%; }
+
+/* Mammoth snow splat */
+.mammoth-splat {
+position: absolute;
+pointer-events: none;
+z-index: 12;
+animation: mammothSplatIn 0.2s ease forwards;
+top: 30%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+@keyframes mammothSplatIn {
+0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+}
+.mammoth-splat.melting {
+animation: mammothSplatMelt 2.5s ease forwards;
+}
+@keyframes mammothSplatMelt {
+0%   { opacity: 1; }
+70%  { opacity: 0.6; }
+100% { opacity: 0; transform: translate(-50%,-50%) scale(0.7) translateY(10px); }
+}
+
+/* Dizzy orbit ring */
+.dizzy-ring {
+position: absolute;
+pointer-events: none;
+z-index: 20;
+width: 100px;
+height: 36px;
+}
+.pterodactyl {
+position: absolute;
+width: 28px;
+height: 18px;
+animation: orbitPtero linear infinite;
+transform-origin: 50px 18px;
+}
+.pterodactyl svg { display: block; }
+@keyframes orbitPtero {
+0%   { transform: rotate(0deg)   translateX(46px) rotate(0deg); }
+50%  { transform: rotate(180deg) translateX(46px) rotate(-180deg) scaleX(-1); }
+100% { transform: rotate(360deg) translateX(46px) rotate(-360deg); }
+}
+@keyframes dizzyWobble {
+0%,100% { transform: rotate(0deg); }
+20%  { transform: rotate(-8deg) translateX(-4px); }
+40%  { transform: rotate(8deg)  translateX(4px); }
+60%  { transform: rotate(-5deg) translateX(-2px); }
+80%  { transform: rotate(5deg)  translateX(2px); }
+}
+.mammoth-wrapper.dizzy {
+animation: dizzyWobble 0.4s ease-in-out infinite !important;
+}
+
 /* Food items that appear on ground before eating */
 .food-item {
 position: absolute;
@@ -1318,6 +1387,18 @@ z-index: 10;
 
 <!-- Speech bubble -->
 <div class="speech-bubble" id="speechBubble">Mrooooo!</div>
+
+<!-- Crosshairs for snowball aiming -->
+<div id="crosshairs">
+  <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,80,80,0.9)" stroke-width="2"/>
+    <circle cx="22" cy="22" r="3" fill="rgba(255,80,80,0.9)"/>
+    <line x1="22" y1="2"  x2="22" y2="12"  stroke="rgba(255,80,80,0.9)" stroke-width="2"/>
+    <line x1="22" y1="32" x2="22" y2="42"  stroke="rgba(255,80,80,0.9)" stroke-width="2"/>
+    <line x1="2"  y1="22" x2="12" y2="22"  stroke="rgba(255,80,80,0.9)" stroke-width="2"/>
+    <line x1="32" y1="22" x2="42" y2="22"  stroke="rgba(255,80,80,0.9)" stroke-width="2"/>
+  </svg>
+</div>
 
 <!-- Clean up hint -->
 <div class="clean-label" id="cleanLabel">👆 Tap poop to clean!</div>
@@ -2286,6 +2367,10 @@ z-index: 10;
     charging: false,
     power: 0,
     chargeInterval: null,
+    crosshairsInterval: null,
+    crosshairsX: 0,      // 0-100% across scene
+    crosshairsDir: 1,    // sweep direction
+    crosshairsSpeed: 1,  // % per tick
     busy: false,
   };
 
@@ -2295,20 +2380,54 @@ z-index: 10;
     if (throwState.busy || state.isAnimating) return;
     throwState.charging = true;
     throwState.power = 0;
-    const btn = document.getElementById('snowballBtn');
+    throwState.crosshairsX = 80; // start on right side
+    throwState.crosshairsDir = -1;
+
+    const btn  = document.getElementById('snowballBtn');
     const wrap = document.getElementById('powerBarWrap');
     const fill = document.getElementById('powerBarFill');
+    const xhEl = document.getElementById('crosshairs');
+    const scene = document.querySelector('.mammoth-scene');
+
     btn.classList.add('charging');
     wrap.classList.add('show');
     fill.style.width = '0%';
+    xhEl.classList.add('show');
 
+    // Power fill
     throwState.chargeInterval = setInterval(() => {
       throwState.power = Math.min(100, throwState.power + 2.5);
       fill.style.width = throwState.power + '%';
-      if (throwState.power >= 100) {
-        clearInterval(throwState.chargeInterval);
-      }
+      if (throwState.power >= 100) clearInterval(throwState.chargeInterval);
     }, 50);
+
+    // Crosshairs sweep — starts slow, gets faster with power
+    throwState.crosshairsInterval = setInterval(() => {
+      const speed = 1.2 + (throwState.power / 100) * 3.5;
+      throwState.crosshairsX += throwState.crosshairsDir * speed;
+      if (throwState.crosshairsX >= 95) { throwState.crosshairsX = 95; throwState.crosshairsDir = -1; }
+      if (throwState.crosshairsX <=  5) { throwState.crosshairsX =  5; throwState.crosshairsDir =  1; }
+
+      // Position vertically at the mammoth's centre, relative to the scene
+      const sceneRect   = scene.getBoundingClientRect();
+      const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+      const mammothCY   = mammothRect.top + mammothRect.height * 0.45; // slightly above centre
+      const topPct      = ((mammothCY - sceneRect.top) / sceneRect.height) * 100;
+
+      xhEl.style.left = throwState.crosshairsX + '%';
+      xhEl.style.top  = topPct + '%';
+
+      // Turn red when crosshairs centre overlaps the mammoth rect
+      const xhRect = xhEl.getBoundingClientRect();
+      const xhCX = xhRect.left + xhRect.width  / 2;
+      const xhCY = xhRect.top  + xhRect.height / 2;
+      const onMammoth = xhCX >= mammothRect.left && xhCX <= mammothRect.right &&
+                        xhCY >= mammothRect.top  && xhCY <= mammothRect.bottom;
+      xhEl.style.filter = onMammoth ? 'drop-shadow(0 0 6px red)' : 'drop-shadow(0 0 4px rgba(255,255,255,0.6))';
+      const strokes = xhEl.querySelectorAll('circle, line');
+      strokes.forEach(s => s.setAttribute('stroke', onMammoth ? 'rgba(255,50,50,0.95)' : 'rgba(255,255,255,0.9)'));
+      xhEl.querySelector('circle:last-of-type').setAttribute('fill', onMammoth ? 'rgba(255,50,50,0.95)' : 'rgba(255,255,255,0.9)');
+    }, 30);
   }
 
   function releaseThrow(e) {
@@ -2316,18 +2435,34 @@ z-index: 10;
     if (!throwState.charging) return;
     throwState.charging = false;
     clearInterval(throwState.chargeInterval);
+    clearInterval(throwState.crosshairsInterval);
+
     const power = throwState.power;
     throwState.power = 0;
 
-    const btn = document.getElementById('snowballBtn');
+    const btn  = document.getElementById('snowballBtn');
     const wrap = document.getElementById('powerBarWrap');
     const fill = document.getElementById('powerBarFill');
+    const xhEl = document.getElementById('crosshairs');
+
+    // ── Check hit BEFORE hiding crosshairs ──
+    const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+    const xhRect      = xhEl.getBoundingClientRect();
+    const xhCX = xhRect.left + xhRect.width  / 2;
+    const xhCY = xhRect.top  + xhRect.height / 2;
+    const hitMammoth = xhCX >= mammothRect.left && xhCX <= mammothRect.right &&
+                       xhCY >= mammothRect.top  && xhCY <= mammothRect.bottom;
+    const aimPct = throwState.crosshairsX;
+
+    // Now hide UI
     btn.classList.remove('charging');
     wrap.classList.remove('show');
     fill.style.width = '0%';
+    xhEl.classList.remove('show');
 
-    if (power < 5) return; // too short a tap
-    launchSnowball(power);
+    if (power < 5) return;
+
+    launchSnowball(power, aimPct, hitMammoth);
   }
 
   function soundThrow() {
@@ -2365,35 +2500,40 @@ z-index: 10;
     }, 60);
   }
 
-  function launchSnowball(power) {
+  function launchSnowball(power, aimPct, hitMammoth) {
     if (throwState.busy) return;
     throwState.busy = true;
     state.isAnimating = true;
 
-    const scene = document.querySelector('.mammoth-scene');
+    const scene   = document.querySelector('.mammoth-scene');
     const wrapper = document.getElementById('mammothWrapper');
-    const trunk = document.getElementById('trunkGroup');
+    const trunk   = document.getElementById('trunkGroup');
     const sceneRect = scene.getBoundingClientRect();
 
-    // Mammoth trunk raises to throw
     trunk.classList.add('trunk-raised');
-    showBubble('💪 Catch this!');
+    showBubble(hitMammoth ? '🎯 Take this!' : '💪 Catch this!');
 
     setTimeout(() => {
       soundThrow();
-
-      // Snowball launches from his trunk
       const ball = document.createElement('div');
       ball.className = 'snowball-fly';
       ball.style.position = 'fixed';
       const startX = sceneRect.left + sceneRect.width * 0.32;
       const startY = sceneRect.bottom - 140;
-      // Landing spot varies with power - further left = more power
-      const landPct = 0.75 - (power / 100) * 0.55;
-      const landX = sceneRect.left + sceneRect.width * landPct;
-      const landY = sceneRect.bottom - 50;
-      const peakY = startY - 60 - power * 1.4;
-      const duration = 500 + power * 5;
+
+      // Use actual mammoth rect for hit landing position
+      const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+      const mammothCX = mammothRect.left + mammothRect.width  * 0.5;
+      const mammothCY = mammothRect.top  + mammothRect.height * 0.45;
+
+      const targetX = hitMammoth
+        ? mammothCX
+        : sceneRect.left + sceneRect.width * ((aimPct || 50) / 100);
+      const targetY = hitMammoth
+        ? mammothCY
+        : sceneRect.bottom - 50;
+      const peakY   = Math.min(startY, targetY) - 60 - power * 0.6;
+      const duration = 400 + power * 4;
       ball.style.left = startX + 'px';
       ball.style.top  = startY + 'px';
       document.body.appendChild(ball);
@@ -2401,71 +2541,182 @@ z-index: 10;
       const t0 = performance.now();
       function animOut(ts) {
         const p = Math.min(1, (ts - t0) / duration);
-        const ex = startX + (landX - startX) * p;
-        const ey = (1-p)*((1-p)*startY + p*peakY) + p*((1-p)*peakY + p*landY);
-        const sc = 0.8 + p * 0.2; // slight size change as it arcs away
+        const ex = startX + (targetX - startX) * p;
+        const ey = (1-p)*((1-p)*startY + p*peakY) + p*((1-p)*peakY + p*targetY);
+        const sc = hitMammoth ? (0.6 + p * 0.8) : (0.8 + p * 0.2);
         ball.style.left = ex + 'px';
         ball.style.top  = ey + 'px';
         ball.style.transform = `scale(${sc})`;
         if (p < 1) { requestAnimationFrame(animOut); return; }
-
-        // Ball lands — catch animation
         ball.remove();
         trunk.classList.remove('trunk-raised');
-        wrapper.classList.remove('eating','happy','catching','winding');
-        void wrapper.offsetWidth;
-        wrapper.classList.add('catching');
-        showBubble('😄 Got it!');
-        soundHappyToot();
 
-        // Short pause then wind up and throw back
-        setTimeout(() => {
-          wrapper.classList.remove('catching');
+        if (hitMammoth) {
+          // ── HIT! Splat on mammoth ──
+          soundSplat();
+          const fullPower = power >= 95;
+          showBubble(fullPower ? '🌀 WHOA!!' : '😤 Ow!! Hey!!');
+          wrapper.classList.remove('eating','happy','catching','winding','dancing');
           void wrapper.offsetWidth;
-          wrapper.classList.add('winding');
-          trunk.classList.add('trunk-raised');
-          showBubble('⚡ Heads up!');
-          soundThrow();
+          wrapper.classList.add('catching');
 
-          // Ball comes back toward the screen
-          const ball2 = document.createElement('div');
-          ball2.className = 'snowball-fly';
-          ball2.style.position = 'fixed';
-          const b2StartX = landX;
-          const b2StartY = landY;
-          const splatX = window.innerWidth  * (0.15 + Math.random() * 0.7);
-          const splatY = window.innerHeight * (0.15 + Math.random() * 0.5);
-          const b2Peak = b2StartY - 120 - Math.random() * 80;
-          const b2Dur  = 550;
-          ball2.style.left = b2StartX + 'px';
-          ball2.style.top  = b2StartY + 'px';
-          document.body.appendChild(ball2);
+          // BIG snow splat blob — positioned at mammoth's actual centre
+          const mRect = document.getElementById('mammothSizer').getBoundingClientRect();
+          const sRect = scene.getBoundingClientRect();
+          const splatTop  = ((mRect.top  + mRect.height * 0.45 - sRect.top)  / sRect.height * 100).toFixed(1) + '%';
+          const splatLeft = ((mRect.left + mRect.width  * 0.5  - sRect.left) / sRect.width  * 100).toFixed(1) + '%';
+          const splatSize = 80 + power * 1.4;
+          const splatEl = document.createElement('div');
+          splatEl.style.cssText = `position:absolute;top:${splatTop};left:${splatLeft};transform:translate(-50%,-50%) scale(0);pointer-events:none;z-index:12;transition:transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275);`;
+          splatEl.innerHTML = `<svg width="${splatSize}" height="${splatSize*0.85}" viewBox="0 0 160 136" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="80" cy="72" rx="58" ry="40" fill="rgba(215,238,255,0.92)"/>
+            <ellipse cx="42" cy="52" rx="30" ry="20" fill="rgba(230,246,255,0.86)"/>
+            <ellipse cx="118" cy="50" rx="27" ry="18" fill="rgba(230,246,255,0.86)"/>
+            <ellipse cx="55" cy="96" rx="26" ry="16" fill="rgba(220,242,255,0.82)"/>
+            <ellipse cx="108" cy="94" rx="23" ry="15" fill="rgba(220,242,255,0.80)"/>
+            <ellipse cx="80" cy="30" rx="20" ry="16" fill="rgba(240,252,255,0.78)"/>
+            <ellipse cx="135" cy="76" rx="18" ry="13" fill="rgba(228,244,255,0.75)"/>
+            <ellipse cx="24"  cy="76" rx="17" ry="12" fill="rgba(228,244,255,0.75)"/>
+            <ellipse cx="80" cy="110" rx="16" ry="11" fill="rgba(218,240,255,0.70)"/>
+            <ellipse cx="20" cy="50"  rx="13" ry="10" fill="rgba(235,248,255,0.68)"/>
+            <ellipse cx="142" cy="52" rx="12" ry="9"  fill="rgba(235,248,255,0.68)"/>
+          </svg>`;
+          scene.appendChild(splatEl);
+          // Pop in
+          requestAnimationFrame(() => {
+            splatEl.style.transform = 'translate(-50%,-50%) scale(1)';
+          });
 
-          const t1 = performance.now();
-          function animBack(ts) {
-            const p = Math.min(1, (ts - t1) / b2Dur);
-            const ex = b2StartX + (splatX - b2StartX) * p;
-            const ey = (1-p)*((1-p)*b2StartY + p*b2Peak) + p*((1-p)*b2Peak + p*splatY);
-            const sc = 1 + p * 0.5; // grows as it flies toward screen
-            ball2.style.left = ex + 'px';
-            ball2.style.top  = ey + 'px';
-            ball2.style.transform = `scale(${sc})`;
-            if (p < 1) { requestAnimationFrame(animBack); return; }
+          // Melt quickly
+          const splatFadeDelay = fullPower ? 800 : 600;
+          const splatFadeDuration = 800;
+          setTimeout(() => {
+            splatEl.style.transition = `opacity ${splatFadeDuration}ms ease, transform ${splatFadeDuration}ms ease`;
+            splatEl.style.opacity = '0';
+            splatEl.style.transform = 'translate(-50%,-50%) translateY(10px) scale(0.7)';
+            setTimeout(() => splatEl.remove(), splatFadeDuration);
+          }, splatFadeDelay);
 
-            ball2.remove();
-            trunk.classList.remove('trunk-raised');
-            wrapper.classList.remove('winding');
-            createSplat(splatX, splatY);
+          // ── FULL POWER: dizzy pterodactyls — spawn AFTER splat fully gone ──
+          if (fullPower) {
+            wrapper.classList.remove('catching');
+            void wrapper.offsetWidth;
+            wrapper.classList.add('dizzy');
             soundSplat();
-            showBubble('😄 Got ya!');
-            state.happiness = Math.min(100, state.happiness + 8);
-            state.score += 15;
-            throwState.busy = false;
-            state.isAnimating = false;
-            updateStats();
+            setTimeout(() => soundHappyToot(), 200);
+
+            // Wait for splat to fully disappear before showing pterodactyls
+            const pteroDelay = splatFadeDelay + splatFadeDuration + 50;
+            setTimeout(() => {
+              // Position ring above mammoth in SCENE coords
+              const mRect2 = document.getElementById('mammothSizer').getBoundingClientRect();
+              const sRect2 = scene.getBoundingClientRect();
+              const ringLeft = ((mRect2.left + mRect2.width * 0.5 - sRect2.left) / sRect2.width  * 100).toFixed(1) + '%';
+              const ringTop  = ((mRect2.top - sRect2.top - 30) / sRect2.height * 100).toFixed(1) + '%';
+
+              const dizzyRing = document.createElement('div');
+              dizzyRing.className = 'dizzy-ring';
+              dizzyRing.style.left = ringLeft;
+              dizzyRing.style.top  = ringTop;
+              dizzyRing.style.transform = 'translate(-50%, 0)';
+
+              const pteroSVG = `<svg width="28" height="18" viewBox="0 0 28 18" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="15" cy="10" rx="5" ry="3" fill="#4a3060"/>
+                <ellipse cx="22" cy="8" rx="3" ry="2" fill="#4a3060"/>
+                <polygon points="25,7 28,6 25,9" fill="#4a3060"/>
+                <polygon points="20,6 22,2 24,6" fill="#5a3a70"/>
+                <path d="M14,9 Q7,2 0,5 Q6,8 13,11Z" fill="#5a3a70" opacity="0.9"/>
+                <path d="M16,9 Q20,5 24,8" stroke="#4a3060" stroke-width="1.5" fill="none"/>
+                <path d="M10,11 Q6,14 4,13" stroke="#4a3060" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              </svg>`;
+
+              [0,1,2,3].forEach((i) => {
+                const p = document.createElement('div');
+                p.className = 'pterodactyl';
+                p.innerHTML = pteroSVG;
+                p.style.animationDuration = (0.9 + i * 0.12) + 's';
+                p.style.animationDelay    = (i * 0.22) + 's';
+                p.style.opacity = '0';
+                // Make visible only once animation begins
+                setTimeout(() => { p.style.opacity = '1'; }, i * 220);
+                dizzyRing.appendChild(p);
+              });
+              scene.appendChild(dizzyRing);
+
+              setTimeout(() => {
+                wrapper.classList.remove('dizzy');
+                dizzyRing.remove();
+                showBubble('😵 What hit me??');
+                throwState.busy = false;
+                state.isAnimating = false;
+              }, 3000);
+            }, pteroDelay);
+
+          } else {
+            setTimeout(() => {
+              wrapper.classList.remove('catching');
+              throwState.busy = false;
+              state.isAnimating = false;
+            }, 900);
           }
-          requestAnimationFrame(animBack);
-        }, 600);
+
+          state.happiness = Math.max(0, state.happiness - (fullPower ? 12 : 5));
+          state.score += fullPower ? 50 : 20;
+          updateStats();
+
+        } else {
+          // ── MISS — catch and throw back ──
+          wrapper.classList.remove('eating','happy','catching','winding');
+          void wrapper.offsetWidth;
+          wrapper.classList.add('catching');
+          showBubble('😄 Got it!');
+          soundHappyToot();
+
+          setTimeout(() => {
+            wrapper.classList.remove('catching');
+            void wrapper.offsetWidth;
+            wrapper.classList.add('winding');
+            trunk.classList.add('trunk-raised');
+            showBubble('⚡ Heads up!');
+            soundThrow();
+
+            const ball2 = document.createElement('div');
+            ball2.className = 'snowball-fly';
+            ball2.style.position = 'fixed';
+            const b2StartX = targetX;
+            const b2StartY = targetY;
+            const splatX = window.innerWidth  * (0.15 + Math.random() * 0.7);
+            const splatY = window.innerHeight * (0.15 + Math.random() * 0.5);
+            const b2Peak = b2StartY - 120 - Math.random() * 80;
+            const b2Dur  = 550;
+            ball2.style.left = b2StartX + 'px';
+            ball2.style.top  = b2StartY + 'px';
+            document.body.appendChild(ball2);
+
+            const t1 = performance.now();
+            function animBack(ts) {
+              const p = Math.min(1, (ts - t1) / b2Dur);
+              const ex = b2StartX + (splatX - b2StartX) * p;
+              const ey = (1-p)*((1-p)*b2StartY + p*b2Peak) + p*((1-p)*b2Peak + p*splatY);
+              ball2.style.left = ex + 'px';
+              ball2.style.top  = ey + 'px';
+              ball2.style.transform = `scale(${1 + p * 0.5})`;
+              if (p < 1) { requestAnimationFrame(animBack); return; }
+              ball2.remove();
+              trunk.classList.remove('trunk-raised');
+              wrapper.classList.remove('winding');
+              createSplat(splatX, splatY);
+              soundSplat();
+              showBubble('😄 Got ya!');
+              state.happiness = Math.min(100, state.happiness + 8);
+              state.score += 15;
+              throwState.busy = false;
+              state.isAnimating = false;
+              updateStats();
+            }
+            requestAnimationFrame(animBack);
+          }, 600);
+        }
       }
       requestAnimationFrame(animOut);
     }, 400);
