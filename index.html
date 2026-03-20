@@ -928,6 +928,36 @@ display: none;
 }
 .mammoth-name-display.show { display: inline-block; }
 
+/* Animal picker */
+.animal-picker {
+display: flex;
+gap: 10px;
+margin: 14px 0 4px;
+}
+.animal-btn {
+flex: 1;
+padding: 10px 6px;
+border: 2px solid rgba(77,208,225,0.3);
+border-radius: 14px;
+background: rgba(255,255,255,0.06);
+color: white;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: 0.85rem;
+cursor: pointer;
+transition: all 0.15s;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+}
+.animal-btn .ab-emoji { font-size: 1.8rem; }
+.animal-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(77,208,225,0.6); }
+.animal-btn.selected {
+background: rgba(77,208,225,0.2);
+border-color: rgba(77,208,225,0.9);
+box-shadow: 0 0 12px rgba(77,208,225,0.3);
+}
+
 /* Name entry popup */
 #namePopup {
 position: fixed;
@@ -1025,12 +1055,22 @@ z-index: 10;
 
 <div id="namePopup" style="display:none;">
   <div class="name-popup-box">
-    <div class="np-emoji">🦣</div>
+    <div class="np-emoji" id="npEmoji">🦣</div>
     <div class="np-title" id="npTitle">Welcome!</div>
-    <div class="np-sub" id="npSub">Let's meet your baby mammoth</div>
+    <div class="np-sub" id="npSub">Choose your baby and give it a name</div>
+    <div class="animal-picker">
+      <button class="animal-btn selected" id="animalBtnMammoth" onclick="selectAnimal('mammoth')">
+        <span class="ab-emoji">🦣</span>
+        Wooly Mammoth
+      </button>
+      <button class="animal-btn" id="animalBtnRhino" onclick="selectAnimal('rhino')">
+        <span class="ab-emoji">🦏</span>
+        Wooly Rhino
+      </button>
+    </div>
     <label>Your name</label>
     <input type="text" id="playerNameInput" placeholder="e.g. John" maxlength="20" autocomplete="off"/>
-    <label>Your mammoth's name</label>
+    <label id="animalNameLabel">Your mammoth's name</label>
     <input type="text" id="mammothNameInput" placeholder="e.g. Bob" maxlength="10" autocomplete="off"/>
     <button class="np-btn" onclick="submitNames()">Let's Go! ❄️</button>
     <button id="npCancelBtn" onclick="cancelReset()" style="display:none;margin-top:10px;width:100%;padding:10px;border:none;border-radius:14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:1rem;cursor:pointer;">Cancel</button>
@@ -1532,7 +1572,101 @@ z-index: 10;
 </div>
 </div><!-- /mammothSizer -->
 
-<!-- Ground -->
+<!-- Wooly Rhino SVG -->
+<div id="rhinoSizer" style="position:relative;z-index:6;transform-origin:bottom center;transition:transform 0.8s ease;transform:scale(0.3);display:none;">
+<div class="mammoth-wrapper" id="rhinoWrapper">
+  <svg width="210" height="195" viewBox="0 0 210 195" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Shadow -->
+    <ellipse cx="108" cy="191" rx="68" ry="7" fill="rgba(0,0,0,0.15)"/>
+
+    <!-- ── BACK LEGS ── -->
+    <rect x="148" y="148" width="20" height="32" rx="7" fill="#5C4228"/>
+    <rect x="170" y="148" width="18" height="30" rx="7" fill="#4e3820"/>
+    <!-- Hooves back -->
+    <rect x="148" y="174" width="20" height="8" rx="4" fill="#1e1008"/>
+    <rect x="170" y="172" width="18" height="8" rx="4" fill="#1e1008"/>
+
+    <!-- ── BODY — stocky, barrel-shaped ── -->
+    <!-- Main body mass -->
+    <ellipse cx="112" cy="120" rx="78" ry="52" fill="#7B5A38"/>
+    <!-- Shoulder hump (distinctive rhino feature) -->
+    <ellipse cx="148" cy="88" rx="32" ry="24" fill="#8B6A48"/>
+    <!-- Body shading underside -->
+    <ellipse cx="112" cy="148" rx="65" ry="18" fill="#5C3E22" opacity="0.5"/>
+
+    <!-- ── SHAGGY FUR TEXTURE ── -->
+    <!-- Back top fur streaks -->
+    <path d="M55 90 Q70 75 95 78 Q120 72 145 78 Q165 78 178 88" stroke="#9B7A58" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M60 100 Q78 85 105 88 Q130 83 155 88 Q172 88 182 96" stroke="#8B6A48" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <!-- Shaggy side fur lines -->
+    <path d="M42 118 Q50 108 52 122" stroke="#6B4A28" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M48 128 Q56 116 58 132" stroke="#7B5A38" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <path d="M36 112 Q44 100 46 115" stroke="#7B5A38" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Shaggy belly fringe -->
+    <path d="M50 158 Q58 168 55 174 Q63 164 68 172 Q74 162 80 169 Q87 160 94 166 Q101 157 108 164 Q116 156 122 162 Q130 154 136 160 Q143 153 148 158" stroke="#4e3618" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- Second belly fringe row -->
+    <path d="M52 162 Q60 170 57 176 Q66 166 72 173 Q79 164 85 170 Q93 162 100 168 Q108 160 115 166 Q123 158 130 163 Q138 155 144 161" stroke="#3e2810" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- ── NECK ── -->
+    <ellipse cx="68" cy="108" rx="24" ry="28" fill="#7B5A38"/>
+
+    <!-- ── HEAD — low, forward-thrust ── -->
+    <!-- Main head shape -->
+    <ellipse cx="42" cy="115" rx="32" ry="24" fill="#8B6848"/>
+    <!-- Snout extension (rhinos have very elongated snouts) -->
+    <ellipse cx="18" cy="122" rx="20" ry="15" fill="#7B5838"/>
+    <!-- Top of head / neck merge -->
+    <ellipse cx="56" cy="100" rx="20" ry="14" fill="#8B6848"/>
+
+    <!-- ── MASSIVE FRONT HORN ── -->
+    <!-- Horn base -->
+    <ellipse cx="8" cy="112" rx="10" ry="7" fill="#5a4028"/>
+    <!-- Main horn - big, sweeping upward and forward -->
+    <path d="M4 112 Q-8 90 -5 62 Q-2 40 6 18 Q10 35 12 58 Q16 85 14 108 Z" fill="#4a3018"/>
+    <!-- Horn highlight -->
+    <path d="M2 105 Q-5 82 -2 55 Q0 38 5 20" stroke="#7a6040" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+    <!-- Horn tip -->
+    <ellipse cx="5" cy="19" rx="3" ry="4" fill="#2e1c08" transform="rotate(-10 5 19)"/>
+
+    <!-- ── EAR — small, rounded, behind shoulder hump ── -->
+    <ellipse cx="72" cy="90" rx="9" ry="11" fill="#7B5A38" transform="rotate(10 72 90)"/>
+    <ellipse cx="72" cy="90" rx="5" ry="7" fill="#c07060" opacity="0.35" transform="rotate(10 72 90)"/>
+
+    <!-- ── EYE — small, deep-set ── -->
+    <circle cx="38" cy="110" r="5.5" fill="#1a0c04"/>
+    <circle cx="38" cy="110" r="5.5" fill="none" stroke="#2e1808" stroke-width="2"/>
+    <circle cx="36" cy="108" r="1.8" fill="white" opacity="0.5"/>
+
+    <!-- ── NOSE / UPPER LIP ── -->
+    <!-- Nose wrinkle folds -->
+    <path d="M10 125 Q16 128 22 126" stroke="#3e2810" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M8 130 Q15 134 20 131" stroke="#3e2810" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- Nostril -->
+    <ellipse cx="6" cy="128" rx="4" ry="3" fill="#2a1408"/>
+    <ellipse cx="6" cy="128" rx="2" ry="1.5" fill="#0e0604"/>
+
+    <!-- ── FRONT LEGS ── -->
+    <rect x="60" y="152" width="20" height="34" rx="7" fill="#5C4228"/>
+    <rect x="82" y="152" width="18" height="32" rx="7" fill="#4e3820"/>
+    <!-- Hooves front -->
+    <rect x="60" y="180" width="20" height="8" rx="4" fill="#1e1008"/>
+    <rect x="82" y="178" width="18" height="8" rx="4" fill="#1e1008"/>
+
+    <!-- ── SHORT STUBBY TAIL ── -->
+    <path d="M185 118 Q196 110 194 122 Q190 130 186 126" stroke="#5C4228" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+    <!-- ── FUR DETAIL on shoulder / back ── -->
+    <path d="M130 82 Q138 72 148 76 Q158 72 165 78" stroke="#a08060" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M110 80 Q120 70 132 74 Q144 70 152 76" stroke="#907050" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.45"/>
+
+    <!-- ── ROSY CHEEK ── -->
+    <circle cx="32" cy="116" r="7" fill="#c07060" opacity="0.25"/>
+
+  </svg>
+</div>
+</div><!-- /rhinoSizer -->
 <div class="ground"></div>
 ```
 
@@ -1805,6 +1939,7 @@ z-index: 10;
         grownUp: state.grownUp,
         playerName: state.playerName,
         mammothName: state.mammothName,
+        animalType: state.animalType,
       }));
     } catch(e) {}
   }
@@ -1822,6 +1957,7 @@ z-index: 10;
         state.grownUp     = d.grownUp     || false;
         state.playerName  = d.playerName  || '';
         state.mammothName = d.mammothName || '';
+        state.animalType  = d.animalType  || 'mammoth';
       }
     } catch(e) {}
   }
@@ -1840,23 +1976,46 @@ z-index: 10;
     lastGrowthAt: 0,
     playerName: '',
     mammothName: '',
+    animalType: 'mammoth', // 'mammoth' or 'rhino'
   };
+
+  function getActiveWrapper() {
+    return state.animalType === 'rhino'
+      ? document.getElementById('rhinoWrapper')
+      : document.getElementById('mammothWrapper');
+  }
+  function getActiveSizer() {
+    return state.animalType === 'rhino'
+      ? document.getElementById('rhinoSizer')
+      : document.getElementById('mammothSizer');
+  }
+
+  function selectAnimal(type) {
+    state.animalType = type;
+    document.getElementById('animalBtnMammoth').classList.toggle('selected', type === 'mammoth');
+    document.getElementById('animalBtnRhino').classList.toggle('selected', type === 'rhino');
+    const label = document.getElementById('animalNameLabel');
+    if (label) label.textContent = type === 'rhino' ? "Your rhino's name" : "Your mammoth's name";
+    const sub = document.getElementById('npSub');
+    if (sub && !sub.textContent.includes('erase')) sub.textContent = 'Choose your baby and give it a name';
+  }
+
+  function applyAnimal() {
+    const isMammoth = state.animalType !== 'rhino';
+    document.getElementById('mammothSizer').style.display = isMammoth ? '' : 'none';
+    document.getElementById('rhinoSizer').style.display   = isMammoth ? 'none' : '';
+    // Update title
+    document.querySelector('.title').textContent = isMammoth ? 'Baby Mammoth' : 'Baby Rhino';
+  }
 
   function applyNames() {
     const p = state.playerName;
     const m = state.mammothName || '';
-    // Player name on button border
     const playerLabel = document.getElementById('playerNameDisplay');
-    if (playerLabel && p) {
-      playerLabel.textContent = p;
-      playerLabel.classList.add('show');
-    }
-    // Mammoth name on score border
+    if (playerLabel && p) { playerLabel.textContent = p; playerLabel.classList.add('show'); }
     const mammothLabel = document.getElementById('mammothNameDisplay');
-    if (mammothLabel && m) {
-      mammothLabel.textContent = m;
-      mammothLabel.classList.add('show');
-    }
+    if (mammothLabel && m) { mammothLabel.textContent = m; mammothLabel.classList.add('show'); }
+    applyAnimal();
   }
 
   // Load saved progress
@@ -1956,7 +2115,7 @@ z-index: 10;
     if (sizeBar) sizeBar.style.width = ((state.sizePercent - 30) / 470 * 100) + '%';
 
     // Dance when happiness > 95%
-    const wrapper = document.getElementById('mammothWrapper');
+    const wrapper = getActiveWrapper();
     const trunk = document.getElementById('trunkGroup');
     if (hp >= 95 && !state.isAnimating) {
       if (!wrapper.classList.contains('dancing')) {
@@ -1977,11 +2136,11 @@ z-index: 10;
   }
 
   function applyMammothSize() {
-    const sizer = document.getElementById('mammothSizer');
-    if (!sizer) return;
     const scale = state.sizePercent / 100;
-    sizer.style.transform = `scale(${scale})`;
-    sizer.style.transformOrigin = 'bottom center';
+    ['mammothSizer','rhinoSizer'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.transform = `scale(${scale})`;
+    });
   }
 
   function showGrowthCelebration(title, sub, isFinal) {
@@ -2210,7 +2369,7 @@ z-index: 10;
   // Feed mammoth
   function feedMammoth(type) {
     if (state.isAnimating) return;
-    const wrapper = document.getElementById('mammothWrapper');
+    const wrapper = getActiveWrapper();
     const food = FOOD_DATA[type];
     state.isAnimating = true;
     state.feedCount++;
@@ -2317,7 +2476,7 @@ z-index: 10;
       showBubble(sound);
       soundHungry();
       // Shake mammoth
-      const wrapper = document.getElementById('mammothWrapper');
+      const wrapper = getActiveWrapper();
       wrapper.style.animation = 'none';
       void wrapper.offsetWidth;
     }
@@ -2337,7 +2496,7 @@ z-index: 10;
   // Dance every 2 minutes if happiness >= 95%
   function triggerDance() {
     if (state.happiness >= 95 && !state.isAnimating) {
-      const wrapper = document.getElementById('mammothWrapper');
+      const wrapper = getActiveWrapper();
       const trunk = document.getElementById('trunkGroup');
 
       // Start dancing
@@ -2410,7 +2569,7 @@ z-index: 10;
 
       // Position vertically at the mammoth's centre, relative to the scene
       const sceneRect   = scene.getBoundingClientRect();
-      const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+      const mammothRect = getActiveSizer().getBoundingClientRect();
       const mammothCY   = mammothRect.top + mammothRect.height * 0.45; // slightly above centre
       const topPct      = ((mammothCY - sceneRect.top) / sceneRect.height) * 100;
 
@@ -2446,7 +2605,7 @@ z-index: 10;
     const xhEl = document.getElementById('crosshairs');
 
     // ── Check hit BEFORE hiding crosshairs ──
-    const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+    const mammothRect = getActiveSizer().getBoundingClientRect();
     const xhRect      = xhEl.getBoundingClientRect();
     const xhCX = xhRect.left + xhRect.width  / 2;
     const xhCY = xhRect.top  + xhRect.height / 2;
@@ -2506,7 +2665,7 @@ z-index: 10;
     state.isAnimating = true;
 
     const scene   = document.querySelector('.mammoth-scene');
-    const wrapper = document.getElementById('mammothWrapper');
+    const wrapper = getActiveWrapper();
     const trunk   = document.getElementById('trunkGroup');
     const sceneRect = scene.getBoundingClientRect();
 
@@ -2522,7 +2681,7 @@ z-index: 10;
       const startY = sceneRect.bottom - 140;
 
       // Use actual mammoth rect for hit landing position
-      const mammothRect = document.getElementById('mammothSizer').getBoundingClientRect();
+      const mammothRect = getActiveSizer().getBoundingClientRect();
       const mammothCX = mammothRect.left + mammothRect.width  * 0.5;
       const mammothCY = mammothRect.top  + mammothRect.height * 0.45;
 
@@ -2561,7 +2720,7 @@ z-index: 10;
           wrapper.classList.add('catching');
 
           // BIG snow splat blob — positioned at mammoth's actual centre
-          const mRect = document.getElementById('mammothSizer').getBoundingClientRect();
+          const mRect = getActiveSizer().getBoundingClientRect();
           const sRect = scene.getBoundingClientRect();
           const splatTop  = ((mRect.top  + mRect.height * 0.45 - sRect.top)  / sRect.height * 100).toFixed(1) + '%';
           const splatLeft = ((mRect.left + mRect.width  * 0.5  - sRect.left) / sRect.width  * 100).toFixed(1) + '%';
@@ -2609,7 +2768,7 @@ z-index: 10;
             const pteroDelay = splatFadeDelay + splatFadeDuration + 50;
             setTimeout(() => {
               // Position ring above mammoth in SCENE coords
-              const mRect2 = document.getElementById('mammothSizer').getBoundingClientRect();
+              const mRect2 = getActiveSizer().getBoundingClientRect();
               const sRect2 = scene.getBoundingClientRect();
               const ringLeft = ((mRect2.left + mRect2.width * 0.5 - sRect2.left) / sRect2.width  * 100).toFixed(1) + '%';
               const ringTop  = ((mRect2.top - sRect2.top - 30) / sRect2.height * 100).toFixed(1) + '%';
@@ -2764,20 +2923,20 @@ z-index: 10;
   // ────────────────────────────────────────────────────────────────
 
   function resetGame() {
-    // Show the popup in reset mode — with cancel button and warning text
     document.getElementById('npTitle').textContent = '⚠️ Reset?';
     document.getElementById('npSub').textContent = 'This will erase all progress!';
     document.getElementById('playerNameInput').value = state.playerName || '';
     document.getElementById('mammothNameInput').value = state.mammothName || '';
     document.getElementById('npCancelBtn').style.display = 'block';
+    // Pre-select current animal
+    selectAnimal(state.animalType || 'mammoth');
     document.getElementById('namePopup').style.display = 'flex';
   }
 
   function cancelReset() {
-    // Just close the popup, restore welcome text, hide cancel button
     document.getElementById('namePopup').style.display = 'none';
     document.getElementById('npTitle').textContent = 'Welcome!';
-    document.getElementById('npSub').textContent = 'Let\'s meet your baby mammoth';
+    document.getElementById('npSub').textContent = 'Choose your baby and give it a name';
     document.getElementById('npCancelBtn').style.display = 'none';
   }
 
@@ -2790,7 +2949,7 @@ z-index: 10;
       return;
     }
 
-    // If we're in reset mode (cancel button is visible), wipe progress first
+    // If reset mode, wipe progress
     if (document.getElementById('npCancelBtn').style.display !== 'none') {
       localStorage.removeItem('mammoth_save');
       state.score = 0;
@@ -2800,11 +2959,6 @@ z-index: 10;
       state.feedCount = 0;
       state.grownUp = false;
       state.lastGrowthAt = 0;
-      // Clear mountain name and border label
-      ['mountainName','mountainNameShadow','mountainNameBorder','mountainNameGlow'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = '';
-      });
       const labelEl = document.getElementById('mammothNameDisplay');
       if (labelEl) { labelEl.textContent = ''; labelEl.classList.remove('show'); }
       const playerLabel = document.getElementById('playerNameDisplay');
@@ -2814,9 +2968,10 @@ z-index: 10;
 
     state.playerName  = pName;
     state.mammothName = mName;
+    // animalType already set by selectAnimal()
     document.getElementById('npCancelBtn').style.display = 'none';
     document.getElementById('npTitle').textContent = 'Welcome!';
-    document.getElementById('npSub').textContent = 'Let\'s meet your baby mammoth';
+    document.getElementById('npSub').textContent = 'Choose your baby and give it a name';
     document.getElementById('namePopup').style.display = 'none';
     applyNames();
     saveProgress();
@@ -2825,10 +2980,12 @@ z-index: 10;
 
   applyMammothSize();
 
-  // Show name popup if first time, otherwise apply saved names
+  // Show name popup if first time, otherwise restore saved state
   if (!state.playerName || !state.mammothName) {
+    selectAnimal(state.animalType || 'mammoth');
     document.getElementById('namePopup').style.display = 'flex';
   } else {
+    selectAnimal(state.animalType || 'mammoth');
     applyNames();
   }
 
