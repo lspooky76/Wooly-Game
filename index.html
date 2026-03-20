@@ -44,11 +44,16 @@
 –poop: #6B3A2A;
 }
 
-html, body {
-width: 100%;
+html {
 height: 100%;
+overflow: hidden;
+position: fixed;
+width: 100%;
+}
+
+html, body {
 overscroll-behavior: none;
--webkit-overflow-scrolling: touch;
+touch-action: none;
 }
 
 body {
@@ -63,12 +68,16 @@ background: linear-gradient(180deg,
 #ddeef8 100%);
 width: 100vw;
 height: 100dvh;
-min-height: 100dvh;
+max-height: 100dvh;
 display: flex;
 flex-direction: column;
 align-items: center;
 overflow: hidden;
-position: relative;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
 /* Safe area for notched phones */
 padding-top: env(safe-area-inset-top);
 padding-bottom: env(safe-area-inset-bottom);
@@ -3545,6 +3554,19 @@ z-index: 10;
       asteroidState.lastRollAt = Math.floor(state.score / 100); // don't re-trigger on same century
     }, 15000);
   }
+  // ── PREVENT iOS SCROLL/BOUNCE ──
+  document.addEventListener('touchmove', (e) => {
+    // Allow touchmove inside asteroid overlay (for dodging) but block everywhere else
+    if (!e.target.closest('#asteroidOverlay')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchstart', (e) => {
+    // Prevent pull-to-refresh
+    if (e.touches.length > 1) e.preventDefault();
+  }, { passive: false });
+
   // ── SERVICE WORKER + UPDATE DETECTION ──
   let swRegistration = null;
   if ('serviceWorker' in navigator) {
