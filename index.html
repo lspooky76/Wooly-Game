@@ -49,7 +49,7 @@ height: 100%;
 overflow: hidden;
 position: fixed;
 width: 100%;
-background: #ddeef8; /* fallback matches bottom of gradient */
+background: #081528;
 }
 
 html, body {
@@ -553,7 +553,7 @@ animation: trunkRaise 0.8s ease-in-out infinite !important;
 0%, 100% { transform: rotate(-60deg); }
 50%       { transform: rotate(-75deg); }
 }
-/* Actions container — fills all remaining bottom space */
+/* Actions container — fills all remaining bottom space including safe area */
 .actions-container {
 position: relative;
 width: 100%;
@@ -563,6 +563,20 @@ background: linear-gradient(180deg, #0a1e3d 0%, #081528 100%);
 border-top: 2px solid rgba(245, 200, 66, 0.4);
 padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
 box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+/* Extend background behind home bar */
+margin-bottom: 0;
+}
+
+/* Fill the very bottom behind the home indicator */
+.actions-container::after {
+content: ‘’;
+position: absolute;
+bottom: calc(-1 * env(safe-area-inset-bottom) - 20px);
+left: 0;
+right: 0;
+height: calc(env(safe-area-inset-bottom) + 20px);
+background: #081528;
+z-index: -1;
 }
 .actions-border-label {
 display: none;
