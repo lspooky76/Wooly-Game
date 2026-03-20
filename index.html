@@ -110,7 +110,7 @@ z-index: 3;
 /* Header */
 .header {
 text-align: center;
-padding: 18px 16px 8px;
+padding: 10px 16px 4px;
 position: relative;
 z-index: 10;
 display: flex;
@@ -119,14 +119,14 @@ align-items: center;
 }
 .title {
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
-font-size: 2.2rem;
+font-size: 1.1rem;
 color: white;
 text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
 letter-spacing: 1px;
 display: inline-block;
 background: rgba(0, 20, 50, 0.55);
-padding: 6px 22px 8px;
-border-radius: 18px;
+padding: 4px 14px 5px;
+border-radius: 12px;
 box-shadow: 0 4px 18px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.08) inset;
 backdrop-filter: blur(4px);
 }
@@ -134,7 +134,7 @@ backdrop-filter: blur(4px);
 font-size: 0.82rem;
 color: white;
 font-weight: 700;
-margin-top: 7px;
+margin-top: 5px;
 text-shadow: none;
 display: inline-block;
 background: rgba(0, 20, 50, 0.45);
@@ -147,8 +147,8 @@ backdrop-filter: blur(4px);
 /* Stats bar */
 .stats {
 display: flex;
-gap: 12px;
-padding: 8px 16px;
+gap: 8px;
+padding: 4px 16px 6px;
 position: relative;
 z-index: 10;
 width: 100%;
@@ -277,7 +277,7 @@ border-radius: 2px;
 .mammoth-scene {
 position: relative;
 width: 100%;
-height: 340px;
+height: 280px;
 display: flex;
 justify-content: center;
 align-items: flex-end;
@@ -343,10 +343,13 @@ animation: poopClean 0.3s ease forwards;
 }
 
 /* SVG Mammoth */
+.mammoth-sizer {
+transform-origin: bottom center;
+transition: transform 0.6s ease;
+}
 .mammoth-wrapper {
 position: relative;
-z-index: 6;
-transition: transform 0.3s ease;
+transform-origin: bottom center;
 }
 .mammoth-wrapper.eating {
 animation: munchBounce 0.3s ease 3;
@@ -359,33 +362,31 @@ animation: happyWiggle 0.4s ease 2;
 }
 @keyframes munchBounce {
 0%, 100% { transform: scaleY(1); }
-50% { transform: scaleY(0.9) translateY(5px); }
+50% { transform: scaleY(0.92) translateY(4px); }
 }
 @keyframes poopSquat {
 0%, 100% { transform: translateY(0); }
-30% { transform: translateY(10px) scaleY(0.85); }
-60% { transform: translateY(8px) scaleY(0.88); }
+30% { transform: translateY(10px) scaleY(0.88); }
+60% { transform: translateY(8px) scaleY(0.90); }
 }
 .mammoth-wrapper.catching {
 animation: catchRock 0.5s ease-in-out;
 }
 @keyframes catchRock {
-0%   { transform: translateX(0)    translateY(0)   rotate(0deg); }
+0%   { transform: translateX(0)     translateY(0)    rotate(0deg); }
 25%  { transform: translateX(-12px) translateY(-6px) rotate(-8deg); }
-55%  { transform: translateX(8px)  translateY(-3px) rotate(5deg); }
-80%  { transform: translateX(-4px) translateY(-1px) rotate(-2deg); }
-100% { transform: translateX(0)    translateY(0)   rotate(0deg); }
+55%  { transform: translateX(8px)   translateY(-3px) rotate(5deg); }
+80%  { transform: translateX(-4px)  translateY(-1px) rotate(-2deg); }
+100% { transform: translateX(0)     translateY(0)    rotate(0deg); }
 }
-
 .mammoth-wrapper.winding {
 animation: windUp 0.4s ease-in-out;
 }
 @keyframes windUp {
-0%   { transform: translateX(0)   rotate(0deg); }
+0%   { transform: translateX(0)    rotate(0deg); }
 40%  { transform: translateX(10px) rotate(6deg); }
-100% { transform: translateX(0)   rotate(0deg); }
+100% { transform: translateX(0)    rotate(0deg); }
 }
-
 @keyframes happyWiggle {
 0%, 100% { transform: rotate(0deg); }
 25% { transform: rotate(-5deg) scale(1.05); }
@@ -739,6 +740,130 @@ animation: splatMelt 3s ease forwards;
 100% { opacity: 0;  transform: scale(0.8) translateY(10px); }
 }
 
+/* Growth celebration */
+.grow-popup {
+position: fixed;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%) scale(0);
+background: rgba(10, 30, 55, 0.95);
+border: 2px solid rgba(77, 208, 225, 0.6);
+border-radius: 24px;
+padding: 24px 32px;
+text-align: center;
+z-index: 9998;
+box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+animation: growPopIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+pointer-events: none;
+}
+.grow-popup.hiding {
+animation: growPopOut 0.4s ease forwards;
+}
+@keyframes growPopIn {
+0%   { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+}
+@keyframes growPopOut {
+0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+100% { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+}
+.grow-popup .grow-title {
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: 1.6rem;
+color: #4dd0e1;
+text-shadow: 0 0 20px rgba(77,208,225,0.5);
+margin-bottom: 6px;
+}
+.grow-popup .grow-sub {
+font-size: 0.95rem;
+color: #a8d8f0;
+font-weight: 700;
+}
+.grow-popup .grow-emoji { font-size: 2.5rem; margin-bottom: 8px; }
+
+/* Mammoth name - shares .title styles, just adds margin and show/hide */
+.mammoth-name-display {
+display: none;
+margin-top: 4px;
+}
+.mammoth-name-display.show { display: inline-block; }
+
+/* Name entry popup */
+#namePopup {
+position: fixed;
+inset: 0;
+background: rgba(5, 15, 35, 0.92);
+z-index: 9999;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+.name-popup-box {
+background: linear-gradient(160deg, #0d2a4a, #1a3a5c);
+border: 1.5px solid rgba(77,208,225,0.4);
+border-radius: 28px;
+padding: 30px 28px;
+width: 100%;
+max-width: 340px;
+box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+text-align: center;
+}
+.name-popup-box .np-emoji { font-size: 3rem; margin-bottom: 8px; }
+.name-popup-box .np-title {
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: 1.6rem;
+color: #4dd0e1;
+margin-bottom: 4px;
+}
+.name-popup-box .np-sub {
+font-size: 0.85rem;
+color: #a8d8f0;
+font-weight: 700;
+margin-bottom: 20px;
+}
+.name-popup-box label {
+display: block;
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: 0.9rem;
+color: #a8d8f0;
+text-align: left;
+margin-bottom: 5px;
+margin-top: 14px;
+}
+.name-popup-box input {
+width: 100%;
+padding: 12px 16px;
+border: 1.5px solid rgba(77,208,225,0.4);
+border-radius: 14px;
+background: rgba(255,255,255,0.07);
+color: white;
+font-family: ‘Nunito’, sans-serif;
+font-size: 1.1rem;
+font-weight: 700;
+outline: none;
+box-sizing: border-box;
+}
+.name-popup-box input:focus {
+border-color: rgba(77,208,225,0.8);
+background: rgba(255,255,255,0.1);
+}
+.name-popup-box input::placeholder { color: rgba(255,255,255,0.3); }
+.name-popup-box .np-btn {
+margin-top: 22px;
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 18px;
+background: linear-gradient(135deg, #4dd0e1, #00bcd4);
+color: #0a2a3a;
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: 1.3rem;
+cursor: pointer;
+box-shadow: 0 5px 0 rgba(0,0,0,0.3);
+transition: transform 0.1s;
+}
+.name-popup-box .np-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+
 /* Score display */
 .score-display {
 position: absolute;
@@ -754,6 +879,22 @@ z-index: 10;
 </style>
 </head>
 <body>
+
+<!-- Name entry popup -->
+
+<div id="namePopup" style="display:none;">
+  <div class="name-popup-box">
+    <div class="np-emoji">🦣</div>
+    <div class="np-title" id="npTitle">Welcome!</div>
+    <div class="np-sub" id="npSub">Let's meet your baby mammoth</div>
+    <label>Your name</label>
+    <input type="text" id="playerNameInput" placeholder="e.g. John" maxlength="20" autocomplete="off"/>
+    <label>Your mammoth's name</label>
+    <input type="text" id="mammothNameInput" placeholder="e.g. Bob" maxlength="20" autocomplete="off"/>
+    <button class="np-btn" onclick="submitNames()">Let's Go! ❄️</button>
+    <button id="npCancelBtn" onclick="cancelReset()" style="display:none;margin-top:10px;width:100%;padding:10px;border:none;border-radius:14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:1rem;cursor:pointer;">Cancel</button>
+  </div>
+</div>
 
 <!-- Clouds -->
 
@@ -774,7 +915,8 @@ z-index: 10;
 
 <div class="header" style="position:relative;">
   <div class="title">Baby Mammoth</div>
-  <div class="subtitle">Feed him. Clean up after him. Love him.</div>
+  <div class="title mammoth-name-display" id="mammothNameDisplay"></div>
+  <div class="subtitle" id="subtitleText">Feed him. Clean up after him. Love him.</div>
 </div>
 
 <!-- Stats -->
@@ -794,6 +936,11 @@ z-index: 10;
     <div class="stat-label">✨ Score</div>
     <div class="stat-value" id="scoreVal" style="color:#a855f7">0</div>
     <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">🦣 Size</div>
+    <div class="stat-value" id="sizeVal" style="color:#4dd0e1">30%</div>
+    <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#4dd0e1,#00bcd4);width:2%" id="sizeBar"></div></div>
   </div>
 </div>
 
@@ -1092,7 +1239,7 @@ z-index: 10;
 <div class="clean-label" id="cleanLabel">👆 Tap poop to clean!</div>
 
 <!-- Mammoth SVG -->
-<!-- Mammoth SVG -->
+<div id="mammothSizer" style="position:relative;z-index:6;transform-origin:bottom center;transition:transform 0.8s ease;transform:scale(0.3);">
 <div class="mammoth-wrapper" id="mammothWrapper">
   <svg width="190" height="200" viewBox="0 0 190 200" xmlns="http://www.w3.org/2000/svg">
     <!-- Shadow -->
@@ -1218,6 +1365,7 @@ z-index: 10;
     <circle cx="160" cy="143" r="4" fill="#5C3A22"/>
   </svg>
 </div>
+</div><!-- /mammothSizer -->
 
 <!-- Ground -->
 <div class="ground"></div>
@@ -1249,7 +1397,7 @@ z-index: 10;
       <div class="power-bar-fill" id="powerBarFill"></div>
       <span class="power-label">POWER</span>
     </div>
-    <div class="hint" id="hintText">👆 Feed your baby mammoth!</div>
+    <button onclick="resetGame()" style="background:rgba(200,40,40,0.7);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:8px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;width:100%;border-radius:12px;box-shadow:0 3px 0 rgba(0,0,0,0.3);">↺ Reset Progress</button>
   </div>
 </div>
 
@@ -1477,6 +1625,40 @@ z-index: 10;
   // ─────────────────────────────────────────────────────────────────
 
   // Game state
+  // ─── PERSISTENCE ────────────────────────────────────────────────
+  function saveProgress() {
+    try {
+      localStorage.setItem('mammoth_save', JSON.stringify({
+        score: state.score,
+        sizePercent: state.sizePercent,
+        hunger: state.hunger,
+        happiness: state.happiness,
+        feedCount: state.feedCount,
+        grownUp: state.grownUp,
+        playerName: state.playerName,
+        mammothName: state.mammothName,
+      }));
+    } catch(e) {}
+  }
+
+  function loadProgress() {
+    try {
+      const saved = localStorage.getItem('mammoth_save');
+      if (saved) {
+        const d = JSON.parse(saved);
+        state.score       = d.score       || 0;
+        state.sizePercent = d.sizePercent || 30;
+        state.hunger      = d.hunger      || 80;
+        state.happiness   = d.happiness   || 70;
+        state.feedCount   = d.feedCount   || 0;
+        state.grownUp     = d.grownUp     || false;
+        state.playerName  = d.playerName  || '';
+        state.mammothName = d.mammothName || '';
+      }
+    } catch(e) {}
+  }
+  // ─────────────────────────────────────────────────────────────────
+
   let state = {
     hunger: 80,
     happiness: 70,
@@ -1485,7 +1667,28 @@ z-index: 10;
     poopCount: 0,
     isAnimating: false,
     feedCount: 0,
+    sizePercent: 30,
+    grownUp: false,
+    lastGrowthAt: 0,
+    playerName: '',
+    mammothName: '',
   };
+
+  function applyNames() {
+    const p = state.playerName;
+    const m = state.mammothName || 'him';
+    const nameEl = document.getElementById('mammothNameDisplay');
+    const subEl  = document.getElementById('subtitleText');
+    if (p && m) {
+      nameEl.textContent = m;
+      nameEl.classList.add('show');
+      subEl.textContent = `${p}! Feed ${m}. Clean up after ${m}. Love ${m}.`;
+    }
+  }
+
+  // Load saved progress
+  loadProgress();
+  state.lastGrowthAt = Math.floor((state.sizePercent - 30) / 2) * 1000;
 
   const FOOD_DATA = {
     hay:     { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 25, happy: 10, poopChance: 0.45 },
@@ -1553,6 +1756,76 @@ z-index: 10;
     if (hp > 60) happyEl.style.color = '#4CAF50';
     else if (hp > 30) happyEl.style.color = '#FF9800';
     else happyEl.style.color = '#f44336';
+
+    // ── GROWTH SYSTEM ──
+    if (!state.grownUp) {
+      const newSize = Math.min(500, 30 + Math.floor(state.score / 1000) * 2);
+      if (newSize > state.sizePercent) {
+        const oldSize = state.sizePercent;
+        state.sizePercent = newSize;
+        applyMammothSize();
+        if (newSize >= 500) {
+          state.grownUp = true;
+          showGrowthCelebration('🎉 Fully Grown!', 'Your mammoth is all grown up at 500%!', true);
+        } else {
+          showGrowthCelebration('📈 He\'s growing!', `${oldSize}% → ${newSize}%`, false);
+        }
+      }
+    }
+
+    // Size stat display
+    const sizeEl = document.getElementById('sizeVal');
+    const sizeBar = document.getElementById('sizeBar');
+    if (sizeEl) {
+      sizeEl.textContent = state.sizePercent + '%';
+      sizeEl.style.color = state.grownUp ? '#ffd700' : '#4dd0e1';
+    }
+    if (sizeBar) sizeBar.style.width = ((state.sizePercent - 30) / 470 * 100) + '%';
+
+    // Dance when happiness > 95%
+    const wrapper = document.getElementById('mammothWrapper');
+    const trunk = document.getElementById('trunkGroup');
+    if (hp >= 95 && !state.isAnimating) {
+      if (!wrapper.classList.contains('dancing')) {
+        wrapper.classList.add('dancing');
+        trunk.classList.add('trunk-raised');
+        trunk.classList.remove('trunk-moving');
+        showBubble(['🎉 Woohoo!', '💃 Mrooooo!', '🎶 La la la!', '✨ So happy!'][Math.floor(Math.random()*4)]);
+        soundHappyToot();
+      }
+    } else {
+      if (wrapper.classList.contains('dancing')) {
+        wrapper.classList.remove('dancing');
+        trunk.classList.remove('trunk-raised');
+      }
+    }
+
+    saveProgress();
+  }
+
+  function applyMammothSize() {
+    const sizer = document.getElementById('mammothSizer');
+    if (!sizer) return;
+    const scale = state.sizePercent / 100;
+    sizer.style.transform = `scale(${scale})`;
+    sizer.style.transformOrigin = 'bottom center';
+  }
+
+  function showGrowthCelebration(title, sub, isFinal) {
+    const el = document.createElement('div');
+    el.className = 'grow-popup';
+    el.innerHTML = `
+      <div class="grow-emoji">${isFinal ? '🦣👑' : '🦣'}</div>
+      <div class="grow-title">${title}</div>
+      <div class="grow-sub">${sub}</div>
+    `;
+    document.body.appendChild(el);
+    soundHappyToot();
+    if (isFinal) { setTimeout(() => soundHappyToot(), 400); setTimeout(() => soundMammothCall(), 800); }
+    setTimeout(() => {
+      el.classList.add('hiding');
+      setTimeout(() => el.remove(), 400);
+    }, isFinal ? 4000 : 2500);
   }
 
   // Show speech bubble
@@ -1679,6 +1952,11 @@ z-index: 10;
     const el = document.createElement('div');
     el.className = 'food-item';
 
+    // Scale food to 65% of mammoth's current size
+    const foodScale = (state.sizePercent / 100) * 0.65;
+    el.style.transformOrigin = 'bottom left';
+    el.style.transform = `scale(${foodScale})`;
+
     let svg = '';
     if (type === 'hay') {
       svg = `<svg width="72" height="50" viewBox="0 0 72 50" xmlns="http://www.w3.org/2000/svg">
@@ -1777,9 +2055,12 @@ z-index: 10;
 
     // After 3 seconds, mammoth eats it
     setTimeout(() => {
-      // Animate food being eaten (shrink up)
-      foodEl.classList.add('food-eaten');
-      setTimeout(() => foodEl.remove(), 400);
+      // Animate food being eaten - shrinks up while preserving the food scale
+      const fs = Math.min(2.5, state.sizePercent / 100);
+      foodEl.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+      foodEl.style.transform = `scale(0) translateY(-40px)`;
+      foodEl.style.opacity = '0';
+      setTimeout(() => foodEl.remove(), 520);
 
       // Update stats
       state.hunger = Math.min(100, state.hunger + food.hunger);
@@ -2035,16 +2316,20 @@ z-index: 10;
         ball.style.transform = `scale(${sc})`;
         if (p < 1) { requestAnimationFrame(animOut); return; }
 
-        // Ball lands — brief catch pause
+        // Ball lands — catch animation
         ball.remove();
         trunk.classList.remove('trunk-raised');
-        wrapper.classList.add('happy'); // little happy wiggle = catching
+        wrapper.classList.remove('eating','happy','catching','winding');
+        void wrapper.offsetWidth;
+        wrapper.classList.add('catching');
         showBubble('😄 Got it!');
         soundHappyToot();
 
-        // Short pause then throw back
+        // Short pause then wind up and throw back
         setTimeout(() => {
-          wrapper.classList.remove('happy');
+          wrapper.classList.remove('catching');
+          void wrapper.offsetWidth;
+          wrapper.classList.add('winding');
           trunk.classList.add('trunk-raised');
           showBubble('⚡ Heads up!');
           soundThrow();
@@ -2076,6 +2361,7 @@ z-index: 10;
 
             ball2.remove();
             trunk.classList.remove('trunk-raised');
+            wrapper.classList.remove('winding');
             createSplat(splatX, splatY);
             soundSplat();
             showBubble('😄 Got ya!');
@@ -2132,6 +2418,66 @@ z-index: 10;
     }, 150);
   }
   // ────────────────────────────────────────────────────────────────
+
+  function resetGame() {
+    // Show the popup in reset mode — with cancel button and warning text
+    document.getElementById('npTitle').textContent = '⚠️ Reset?';
+    document.getElementById('npSub').textContent = 'This will erase all progress!';
+    document.getElementById('playerNameInput').value = state.playerName || '';
+    document.getElementById('mammothNameInput').value = state.mammothName || '';
+    document.getElementById('npCancelBtn').style.display = 'block';
+    document.getElementById('namePopup').style.display = 'flex';
+  }
+
+  function cancelReset() {
+    // Just close the popup, restore welcome text, hide cancel button
+    document.getElementById('namePopup').style.display = 'none';
+    document.getElementById('npTitle').textContent = 'Welcome!';
+    document.getElementById('npSub').textContent = 'Let\'s meet your baby mammoth';
+    document.getElementById('npCancelBtn').style.display = 'none';
+  }
+
+  function submitNames() {
+    const pName = document.getElementById('playerNameInput').value.trim();
+    const mName = document.getElementById('mammothNameInput').value.trim();
+    if (!pName || !mName) {
+      document.getElementById('playerNameInput').style.borderColor = pName ? 'rgba(77,208,225,0.4)' : '#f44336';
+      document.getElementById('mammothNameInput').style.borderColor = mName ? 'rgba(77,208,225,0.4)' : '#f44336';
+      return;
+    }
+
+    // If we're in reset mode (cancel button is visible), wipe progress first
+    if (document.getElementById('npCancelBtn').style.display !== 'none') {
+      localStorage.removeItem('mammoth_save');
+      state.score = 0;
+      state.sizePercent = 30;
+      state.hunger = 80;
+      state.happiness = 70;
+      state.feedCount = 0;
+      state.grownUp = false;
+      state.lastGrowthAt = 0;
+      applyMammothSize();
+    }
+
+    state.playerName  = pName;
+    state.mammothName = mName;
+    document.getElementById('npCancelBtn').style.display = 'none';
+    document.getElementById('npTitle').textContent = 'Welcome!';
+    document.getElementById('npSub').textContent = 'Let\'s meet your baby mammoth';
+    document.getElementById('namePopup').style.display = 'none';
+    applyNames();
+    saveProgress();
+    updateStats();
+  }
+
+  applyMammothSize();
+
+  // Show name popup if first time, otherwise apply saved names
+  if (!state.playerName || !state.mammothName) {
+    document.getElementById('namePopup').style.display = 'flex';
+  } else {
+    applyNames();
+  }
 
   updateStats();
 </script>
