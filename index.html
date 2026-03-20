@@ -34,7 +34,8 @@ min-height: 100vh;
 display: flex;
 flex-direction: column;
 align-items: center;
-overflow: hidden;
+overflow-x: hidden;
+overflow-y: hidden;
 position: relative;
 max-width: 430px;
 margin: 0 auto;
@@ -365,6 +366,26 @@ animation: happyWiggle 0.4s ease 2;
 30% { transform: translateY(10px) scaleY(0.85); }
 60% { transform: translateY(8px) scaleY(0.88); }
 }
+.mammoth-wrapper.catching {
+animation: catchRock 0.5s ease-in-out;
+}
+@keyframes catchRock {
+0%   { transform: translateX(0)    translateY(0)   rotate(0deg); }
+25%  { transform: translateX(-12px) translateY(-6px) rotate(-8deg); }
+55%  { transform: translateX(8px)  translateY(-3px) rotate(5deg); }
+80%  { transform: translateX(-4px) translateY(-1px) rotate(-2deg); }
+100% { transform: translateX(0)    translateY(0)   rotate(0deg); }
+}
+
+.mammoth-wrapper.winding {
+animation: windUp 0.4s ease-in-out;
+}
+@keyframes windUp {
+0%   { transform: translateX(0)   rotate(0deg); }
+40%  { transform: translateX(10px) rotate(6deg); }
+100% { transform: translateX(0)   rotate(0deg); }
+}
+
 @keyframes happyWiggle {
 0%, 100% { transform: rotate(0deg); }
 25% { transform: rotate(-5deg) scale(1.05); }
@@ -457,25 +478,25 @@ position: relative;
 z-index: 10;
 width: 100%;
 max-width: 380px;
-padding: 12px 16px;
+padding: 8px 16px 12px;
 display: flex;
 flex-direction: column;
-gap: 10px;
+gap: 8px;
 }
 
 .feed-btn {
 display: flex;
 align-items: center;
 justify-content: center;
-gap: 10px;
-padding: 16px 24px;
+gap: 6px;
+padding: 11px 8px;
 border: none;
-border-radius: 20px;
+border-radius: 16px;
 font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, ‘Helvetica Rounded’, Arial, sans-serif;
-font-size: 1.3rem;
+font-size: 1rem;
 cursor: pointer;
 transition: all 0.15s ease;
-box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.15);
+box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 6px 14px rgba(0,0,0,0.15);
 position: relative;
 overflow: hidden;
 user-select: none;
@@ -499,13 +520,10 @@ pointer-events: none;
 
 .btn-row {
 display: flex;
-gap: 10px;
+gap: 8px;
+align-items: center;
 }
-.btn-row .feed-btn {
-flex: 1;
-font-size: 1.1rem;
-padding: 14px 12px;
-}
+.btn-row .feed-btn { flex: 1; font-size: 1.6rem; padding: 10px 6px; }
 
 /* Hint text */
 .hint {
@@ -613,13 +631,10 @@ flex-shrink: 0;
 }
 .mute-btn:active { transform: scale(0.9); }
 
-.hay-row {
+.btn-row {
 display: flex;
-align-items: center;
 gap: 8px;
-}
-.hay-row .feed-btn {
-flex: 1;
+align-items: center;
 }
 
 /* Food items that appear on ground before eating */
@@ -644,6 +659,84 @@ animation: foodEaten 0.5s ease forwards;
 0%   { transform: scale(1)   translateY(0);    opacity: 1; }
 50%  { transform: scale(0.7) translateY(-20px); opacity: 0.8; }
 100% { transform: scale(0)   translateY(-50px); opacity: 0; }
+}
+
+/* Snowball button */
+.btn-snowball {
+background: linear-gradient(135deg, #a8d8f0, #6ab0d8);
+color: #0a2a4a;
+font-size: 1.1rem;
+}
+.btn-snowball:active { transform: translateY(4px); }
+.btn-snowball.charging {
+background: linear-gradient(135deg, #60b0e8, #2080c0);
+color: white;
+}
+
+/* Power bar */
+.power-bar-wrap {
+height: 18px;
+background: rgba(0,0,0,0.25);
+border-radius: 10px;
+overflow: hidden;
+position: relative;
+display: none;
+margin-top: -4px;
+}
+.power-bar-wrap.show { display: block; }
+.power-bar-fill {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, #4fc, #0f8, #ff0, #f80, #f00);
+border-radius: 10px;
+transition: width 0.05s linear;
+}
+.power-label {
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
+font-size: 0.65rem;
+color: rgba(255,255,255,0.9);
+letter-spacing: 2px;
+pointer-events: none;
+}
+
+/* Flying snowball */
+.snowball-fly {
+position: absolute;
+width: 28px; height: 28px;
+border-radius: 50%;
+background: radial-gradient(circle at 35% 35%, #ffffff, #c8e8f8 60%, #a0c8e8);
+box-shadow: 0 2px 8px rgba(0,80,160,0.3), inset 0 -2px 4px rgba(100,160,200,0.4);
+pointer-events: none;
+z-index: 20;
+}
+
+/* Splat on screen */
+.snowball-splat {
+position: fixed;
+pointer-events: none;
+z-index: 9990;
+animation: splatAppear 0.15s ease forwards;
+}
+.splat-blob {
+position: absolute;
+background: rgba(220, 240, 255, 0.88);
+border-radius: 50%;
+transform-origin: center;
+}
+@keyframes splatAppear {
+0%   { transform: scale(0); opacity: 1; }
+100% { transform: scale(1); opacity: 1; }
+}
+.snowball-splat.melting {
+animation: splatMelt 3s ease forwards;
+}
+@keyframes splatMelt {
+0%   { opacity: 1;  transform: scale(1); }
+60%  { opacity: 0.7; transform: scale(1.05); }
+100% { opacity: 0;  transform: scale(0.8) translateY(10px); }
 }
 
 /* Score display */
@@ -1135,19 +1228,26 @@ z-index: 10;
   <!-- Action buttons -->
 
   <div class="actions">
-    <div class="hay-row">
-      <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
-      <button class="feed-btn btn-hay" id="feedHayBtn" onclick="startAudio();feedMammoth('hay')">
-        🌾 Feed Hay
-      </button>
-    </div>
     <div class="btn-row">
+      <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
+      <button class="feed-btn btn-hay" onclick="startAudio();feedMammoth('hay')">
+        🌾
+      </button>
       <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
-        🫐 Berries
+        🫐
       </button>
       <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="startAudio();feedMammoth('leaves')">
-        🌿 Leaves
+        🌿
       </button>
+    </div>
+    <button class="feed-btn btn-snowball" id="snowballBtn"
+            onmousedown="startThrow(event)" ontouchstart="startThrow(event)"
+            onmouseup="releaseThrow(event)" ontouchend="releaseThrow(event)">
+      ❄️ Hold to Throw Snowball
+    </button>
+    <div class="power-bar-wrap" id="powerBarWrap">
+      <div class="power-bar-fill" id="powerBarFill"></div>
+      <span class="power-label">POWER</span>
     </div>
     <div class="hint" id="hintText">👆 Feed your baby mammoth!</div>
   </div>
@@ -1806,6 +1906,232 @@ z-index: 10;
   }
 
   setInterval(triggerDance, 120000); // every 2 minutes
+
+  // ─── SNOWBALL SYSTEM ────────────────────────────────────────────
+  let throwState = {
+    charging: false,
+    power: 0,
+    chargeInterval: null,
+    busy: false,
+  };
+
+  function startThrow(e) {
+    e.preventDefault();
+    startAudio();
+    if (throwState.busy || state.isAnimating) return;
+    throwState.charging = true;
+    throwState.power = 0;
+    const btn = document.getElementById('snowballBtn');
+    const wrap = document.getElementById('powerBarWrap');
+    const fill = document.getElementById('powerBarFill');
+    btn.classList.add('charging');
+    wrap.classList.add('show');
+    fill.style.width = '0%';
+
+    throwState.chargeInterval = setInterval(() => {
+      throwState.power = Math.min(100, throwState.power + 2.5);
+      fill.style.width = throwState.power + '%';
+      if (throwState.power >= 100) {
+        clearInterval(throwState.chargeInterval);
+      }
+    }, 50);
+  }
+
+  function releaseThrow(e) {
+    e.preventDefault();
+    if (!throwState.charging) return;
+    throwState.charging = false;
+    clearInterval(throwState.chargeInterval);
+    const power = throwState.power;
+    throwState.power = 0;
+
+    const btn = document.getElementById('snowballBtn');
+    const wrap = document.getElementById('powerBarWrap');
+    const fill = document.getElementById('powerBarFill');
+    btn.classList.remove('charging');
+    wrap.classList.remove('show');
+    fill.style.width = '0%';
+
+    if (power < 5) return; // too short a tap
+    launchSnowball(power);
+  }
+
+  function soundThrow() {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    // Whoosh
+    const buf = AC.createBuffer(1, Math.floor(AC.sampleRate*0.25), AC.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,1.2);
+    const src=AC.createBufferSource(); src.buffer=buf;
+    const f=AC.createBiquadFilter(); f.type='bandpass'; f.frequency.value=800; f.Q.value=0.5;
+    const g=AC.createGain(); g.gain.setValueAtTime(0.4,now); g.gain.linearRampToValueAtTime(0,now+0.25);
+    src.connect(f); f.connect(g); g.connect(d); src.start(now); src.stop(now+0.27);
+  }
+
+  function soundSplat() {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    // Wet smack
+    const buf = AC.createBuffer(1, Math.floor(AC.sampleRate*0.12), AC.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,0.8);
+    const src=AC.createBufferSource(); src.buffer=buf;
+    const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=600;
+    const g=AC.createGain(); g.gain.setValueAtTime(0.6,now); g.gain.linearRampToValueAtTime(0,now+0.15);
+    src.connect(f); f.connect(g); g.connect(d); src.start(now); src.stop(now+0.17);
+    // Secondary wet slap
+    setTimeout(()=>{
+      const d2=dest(); if(!d2) return;
+      const n2=AC.currentTime;
+      const osc=AC.createOscillator(); osc.type='sine';
+      osc.frequency.setValueAtTime(200,n2); osc.frequency.linearRampToValueAtTime(80,n2+0.1);
+      const g2=AC.createGain(); g2.gain.setValueAtTime(0.3,n2); g2.gain.linearRampToValueAtTime(0,n2+0.12);
+      osc.connect(g2); g2.connect(d2); osc.start(n2); osc.stop(n2+0.13);
+    }, 60);
+  }
+
+  function launchSnowball(power) {
+    if (throwState.busy) return;
+    throwState.busy = true;
+    state.isAnimating = true;
+
+    const scene = document.querySelector('.mammoth-scene');
+    const wrapper = document.getElementById('mammothWrapper');
+    const trunk = document.getElementById('trunkGroup');
+    const sceneRect = scene.getBoundingClientRect();
+
+    // Mammoth trunk raises to throw
+    trunk.classList.add('trunk-raised');
+    showBubble('💪 Catch this!');
+
+    setTimeout(() => {
+      soundThrow();
+
+      // Snowball launches from his trunk
+      const ball = document.createElement('div');
+      ball.className = 'snowball-fly';
+      ball.style.position = 'fixed';
+      const startX = sceneRect.left + sceneRect.width * 0.32;
+      const startY = sceneRect.bottom - 140;
+      // Landing spot varies with power - further left = more power
+      const landPct = 0.75 - (power / 100) * 0.55;
+      const landX = sceneRect.left + sceneRect.width * landPct;
+      const landY = sceneRect.bottom - 50;
+      const peakY = startY - 60 - power * 1.4;
+      const duration = 500 + power * 5;
+      ball.style.left = startX + 'px';
+      ball.style.top  = startY + 'px';
+      document.body.appendChild(ball);
+
+      const t0 = performance.now();
+      function animOut(ts) {
+        const p = Math.min(1, (ts - t0) / duration);
+        const ex = startX + (landX - startX) * p;
+        const ey = (1-p)*((1-p)*startY + p*peakY) + p*((1-p)*peakY + p*landY);
+        const sc = 0.8 + p * 0.2; // slight size change as it arcs away
+        ball.style.left = ex + 'px';
+        ball.style.top  = ey + 'px';
+        ball.style.transform = `scale(${sc})`;
+        if (p < 1) { requestAnimationFrame(animOut); return; }
+
+        // Ball lands — brief catch pause
+        ball.remove();
+        trunk.classList.remove('trunk-raised');
+        wrapper.classList.add('happy'); // little happy wiggle = catching
+        showBubble('😄 Got it!');
+        soundHappyToot();
+
+        // Short pause then throw back
+        setTimeout(() => {
+          wrapper.classList.remove('happy');
+          trunk.classList.add('trunk-raised');
+          showBubble('⚡ Heads up!');
+          soundThrow();
+
+          // Ball comes back toward the screen
+          const ball2 = document.createElement('div');
+          ball2.className = 'snowball-fly';
+          ball2.style.position = 'fixed';
+          const b2StartX = landX;
+          const b2StartY = landY;
+          const splatX = window.innerWidth  * (0.15 + Math.random() * 0.7);
+          const splatY = window.innerHeight * (0.15 + Math.random() * 0.5);
+          const b2Peak = b2StartY - 120 - Math.random() * 80;
+          const b2Dur  = 550;
+          ball2.style.left = b2StartX + 'px';
+          ball2.style.top  = b2StartY + 'px';
+          document.body.appendChild(ball2);
+
+          const t1 = performance.now();
+          function animBack(ts) {
+            const p = Math.min(1, (ts - t1) / b2Dur);
+            const ex = b2StartX + (splatX - b2StartX) * p;
+            const ey = (1-p)*((1-p)*b2StartY + p*b2Peak) + p*((1-p)*b2Peak + p*splatY);
+            const sc = 1 + p * 0.5; // grows as it flies toward screen
+            ball2.style.left = ex + 'px';
+            ball2.style.top  = ey + 'px';
+            ball2.style.transform = `scale(${sc})`;
+            if (p < 1) { requestAnimationFrame(animBack); return; }
+
+            ball2.remove();
+            trunk.classList.remove('trunk-raised');
+            createSplat(splatX, splatY);
+            soundSplat();
+            showBubble('😄 Got ya!');
+            state.happiness = Math.min(100, state.happiness + 8);
+            state.score += 15;
+            throwState.busy = false;
+            state.isAnimating = false;
+            updateStats();
+          }
+          requestAnimationFrame(animBack);
+        }, 600);
+      }
+      requestAnimationFrame(animOut);
+    }, 400);
+  }
+
+  function createSplat(x, y) {
+    const splat = document.createElement('div');
+    splat.className = 'snowball-splat';
+    splat.style.left = x + 'px';
+    splat.style.top  = y + 'px';
+
+    // Create irregular blob shape from multiple circles
+    const blobs = [
+      { dx:  0,  dy:  0,  r: 38 },
+      { dx: 28,  dy:-12,  r: 24 },
+      { dx:-30,  dy: -8,  r: 22 },
+      { dx: 10,  dy: 28,  r: 20 },
+      { dx:-20,  dy: 22,  r: 18 },
+      { dx: 35,  dy: 15,  r: 14 },
+      { dx:-12,  dy:-30,  r: 16 },
+      { dx: 45,  dy:  0,  r: 12 },
+      { dx:-42,  dy:  8,  r: 12 },
+      { dx:  5,  dy: 44,  r: 10 },
+    ];
+
+    blobs.forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'splat-blob';
+      el.style.width  = b.r*2 + 'px';
+      el.style.height = b.r*2 + 'px';
+      el.style.left   = (b.dx - b.r) + 'px';
+      el.style.top    = (b.dy - b.r) + 'px';
+      el.style.opacity = 0.7 + Math.random() * 0.25;
+      splat.appendChild(el);
+    });
+
+    document.body.appendChild(splat);
+
+    // Start melting after appear animation
+    setTimeout(() => {
+      splat.classList.add('melting');
+      setTimeout(() => splat.remove(), 3000);
+    }, 150);
+  }
+  // ────────────────────────────────────────────────────────────────
 
   updateStats();
 </script>
