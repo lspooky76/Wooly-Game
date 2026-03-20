@@ -3571,18 +3571,19 @@ z-index: 10;
   let swRegistration = null;
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').then((reg) => {
+      // updateViaCache: 'none' means sw.js itself is never served from cache
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then((reg) => {
         swRegistration = reg;
 
-        // Check for updates every time the page loads
+        // Check for updates immediately every time the app opens
         reg.update();
 
-        // New SW is waiting — show update banner
+        // New SW already waiting (app was opened before update applied)
         if (reg.waiting) {
           document.getElementById('updateBanner').classList.add('show');
         }
 
-        // New SW installed while page is open
+        // New SW found while app is open
         reg.addEventListener('updatefound', () => {
           const newWorker = reg.installing;
           newWorker.addEventListener('statechange', () => {
@@ -3593,7 +3594,7 @@ z-index: 10;
         });
       }).catch(() => {});
 
-      // When SW takes control, reload to apply update
+      // When new SW takes control, reload to apply
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
       });
@@ -3602,7 +3603,6 @@ z-index: 10;
 
   function applyUpdate() {
     if (swRegistration && swRegistration.waiting) {
-      // Tell the waiting SW to take over
       swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
     } else {
       window.location.reload();
