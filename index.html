@@ -3330,49 +3330,44 @@ z-index: 10;
     else if (hp > 30) happyEl.style.color = '#FF9800';
     else happyEl.style.color = '#f44336';
 
-    // ── ASTEROID MINI-GAME TRIGGER ──
-    // Every 100 points, roll 1-25. If it lands on 7, engage asteroid field.
-    if (!asteroidState.active && !asteroidState.cooldown && !asteroidState.readyScreen) {
+    // ── MINI-GAME TRIGGERS ──
+    // Helper: true if any mini-game is currently active or pending
+    const anyBusy = asteroidState.active || asteroidState.cooldown || asteroidState.readyScreen ||
+                    tigerState.active    || tigerState.cooldown    || tigerState.readyScreen    ||
+                    cavemanState.active  || cavemanState.cooldown  || cavemanState.readyScreen  ||
+                    state.isAnimating;
+
+    if (!anyBusy) {
       const century = Math.floor(state.score / 100);
-      if (century > 0 && century !== asteroidState.lastRollAt) {
-        asteroidState.lastRollAt = century;
-        const roll = Math.floor(Math.random() * 10) + 1;
-        if (roll === 7) {
-          asteroidState.cooldown = true;
-          setTimeout(showAsteroidReadyScreen, 400);
-        }
-      }
-    }
-
-    // ── SABER TOOTH TIGER TRIGGER (night only) ──
-    if (!tigerState.active && !tigerState.cooldown && !tigerState.readyScreen &&
-        !asteroidState.active && !asteroidState.readyScreen &&
-        typeof getNightOpacity === 'function') {
-      const nightAlpha = getNightOpacity(getGameMins());
-      if (nightAlpha > 0.3) { // only at night
-        const tigerCentury = Math.floor(state.score / 100);
-        if (tigerCentury > 0 && tigerCentury !== tigerState.lastRollAt) {
-          tigerState.lastRollAt = tigerCentury;
+      if (century > 0) {
+        // Only roll once per century across all games
+        const alreadyRolled = century === asteroidState.lastRollAt ||
+                              century === tigerState.lastRollAt    ||
+                              century === cavemanState.lastRollAt;
+        if (!alreadyRolled) {
           const roll = Math.floor(Math.random() * 10) + 1;
-          if (roll === 3) { // different number from asteroid so they don't clash
-            tigerState.cooldown = true;
-            setTimeout(showTigerReadyScreen, 400);
-          }
-        }
-      }
-    }
 
-    // ── CAVEMAN ATTACK TRIGGER (day or night) ──
-    if (!cavemanState.active && !cavemanState.cooldown && !cavemanState.readyScreen &&
-        !asteroidState.active && !asteroidState.readyScreen &&
-        !tigerState.active && !tigerState.readyScreen) {
-      const cavemanCentury = Math.floor(state.score / 100);
-      if (cavemanCentury > 0 && cavemanCentury !== cavemanState.lastRollAt) {
-        cavemanState.lastRollAt = cavemanCentury;
-        const roll = Math.floor(Math.random() * 10) + 1;
-        if (roll === 5) { // 7=asteroid, 3=tiger, 5=caveman
-          cavemanState.cooldown = true;
-          setTimeout(showCavemanReadyScreen, 400);
+          if (roll === 7) {
+            asteroidState.lastRollAt = century;
+            asteroidState.cooldown   = true;
+            setTimeout(showAsteroidReadyScreen, 400);
+
+          } else if (roll === 3 && getNightOpacity(getGameMins()) > 0.3) {
+            tigerState.lastRollAt = century;
+            tigerState.cooldown   = true;
+            setTimeout(showTigerReadyScreen, 400);
+
+          } else if (roll === 5) {
+            cavemanState.lastRollAt = century;
+            cavemanState.cooldown   = true;
+            setTimeout(showCavemanReadyScreen, 400);
+
+          } else {
+            // No game triggered — mark all so we don't re-roll this century
+            asteroidState.lastRollAt = century;
+            tigerState.lastRollAt    = century;
+            cavemanState.lastRollAt  = century;
+          }
         }
       }
     }
@@ -4889,7 +4884,7 @@ z-index: 10;
 
     setTimeout(() => {
       cavemanState.cooldown   = false;
-      cavemanState.lastRollAt = Math.floor(state.score / 100);
+      cavemanState.lastRollAt = asteroidState.lastRollAt = tigerState.lastRollAt = asteroidState.lastRollAt = cavemanState.lastRollAt = Math.floor(state.score / 100);
     }, 15000);
   }
   // ─────────────────────────────────────────────────────────────────
@@ -5064,6 +5059,7 @@ z-index: 10;
     document.querySelectorAll('[id^="tigerActive_"]').forEach(el => el.remove());
 
     const overlay = document.getElementById('tigerOverlay');
+    overlay.innerHTML = '';
     overlay.classList.remove('active');
     clearInterval(tigerState.moveInterval);
 
@@ -5087,7 +5083,7 @@ z-index: 10;
 
     setTimeout(() => {
       tigerState.cooldown   = false;
-      tigerState.lastRollAt = Math.floor(state.score / 100);
+      tigerState.lastRollAt = asteroidState.lastRollAt = cavemanState.lastRollAt = Math.floor(state.score / 100);
     }, 15000);
   }
   // ─────────────────────────────────────────────────────────────────
@@ -5392,7 +5388,7 @@ z-index: 10;
     // 15s cooldown — also reset lastRollAt so the randomiser can fire again
     setTimeout(() => {
       asteroidState.cooldown = false;
-      asteroidState.lastRollAt = Math.floor(state.score / 100); // don't re-trigger on same century
+      asteroidState.lastRollAt = tigerState.lastRollAt = cavemanState.lastRollAt = Math.floor(state.score / 100);
     }, 15000);
   }
   // ── WYATT'S FACTS ──────────────────────────────────────────────
