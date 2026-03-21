@@ -1034,7 +1034,7 @@ animation: foodEaten 0.5s ease forwards;
 100% { transform: scale(0)   translateY(-50px); opacity: 0; }
 }
 
-/* Snowball button */
+/* Snowball button — power bar fills from left inside the button */
 .btn-snowball {
 background: linear-gradient(135deg, #4dc8f0, #1a90cc);
 color: white;
@@ -1042,39 +1042,31 @@ font-size: clamp(0.95rem, 3vw, 1.2rem);
 letter-spacing: 0.5px;
 text-shadow: 0 1px 3px rgba(0,0,50,0.3);
 box-shadow: 0 5px 0 rgba(0,60,120,0.5), 0 6px 16px rgba(0,80,160,0.3);
+position: relative;
+overflow: hidden;
 }
 .btn-snowball:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,60,120,0.5); }
 .btn-snowball.charging {
-background: linear-gradient(135deg, #2090d0, #1060a0);
+background: linear-gradient(135deg, #0a3060, #082050);
 box-shadow: 0 5px 0 rgba(0,40,100,0.6), 0 0 20px rgba(0,140,255,0.4);
 }
-
-/* Power bar */
-.power-bar-wrap {
-height: 18px;
-background: rgba(0,0,0,0.25);
-border-radius: 10px;
-overflow: hidden;
-position: relative;
-display: none;
-margin-top: -4px;
-}
-.power-bar-wrap.show { display: block; }
-.power-bar-fill {
-height: 100%;
-width: 0%;
-background: linear-gradient(90deg, #4fc, #0f8, #ff0, #f80, #f00);
-border-radius: 10px;
-transition: width 0.05s linear;
-}
-.power-label {
+/* Power fill overlays inside the button */
+.snowball-power-fill {
 position: absolute;
-top: 0; left: 0; right: 0; bottom: 0;
-display: flex; align-items: center; justify-content: center;
-font-family: ‘Fredoka One’, ‘Arial Rounded MT Bold’, Arial, sans-serif;
-font-size: 0.65rem;
-color: rgba(255,255,255,0.9);
-letter-spacing: 2px;
+top: 0; left: 0; bottom: 0;
+width: 0%;
+background: linear-gradient(90deg, #00e5ff, #00b8d9, #ffeb3b, #ff9800, #f44336);
+border-radius: inherit;
+transition: none;
+z-index: 0;
+opacity: 0;
+}
+.btn-snowball.charging .snowball-power-fill {
+opacity: 1;
+}
+.snowball-btn-text {
+position: relative;
+z-index: 1;
 pointer-events: none;
 }
 
@@ -1957,12 +1949,9 @@ z-index: 10;
       <button class="feed-btn btn-snowball" id="snowballBtn"
               onmousedown="startThrow(event)" ontouchstart="startThrow(event)"
               onmouseup="releaseThrow(event)" ontouchend="releaseThrow(event)">
-        ❄️ Hold to Throw Snowball
+        <div class="snowball-power-fill" id="powerBarFill"></div>
+        <span class="snowball-btn-text" id="snowballBtnText">❄️ Hold to Throw Snowball</span>
       </button>
-      <div class="power-bar-wrap" id="powerBarWrap">
-        <div class="power-bar-fill" id="powerBarFill"></div>
-        <span class="power-label">POWER</span>
-      </div>
       <button onclick="resetGame()" style="background:linear-gradient(135deg,#c0392b,#922b21);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;width:100%;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35),0 5px 12px rgba(180,0,0,0.2);">↺ Reset Progress</button>
     </div>
   </div>
@@ -2850,13 +2839,11 @@ z-index: 10;
     throwState.crosshairsDir = -1;
 
     const btn  = document.getElementById('snowballBtn');
-    const wrap = document.getElementById('powerBarWrap');
     const fill = document.getElementById('powerBarFill');
     const xhEl = document.getElementById('crosshairs');
     const scene = document.querySelector('.mammoth-scene');
 
     btn.classList.add('charging');
-    wrap.classList.add('show');
     fill.style.width = '0%';
     xhEl.classList.add('show');
 
@@ -2907,7 +2894,6 @@ z-index: 10;
     throwState.power = 0;
 
     const btn  = document.getElementById('snowballBtn');
-    const wrap = document.getElementById('powerBarWrap');
     const fill = document.getElementById('powerBarFill');
     const xhEl = document.getElementById('crosshairs');
 
@@ -2922,7 +2908,6 @@ z-index: 10;
 
     // Now hide UI
     btn.classList.remove('charging');
-    wrap.classList.remove('show');
     fill.style.width = '0%';
     xhEl.classList.remove('show');
 
