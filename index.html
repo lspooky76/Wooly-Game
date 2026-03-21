@@ -831,6 +831,122 @@ animation: houseItemArc 2s ease-in-out forwards;
 0%   { transform: translateX(-60%) rotate(-5deg); }
 100% { transform: translateX(-60%) rotate(5deg); }
 }
+0%   { transform: translateX(-60%) rotate(-5deg); }
+100% { transform: translateX(-60%) rotate(5deg); }
+}
+
+/* ── SABER TOOTH TIGER MINI-GAME ── */
+#tigerOverlay {
+position: absolute;
+inset: 0;
+z-index: 28;
+display: none;
+pointer-events: none;
+overflow: visible;
+}
+#tigerOverlay.active { display: block; pointer-events: all; }
+
+#tigerEl {
+position: absolute;
+bottom: 122px;
+left: -120px;
+width: 80px;
+height: 68px;
+pointer-events: none;
+transition: none;
+z-index: 8;
+}
+#tigerEl.prowl { animation: tigerProwl 1.4s ease-in-out infinite alternate; }
+@keyframes tigerProwl {
+0%   { transform: translateY(0) scaleX(-1); }
+50%  { transform: translateY(-4px) scaleX(-1); }
+100% { transform: translateY(0) scaleX(-1); }
+}
+#tigerEl.pounce {
+animation: none;
+transition: left 0.52s cubic-bezier(0.3,0,0.7,1), bottom 0.52s cubic-bezier(0.3,0,0.5,1.5);
+}
+.tiger-warning {
+position: absolute;
+top: 12px; left: 50%;
+transform: translateX(-50%);
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1rem,3.5vw,1.3rem);
+color: #ff4400;
+text-shadow: 0 0 12px rgba(255,80,0,0.8), 0 2px 4px rgba(0,0,0,0.6);
+text-align: center;
+animation: warningPulse 0.5s ease-in-out infinite alternate;
+pointer-events: none;
+white-space: nowrap;
+}
+@keyframes warningPulse {
+0%   { opacity: 0.7; transform: translateX(-50%) scale(0.97); }
+100% { opacity: 1;   transform: translateX(-50%) scale(1.03); }
+}
+.tiger-hint {
+position: absolute;
+bottom: 120px; left: 50%;
+transform: translateX(-50%);
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(0.75rem,2.5vw,0.95rem);
+color: rgba(255,220,180,0.9);
+text-align: center;
+text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+pointer-events: none;
+white-space: nowrap;
+}
+/* Tiger ready screen */
+#tigerReadyScreen {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100vw; height: 100vh;
+z-index: 9999;
+background: rgba(20,5,5,0.92);
+align-items: center;
+justify-content: center;
+padding: 20px;
+box-sizing: border-box;
+}
+#tigerReadyScreen.show { display: flex; }
+.tiger-ready-box {
+background: linear-gradient(160deg, #2a0a0a, #3a1010);
+border: 2px solid rgba(255,80,0,0.6);
+border-radius: 24px;
+padding: 20px 22px;
+max-width: 340px;
+width: 100%;
+text-align: center;
+box-shadow: 0 0 40px rgba(255,60,0,0.3), 0 12px 40px rgba(0,0,0,0.7);
+animation: tigerBoxAppear 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards,
+tigerBoxShake 0.5s ease-in-out 0.35s 2;
+}
+@keyframes tigerBoxAppear {
+0%   { transform: scale(0.7); opacity: 0; }
+100% { transform: scale(1);   opacity: 1; }
+}
+@keyframes tigerBoxShake {
+0%,100% { transform: rotate(0deg); }
+20%     { transform: rotate(-2deg); }
+40%     { transform: rotate(2deg); }
+60%     { transform: rotate(-1.5deg); }
+80%     { transform: rotate(1.5deg); }
+}
+.tiger-ready-box h2 {
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.4rem,5vw,1.8rem);
+color: #ff6600;
+text-shadow: 0 0 20px rgba(255,100,0,0.6);
+margin-bottom: 4px;
+}
+.trb-emoji  { font-size: 2.4rem; display: block; margin-bottom: 4px; animation: pulse 0.8s ease-in-out infinite; }
+.trb-sub    { color: rgba(255,200,160,0.9); font-size: clamp(0.78rem,2.4vw,0.9rem); font-weight:700; margin-bottom:10px; line-height:1.4; }
+.trb-instructions { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,120,40,0.3); border-radius:12px; padding:8px 14px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; text-align:left; font-size:clamp(0.75rem,2.2vw,0.86rem); color:rgba(255,220,180,0.9); font-weight:700; line-height:1.5; }
+.trb-penalty { color:#ff6600; font-weight:800; font-size:clamp(0.82rem,2.4vw,0.95rem); margin-bottom:12px; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; }
+#tigerIntensity { margin-bottom:10px; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(0.82rem,2.5vw,0.95rem); }
+.tiger-ready-btn { width:100%; padding:12px; border:none; border-radius:16px; background:linear-gradient(135deg,#ff6600,#cc3300); color:white; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(1rem,3.5vw,1.15rem); cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,0.4),0 0 20px rgba(255,80,0,0.3); }
+.tiger-ready-btn:active { transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.4); }
+
 #asteroidOverlay {
 position: absolute;
 inset: 0;
@@ -1847,8 +1963,110 @@ z-index: 10;
 ```
 <!-- Asteroid mini-game overlay -->
 <div id="asteroidOverlay"></div>
-<div id="dayNightOverlay"></div>
-<div id="timeDisplay">6:00 AM</div>
+<div id="tigerOverlay"></div>
+```
+
+<!-- Tiger ready screen -->
+
+<div id="tigerReadyScreen">
+  <div class="tiger-ready-box">
+    <span class="trb-emoji">🐯</span>
+    <h2>SABER TOOTH ATTACK!</h2>
+    <div class="trb-sub">A saber tooth tiger is stalking out of the darkness!</div>
+    <div id="tigerIntensity"></div>
+    <div class="trb-instructions">
+      <span>👆 <strong>Drag</strong> across the scene to move</span>
+      <span>◀ Tap <strong>left side</strong> to move left</span>
+      <span>▶ Tap <strong>right side</strong> to move right</span>
+      <span>⚠️ Only happens <strong>at night!</strong></span>
+    </div>
+    <div class="trb-penalty">💥 Each hit = -50 points</div>
+    <button class="tiger-ready-btn" onclick="launchTigerAttack()">🏃 RUN! — START!</button>
+  </div>
+</div>
+    <div id="dayNightOverlay"></div>
+    <div id="timeDisplay">6:00 AM</div>
+
+```
+<!-- Saber Tooth Tiger SVG — fixed baby mammoth size, facing right (scaleX flipped in CSS) -->
+<div id="tigerEl">
+  <svg width="80" height="68" viewBox="0 0 80 68" xmlns="http://www.w3.org/2000/svg">
+    <!-- Shadow -->
+    <ellipse cx="40" cy="65" rx="28" ry="4" fill="rgba(0,0,0,0.35)"/>
+    <!-- TAIL -->
+    <path d="M72 38 Q82 28 78 18 Q76 14 74 18 Q76 24 68 32" stroke="#8B6040" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="74" cy="14" r="5" fill="#6B4828"/>
+    <!-- BACK LEGS -->
+    <rect x="56" y="42" width="10" height="18" rx="4" fill="#8B6040"/>
+    <rect x="68" y="42" width="9"  height="17" rx="4" fill="#7a5030"/>
+    <!-- Back paws -->
+    <ellipse cx="61"  cy="60" rx="7" ry="4" fill="#6B4828"/>
+    <ellipse cx="72"  cy="59" rx="6" ry="4" fill="#6B4828"/>
+    <!-- BODY -->
+    <ellipse cx="48" cy="38" rx="26" ry="18" fill="#9B7050"/>
+    <!-- Fur stripes -->
+    <path d="M38 24 Q42 22 40 30" stroke="#5a3a18" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M48 22 Q52 20 50 29" stroke="#5a3a18" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M58 25 Q62 23 60 32" stroke="#5a3a18" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <!-- Belly lighter -->
+    <ellipse cx="46" cy="46" rx="18" ry="9" fill="#c8a878" opacity="0.6"/>
+    <!-- NECK -->
+    <ellipse cx="26" cy="30" rx="12" ry="10" fill="#9B7050"/>
+    <!-- HEAD -->
+    <ellipse cx="14" cy="25" rx="14" ry="12" fill="#a07858"/>
+    <!-- Ear left -->
+    <polygon points="6,16 2,8 12,14" fill="#8B6040"/>
+    <polygon points="7,15 4,10 11,14" fill="#c08060" opacity="0.6"/>
+    <!-- Ear right -->
+    <polygon points="18,14 16,6 24,13" fill="#8B6040"/>
+    <polygon points="18,14 17,8 23,13" fill="#c08060" opacity="0.6"/>
+    <!-- Forehead stripes -->
+    <path d="M8 18 Q12 15 10 22"  stroke="#5a3a18" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M14 16 Q18 13 16 20" stroke="#5a3a18" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- GLOWING EYES -->
+    <ellipse cx="8"  cy="24" rx="4" ry="3.5" fill="#1a0800"/>
+    <ellipse cx="19" cy="23" rx="4" ry="3.5" fill="#1a0800"/>
+    <!-- Eye glow outer -->
+    <ellipse cx="8"  cy="24" rx="4" ry="3.5" fill="none" stroke="#ff8800" stroke-width="1.5" opacity="0.9" filter="url(#eyeGlow)"/>
+    <ellipse cx="19" cy="23" rx="4" ry="3.5" fill="none" stroke="#ff8800" stroke-width="1.5" opacity="0.9"/>
+    <!-- Iris glow -->
+    <ellipse cx="8"  cy="24" rx="2.5" ry="2" fill="#ff6600" opacity="0.9"/>
+    <ellipse cx="19" cy="23" rx="2.5" ry="2" fill="#ff6600" opacity="0.9"/>
+    <!-- Pupil slit -->
+    <ellipse cx="8"  cy="24" rx="0.8" ry="2"   fill="#0a0400"/>
+    <ellipse cx="19" cy="23" rx="0.8" ry="1.8" fill="#0a0400"/>
+    <!-- Eye shine -->
+    <circle cx="9.5"  cy="23" r="0.9" fill="rgba(255,220,150,0.8)"/>
+    <circle cx="20.5" cy="22" r="0.9" fill="rgba(255,220,150,0.8)"/>
+    <!-- NOSE -->
+    <ellipse cx="5" cy="28" rx="3" ry="2" fill="#5a3020"/>
+    <circle cx="4.5" cy="27.5" r="0.8" fill="#2a1008"/>
+    <circle cx="5.5" cy="27.5" r="0.8" fill="#2a1008"/>
+    <!-- SABER TEETH — two long curved fangs -->
+    <path d="M9 30 Q7 36 8 40 Q9 43 10 40 Q10 36 11 30" fill="#f8f0d8" stroke="#c8b890" stroke-width="0.5"/>
+    <path d="M14 30 Q12 36 13 40 Q14 42 15 39 Q15 35 16 30" fill="#f8f0d8" stroke="#c8b890" stroke-width="0.5"/>
+    <!-- Mouth line -->
+    <path d="M6 30 Q11 33 17 30" stroke="#5a3020" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- FRONT LEGS -->
+    <rect x="14" y="40" width="10" height="18" rx="4" fill="#8B6040"/>
+    <rect x="26" y="40" width="9"  height="17" rx="4" fill="#7a5030"/>
+    <!-- Front paws with claws -->
+    <ellipse cx="19" cy="58" rx="7" ry="4" fill="#6B4828"/>
+    <ellipse cx="30" cy="57" rx="6" ry="4" fill="#6B4828"/>
+    <!-- Claws front -->
+    <line x1="15" y1="61" x2="14" y2="65" stroke="#d8c8a0" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="19" y1="62" x2="19" y2="66" stroke="#d8c8a0" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="23" y1="61" x2="24" y2="65" stroke="#d8c8a0" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Eye glow animation -->
+    <style>
+      @keyframes eyeGlowPulse {
+        0%,100% { opacity: 0.7; }
+        50%      { opacity: 1; }
+      }
+      #tigerEl ellipse[fill="#ff6600"] { animation: eyeGlowPulse 1.2s ease-in-out infinite; }
+    </style>
+  </svg>
+</div>
 
 <!-- BIG SNOWY MOUNTAIN - behind everything -->
 <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg"
@@ -2517,6 +2735,33 @@ z-index: 10;
 </div>
 
 <script>
+  // ── STATE DECLARATIONS (hoisted so all functions can reference them) ──
+  const GAME_MINS_PER_REAL_MS = 6 / 60000;
+  const DN_KEY = 'mammoth_dn_epoch';
+  let dnEpoch = parseInt(localStorage.getItem(DN_KEY) || '0');
+  if (!dnEpoch) {
+    dnEpoch = Date.now() - (6 * 60) / GAME_MINS_PER_REAL_MS;
+    localStorage.setItem(DN_KEY, dnEpoch);
+  }
+  const dayNightState = { epoch: dnEpoch };
+
+  function getGameMins() {
+    return ((Date.now() - dayNightState.epoch) * GAME_MINS_PER_REAL_MS) % (24 * 60);
+  }
+
+  const asteroidState = {
+    active: false, cooldown: false, readyScreen: false,
+    lastRollAt: 0, intensity: 1, animalX: 50, moveDir: 0,
+    moveInterval: null, spawnInterval: null, hitCooldown: false, duration: 8000,
+  };
+  const tigerState = {
+    active: false, cooldown: false, readyScreen: false,
+    lastRollAt: 0, hitCooldown: false, duration: 8000,
+    animalX: 50, moveDir: 0, moveInterval: null,
+    intensity: 1,
+  };
+  // ─────────────────────────────────────────────────────────────────
+
   // ─── AUDIO ENGINE ───────────────────────────────────────────────
   // iOS Safari requires AudioContext to be created AND resumed
   // inside a synchronous user gesture handler. We use a visible
@@ -2938,8 +3183,26 @@ z-index: 10;
         asteroidState.lastRollAt = century;
         const roll = Math.floor(Math.random() * 10) + 1;
         if (roll === 7) {
-          asteroidState.cooldown = true; // lock until player clicks Start
+          asteroidState.cooldown = true;
           setTimeout(showAsteroidReadyScreen, 400);
+        }
+      }
+    }
+
+    // ── SABER TOOTH TIGER TRIGGER (night only) ──
+    if (!tigerState.active && !tigerState.cooldown && !tigerState.readyScreen &&
+        !asteroidState.active && !asteroidState.readyScreen &&
+        typeof getNightOpacity === 'function') {
+      const nightAlpha = getNightOpacity(getGameMins());
+      if (nightAlpha > 0.3) { // only at night
+        const tigerCentury = Math.floor(state.score / 100);
+        if (tigerCentury > 0 && tigerCentury !== tigerState.lastRollAt) {
+          tigerState.lastRollAt = tigerCentury;
+          const roll = Math.floor(Math.random() * 10) + 1;
+          if (roll === 3) { // different number from asteroid so they don't clash
+            tigerState.cooldown = true;
+            setTimeout(showTigerReadyScreen, 400);
+          }
         }
       }
     }
@@ -3728,6 +3991,16 @@ z-index: 10;
 
   setInterval(triggerDance, 120000);          // dance every 2 min if happiness ≥ 95
   setInterval(triggerIdleActivity, 90000);    // random idle activity every 90s if happiness ≥ 40
+
+  // ── SAFETY NET: restore animal if it ever goes missing after a mini-game crash ──
+  setInterval(() => {
+    if (asteroidState.active || tigerState.active) return;
+    const sizer = getActiveSizer();
+    if (!sizer) return;
+    if (sizer.style.position === 'absolute' || sizer.style.opacity === '0') {
+      forceRestoreAnimal();
+    }
+  }, 3000);
   // ─────────────────────────────────────────────────────────────────
 
   // ─── SNOWBALL SYSTEM ────────────────────────────────────────────
@@ -4186,19 +4459,6 @@ z-index: 10;
   }
 
   // ── ASTEROID STATE — declared here so updateStats can reference it on load ──
-  const asteroidState = {
-    active: false,
-    cooldown: false,
-    readyScreen: false,
-    lastRollAt: 0,
-    intensity: 1,      // 1-5, rolled when triggered
-    animalX: 50,
-    moveDir: 0,
-    moveInterval: null,
-    spawnInterval: null,
-    hitCooldown: false,
-    duration: 8000,
-  };
 
   applyMammothSize();
   if (!state.playerName || !state.mammothName) {
@@ -4211,7 +4471,205 @@ z-index: 10;
 
   updateStats();
 
-  // ── ASTEROID MINI-GAME ────────────────────────────────────────────
+  // ── SABER TOOTH TIGER MINI-GAME ─────────────────────────────────
+
+  const TIGER_PACK_LABELS = ['Lone Hunter','Hunting Pair','Small Pack','War Party','FULL PRIDE!'];
+  const TIGER_PACK_COLORS = ['#ff9944','#ff6600','#ff3300','#dd0000','#aa0000'];
+
+  function showTigerReadyScreen() {
+    tigerState.readyScreen = true;
+    tigerState.intensity   = Math.floor(Math.random() * 5) + 1;
+    const lvl   = tigerState.intensity;
+    const intEl = document.getElementById('tigerIntensity');
+    if (intEl) {
+      const eyes = '🐯'.repeat(lvl) + '🌑'.repeat(5 - lvl);
+      intEl.innerHTML = `<span style="color:${TIGER_PACK_COLORS[lvl-1]};text-shadow:0 0 10px ${TIGER_PACK_COLORS[lvl-1]}88;">${lvl} TIGER${lvl>1?'S':''} — ${TIGER_PACK_LABELS[lvl-1]}<br>${eyes}</span>`;
+    }
+    const gameArea = document.getElementById('gameArea');
+    gameArea.classList.add('shaking');
+    setTimeout(() => gameArea.classList.remove('shaking'), 650);
+    document.getElementById('tigerReadyScreen').classList.add('show');
+  }
+
+  function launchTigerAttack() {
+    document.getElementById('tigerReadyScreen').classList.remove('show');
+    tigerState.readyScreen = false;
+    startTigerAttack();
+  }
+
+  function startTigerAttack() {
+    if (tigerState.active || state.isAnimating) return;
+    tigerState.active      = true;
+    tigerState.hitCooldown = false;
+    tigerState.animalX     = 50;
+
+    const overlay = document.getElementById('tigerOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    const lvl     = tigerState.intensity;
+
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+
+    const warn = document.createElement('div');
+    warn.className   = 'tiger-warning';
+    warn.textContent = lvl > 1 ? `🐯 PACK ATTACK! ${lvl} TIGERS!` : '🐯 SABER TOOTH! DODGE!';
+    overlay.appendChild(warn);
+    const hint = document.createElement('div');
+    hint.className   = 'tiger-hint';
+    hint.textContent = '← drag or tap sides to dodge →';
+    overlay.appendChild(hint);
+
+    // Attach controls to scene
+    tigerState._sceneEl = scene;
+    scene.addEventListener('mousemove',  _onMove);
+    scene.addEventListener('touchmove',  _onTouchTiger,      { passive: false });
+    scene.addEventListener('mousedown',  _onDown);
+    scene.addEventListener('touchstart', _onTouchStartTiger, { passive: false });
+    scene.addEventListener('mouseup',    _onUp);
+    scene.addEventListener('touchend',   _onUp);
+
+    // Movement tick
+    tigerState.moveInterval = setInterval(() => {
+      if (tigerState.moveDir !== 0) {
+        tigerState.animalX = Math.max(5, Math.min(90, tigerState.animalX + tigerState.moveDir * 2.5));
+        _applyAnimalX();
+      }
+    }, 30);
+
+    // Position animal in scene centre
+    _applyAnimalX();
+
+    // Spawn tigers staggered 3s apart
+    const totalDuration = 6000 + (lvl - 1) * 3000;
+    for (let i = 0; i < lvl; i++) {
+      setTimeout(() => { if (tigerState.active) spawnSingleTiger(scene, i); }, i * 3000 + 500);
+    }
+    setTimeout(() => endTigerAttack(true), totalDuration + 2000);
+  }
+
+  function spawnSingleTiger(scene, idx) {
+    const src      = document.getElementById('tigerEl');
+    const el       = src.cloneNode(true);
+    el.id          = 'tigerActive_' + idx;
+    const fromLeft = Math.random() < 0.5;
+    const sceneW   = scene.getBoundingClientRect().width;
+    const bott     = getAnimalBottom();
+
+    el.style.cssText = 'position:absolute;bottom:' + bott + 'px;left:' + (fromLeft ? '-85' : sceneW) + 'px;width:80px;height:68px;pointer-events:none;transition:none;z-index:7;transform:scaleX(' + (fromLeft ? -1 : 1) + ')';
+    el.classList.remove('prowl','pounce');
+    scene.appendChild(el);
+
+    // Prowl to near edge
+    const edgeX = fromLeft ? 5 : sceneW - 85;
+    setTimeout(() => {
+      el.style.transition = 'left 0.8s ease';
+      el.style.left = edgeX + 'px';
+    }, 50);
+
+    // After arriving, start pouncing
+    setTimeout(() => {
+      el.classList.add('prowl');
+      let pounces = 0;
+      const maxPounces = 2;
+
+      function doPounce() {
+        if (!tigerState.active) { el.remove(); return; }
+        pounces++;
+        el.classList.remove('prowl');
+
+        const sizer     = getActiveSizer();
+        const sceneRect = scene.getBoundingClientRect();
+        const sr        = sizer ? sizer.getBoundingClientRect() : null;
+        const targetX   = sr ? (sr.left - sceneRect.left + sr.width * 0.4) : sceneRect.width * (tigerState.animalX / 100);
+        const clampedX  = Math.max(0, Math.min(sceneW - 80, targetX - 40));
+        const facing    = clampedX > parseFloat(el.style.left) ? -1 : 1;
+        const bott      = getAnimalBottom();
+
+        el.style.transform  = 'scaleX(' + facing + ')';
+        el.style.transition = 'left 0.5s cubic-bezier(0.3,0,0.6,1), bottom 0.25s ease-out';
+        el.style.left       = clampedX + 'px';
+        el.style.bottom     = (bott + 30) + 'px';
+
+        setTimeout(() => {
+          if (!tigerState.active) { el.remove(); return; }
+          el.style.bottom = bott + 'px';
+
+          // Hit check
+          if (!tigerState.hitCooldown && sizer) {
+            const tr = el.getBoundingClientRect();
+            const mr = sizer.getBoundingClientRect();
+            if (!(tr.right < mr.left || tr.left > mr.right || tr.bottom < mr.top || tr.top > mr.bottom)) {
+              tigerState.hitCooldown = true;
+              state.score = Math.max(0, state.score - 50);
+              updateStats();
+              showBubble('😱 Ouch!!');
+              getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
+              setTimeout(() => { getActiveWrapper().style.filter = ''; }, 300);
+              setTimeout(() => { tigerState.hitCooldown = false; }, 1200);
+            }
+          }
+
+          setTimeout(() => {
+            if (!tigerState.active) { el.remove(); return; }
+            if (pounces < maxPounces) {
+              el.classList.add('prowl');
+              setTimeout(doPounce, 700 + Math.random() * 400);
+            } else {
+              el.style.transition = 'left 0.7s ease';
+              el.style.left = (fromLeft ? -90 : sceneW) + 'px';
+              setTimeout(() => el.remove(), 800);
+            }
+          }, 400);
+        }, 280);
+      }
+      doPounce();
+    }, 900);
+  }
+
+  function getAnimalBottom() {
+    // Animal sizer sits at bottom:30px in the scene.
+    // Tiger SVG bottom edge should match — feet at same level.
+    return 30;
+  }
+
+  function endTigerAttack(survived) {
+    if (!tigerState.active) return;
+    tigerState.active   = false;
+    tigerState.cooldown = true;
+    tigerState.moveDir  = 0;
+
+    document.querySelectorAll('[id^="tigerActive_"]').forEach(el => el.remove());
+
+    const overlay = document.getElementById('tigerOverlay');
+    overlay.classList.remove('active');
+    clearInterval(tigerState.moveInterval);
+
+    const sceneEl = tigerState._sceneEl || document.querySelector('.mammoth-scene');
+    sceneEl.removeEventListener('mousemove',  _onMove);
+    sceneEl.removeEventListener('touchmove',  _onTouchTiger);
+    sceneEl.removeEventListener('mousedown',  _onDown);
+    sceneEl.removeEventListener('touchstart', _onTouchStartTiger);
+    sceneEl.removeEventListener('mouseup',    _onUp);
+    sceneEl.removeEventListener('touchend',   _onUp);
+
+    forceRestoreAnimal();
+
+    if (survived) {
+      state.score     += 30;
+      state.happiness  = Math.min(100, state.happiness + 10);
+      const msgs = ['😤 Ran away!!', '🏃 Too fast for them!', '😅 That was close!'];
+      showBubble(msgs[Math.floor(Math.random() * msgs.length)]);
+      updateStats();
+    }
+
+    setTimeout(() => {
+      tigerState.cooldown   = false;
+      tigerState.lastRollAt = Math.floor(state.score / 100);
+    }, 15000);
+  }
+  // ─────────────────────────────────────────────────────────────────
+
+  // ── ASTEROID MINI-GAME ────────────────────────────────────────────────────────────────
 
   function showAsteroidReadyScreen() {
     asteroidState.readyScreen = true;
@@ -4317,41 +4775,63 @@ z-index: 10;
   function _applyAnimalX() {
     const sizer = getActiveSizer();
     if (!sizer) return;
-    const scene = document.querySelector('.mammoth-scene');
+    const scene  = document.querySelector('.mammoth-scene');
     const sceneW = scene.getBoundingClientRect().width;
     const sizerW = sizer.getBoundingClientRect().width;
-    const newLeft = (asteroidState.animalX / 100) * sceneW - sizerW / 2;
-    sizer.style.left = Math.max(0, Math.min(sceneW - sizerW, newLeft)) + 'px';
+    const xPct   = tigerState.active ? tigerState.animalX : asteroidState.animalX;
+    const newLeft = (xPct / 100) * sceneW - sizerW / 2;
     sizer.style.position = 'absolute';
-    sizer.style.bottom = '30px';
+    sizer.style.left     = Math.max(0, Math.min(sceneW - sizerW, newLeft)) + 'px';
+    sizer.style.bottom   = '30px';
   }
 
   function _onMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    asteroidState.animalX = Math.max(5, Math.min(90, (x / rect.width) * 100));
+    const x    = e.clientX - rect.left;
+    const pct  = Math.max(5, Math.min(90, (x / rect.width) * 100));
+    if (tigerState.active)    tigerState.animalX    = pct;
+    else                      asteroidState.animalX = pct;
     _applyAnimalX();
   }
   function _onTouch(e) {
     e.preventDefault();
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    asteroidState.animalX = Math.max(5, Math.min(90, (x / rect.width) * 100));
+    const pct  = Math.max(5, Math.min(90, (e.touches[0].clientX - rect.left) / rect.width * 100));
+    if (tigerState.active) tigerState.animalX    = pct;
+    else                   asteroidState.animalX = pct;
     _applyAnimalX();
   }
   function _onDown(e) {
     const rect = e.currentTarget.getBoundingClientRect();
-    asteroidState.moveDir = e.clientX - rect.left < rect.width / 2 ? -1 : 1;
+    const dir  = e.clientX - rect.left < rect.width / 2 ? -1 : 1;
+    if (tigerState.active) tigerState.moveDir    = dir;
+    else                   asteroidState.moveDir = dir;
   }
   function _onTouchStart(e) {
     e.preventDefault();
     const rect = e.currentTarget.getBoundingClientRect();
-    asteroidState.moveDir = e.touches[0].clientX - rect.left < rect.width / 2 ? -1 : 1;
+    const dir  = e.touches[0].clientX - rect.left < rect.width / 2 ? -1 : 1;
+    if (tigerState.active) tigerState.moveDir    = dir;
+    else                   asteroidState.moveDir = dir;
   }
-  function _onUp() { asteroidState.moveDir = 0; }
+  function _onUp() {
+    asteroidState.moveDir = 0;
+    tigerState.moveDir    = 0;
+  }
+
+  function _onTouchTiger(e) {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    tigerState.animalX = Math.max(5, Math.min(90, (e.touches[0].clientX - rect.left) / rect.width * 100));
+    _applyAnimalX();
+  }
+  function _onTouchStartTiger(e) {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    tigerState.moveDir = e.touches[0].clientX - rect.left < rect.width / 2 ? -1 : 1;
+  }
 
   function _spawnAsteroid(overlay, scene, speedMult) {
-    speedMult = speedMult || 1;
     const sceneRect = scene.getBoundingClientRect();
     // Higher intensity = bigger rocks too
     const minSize = 24 + speedMult * 2;
@@ -4443,6 +4923,27 @@ z-index: 10;
     setTimeout(() => { asteroidState.hitCooldown = false; }, 1200);
   }
 
+  // ── SAFETY: always fully restores animal position/visibility ──
+  function forceRestoreAnimal() {
+    ['mammothSizer','rhinoSizer'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.position   = '';
+      el.style.left       = '';
+      el.style.bottom     = '';
+      el.style.top        = '';
+      el.style.opacity    = '1';
+      el.style.transition = '';
+    });
+    ['mammothWrapper','rhinoWrapper'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.filter = '';
+      el.classList.remove('skating','falling','getup','jumping','dancing');
+    });
+    applyMammothSize();
+  }
+
   function endAsteroidField(survived) {
     if (!asteroidState.active) return;
     asteroidState.active = false;
@@ -4456,13 +4957,7 @@ z-index: 10;
     overlay.innerHTML = '';
     overlay.classList.remove('active');
 
-    // Reset animal position back to centre
-    const sizer = getActiveSizer();
-    if (sizer) {
-      sizer.style.position = '';
-      sizer.style.left     = '';
-      sizer.style.bottom   = '';
-    }
+    forceRestoreAnimal();
 
     if (survived) {
       showBubble('🎉 Survived!');
@@ -4518,30 +5013,6 @@ z-index: 10;
     document.getElementById('wyattPopup').classList.add('show');
   }
   // ───────────────────────────────────────────────────────────────
-
-  // ── DAY / NIGHT CYCLE ────────────────────────────────────────────
-  // Real time: 30 min = 3 game hours → 1 real minute = 6 game minutes
-  // Game day: 24 hours.
-  // Darkness: 6pm start getting dark, fully dark at 8pm
-  //           6am start getting light, fully light at 7am
-  const GAME_MINS_PER_REAL_MS = 6 / 60000; // 6 game-mins per real ms
-
-  // Persist the epoch so time keeps running even when app is closed
-  const DN_KEY = 'mammoth_dn_epoch';
-  let dnEpoch = parseInt(localStorage.getItem(DN_KEY) || '0');
-  if (!dnEpoch) {
-    // First ever launch — anchor to 6:00 AM game time
-    // Work out what real-world ms corresponds to game 6:00 AM
-    dnEpoch = Date.now() - (6 * 60) / GAME_MINS_PER_REAL_MS;
-    localStorage.setItem(DN_KEY, dnEpoch);
-  }
-
-  const dayNightState = { epoch: dnEpoch };
-
-  function getGameMins() {
-    const elapsed = Date.now() - dayNightState.epoch;
-    return (elapsed * GAME_MINS_PER_REAL_MS) % (24 * 60);
-  }
 
   function formatGameTime(mins) {
     const h = Math.floor(mins / 60) % 24;
