@@ -4521,19 +4521,26 @@ z-index: 10;
 
   // ── DAY / NIGHT CYCLE ────────────────────────────────────────────
   // Real time: 30 min = 3 game hours → 1 real minute = 6 game minutes
-  // Game day: 24 hours. Starts at 6:00 AM game time on load.
+  // Game day: 24 hours.
   // Darkness: 6pm start getting dark, fully dark at 8pm
   //           6am start getting light, fully light at 7am
   const GAME_MINS_PER_REAL_MS = 6 / 60000; // 6 game-mins per real ms
 
-  const dayNightState = {
-    startRealMs: Date.now(),
-    startGameMins: 6 * 60, // start at 6:00 AM
-  };
+  // Persist the epoch so time keeps running even when app is closed
+  const DN_KEY = 'mammoth_dn_epoch';
+  let dnEpoch = parseInt(localStorage.getItem(DN_KEY) || '0');
+  if (!dnEpoch) {
+    // First ever launch — anchor to 6:00 AM game time
+    // Work out what real-world ms corresponds to game 6:00 AM
+    dnEpoch = Date.now() - (6 * 60) / GAME_MINS_PER_REAL_MS;
+    localStorage.setItem(DN_KEY, dnEpoch);
+  }
+
+  const dayNightState = { epoch: dnEpoch };
 
   function getGameMins() {
-    const elapsed = Date.now() - dayNightState.startRealMs;
-    return (dayNightState.startGameMins + elapsed * GAME_MINS_PER_REAL_MS) % (24 * 60);
+    const elapsed = Date.now() - dayNightState.epoch;
+    return (elapsed * GAME_MINS_PER_REAL_MS) % (24 * 60);
   }
 
   function formatGameTime(mins) {
@@ -4583,21 +4590,19 @@ z-index: 10;
   updateDayNight(); // run immediately on load
   // ─────────────────────────────────────────────────────────────────
 
-  let dayNightTestMode = null; // null = real time, 'day' or 'night'
+  let dayNightTestMode = null;
   function toggleDayNightTest() {
     const btn = document.getElementById('dayNightTestBtn');
     if (dayNightTestMode !== 'night') {
-      // Switch to night (midnight)
       dayNightTestMode = 'night';
-      dayNightState.startRealMs = Date.now();
-      dayNightState.startGameMins = 0; // midnight
+      // Set epoch so game time is midnight right now
+      dayNightState.epoch = Date.now() - (0 * 60) / GAME_MINS_PER_REAL_MS;
       btn.textContent = '🌕 TEST: Switch to Day';
       btn.style.background = 'rgba(5,10,30,0.8)';
     } else {
-      // Switch to day (10am)
       dayNightTestMode = 'day';
-      dayNightState.startRealMs = Date.now();
-      dayNightState.startGameMins = 10 * 60; // 10am
+      // Set epoch so game time is 10am right now
+      dayNightState.epoch = Date.now() - (10 * 60) / GAME_MINS_PER_REAL_MS;
       btn.textContent = '☀️ TEST: Switch to Night';
       btn.style.background = 'rgba(20,30,60,0.7)';
     }
