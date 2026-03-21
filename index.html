@@ -1373,8 +1373,8 @@ z-index: 10;
       <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#a855f7,#ec4899);width:5%" id="scoreBar"></div></div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">🦣 Size</div>
-      <div class="stat-value" id="sizeVal" style="color:#4dd0e1">30%</div>
+      <div class="stat-label">🦣 Age</div>
+      <div class="stat-value" id="sizeVal" style="color:#4dd0e1">Baby</div>
       <div class="stat-bar" style="background:#e0e0e0;"><div class="stat-fill" style="background:linear-gradient(90deg,#4dd0e1,#00bcd4);width:2%" id="sizeBar"></div></div>
     </div>
   </div>
@@ -2387,16 +2387,23 @@ z-index: 10;
 
     // ── GROWTH SYSTEM ──
     if (!state.grownUp) {
-      const newSize = Math.min(500, 30 + Math.floor(state.score / 1000) * 2);
+      const newSize = Math.min(100, 30 + Math.floor(state.score / 1000) * 2);
       if (newSize > state.sizePercent) {
-        const oldSize = state.sizePercent;
         state.sizePercent = newSize;
         applyMammothSize();
-        if (newSize >= 500) {
+        const getStage = (pct) => {
+          if (pct >= 100) return 'Full Grown';
+          if (pct >= 71)  return 'Adult';
+          if (pct >= 61)  return 'Young Adult';
+          if (pct >= 51)  return 'Teen';
+          if (pct >= 41)  return 'Toddler';
+          return 'Baby';
+        };
+        if (newSize >= 100) {
           state.grownUp = true;
-          showGrowthCelebration('🎉 Fully Grown!', 'Your mammoth is all grown up at 500%!', true);
+          showGrowthCelebration('🎉 Full Grown!', 'Your animal has reached Full Grown!', true);
         } else {
-          showGrowthCelebration('📈 He\'s growing!', `${oldSize}% → ${newSize}%`, false);
+          showGrowthCelebration('📈 Growing up!', `Now a ${getStage(newSize)}!`, false);
         }
       }
     }
@@ -2405,10 +2412,19 @@ z-index: 10;
     const sizeEl = document.getElementById('sizeVal');
     const sizeBar = document.getElementById('sizeBar');
     if (sizeEl) {
-      sizeEl.textContent = state.sizePercent + '%';
-      sizeEl.style.color = state.grownUp ? '#ffd700' : '#4dd0e1';
+      const pct = state.sizePercent;
+      let ageLabel, ageColor;
+      if (pct >= 100)      { ageLabel = 'Full Grown'; ageColor = '#ffd700'; }
+      else if (pct >= 71)  { ageLabel = 'Adult';       ageColor = '#66bb6a'; }
+      else if (pct >= 61)  { ageLabel = 'Young Adult'; ageColor = '#4dd0e1'; }
+      else if (pct >= 51)  { ageLabel = 'Teen';        ageColor = '#ab47bc'; }
+      else if (pct >= 41)  { ageLabel = 'Toddler';     ageColor = '#ff8a65'; }
+      else                 { ageLabel = 'Baby';         ageColor = '#f06292'; }
+      sizeEl.textContent = ageLabel;
+      sizeEl.style.color = ageColor;
+      sizeEl.style.fontSize = ageLabel.length > 8 ? 'clamp(0.55rem, 1.8vw, 0.75rem)' : '';
     }
-    if (sizeBar) sizeBar.style.width = ((state.sizePercent - 30) / 470 * 100) + '%';
+    if (sizeBar) sizeBar.style.width = ((state.sizePercent - 30) / 70 * 100) + '%';
 
     // Dance when happiness > 95%
     const wrapper = getActiveWrapper();
@@ -3370,13 +3386,16 @@ z-index: 10;
     // Intensity: level 1 = 5 asteroids, each level x2 count and speed
     // Level 1: 5 asteroids, interval ~1600ms
     // Level 2: 10 asteroids, interval ~800ms
-    // Level 3: 20 asteroids, interval ~400ms
-    // Level 4: 40 asteroids, interval ~200ms
-    // Level 5: 80 asteroids, interval ~100ms
+    // ── REBALANCED INTENSITY ──
+    // Level: 1    2    3    4    5
+    // Count: 5    9    13   18   25
+    // Speed: 1x   1.5x 2x   3x   4x
     const lvl = asteroidState.intensity;
-    const baseCount  = 5 * Math.pow(2, lvl - 1);   // 5, 10, 20, 40, 80
-    const baseSpeed  = 1 * Math.pow(2, lvl - 1);    // 1, 2, 4, 8, 16 (relative speed multiplier)
-    const spawnInterval = Math.max(80, Math.round(8000 / baseCount)); // spread across 8s
+    const countTable = [5, 9, 13, 18, 25];
+    const speedTable = [1, 1.5, 2, 3, 4];
+    const baseCount    = countTable[lvl - 1];
+    const baseSpeed    = speedTable[lvl - 1];
+    const spawnInterval = Math.max(150, Math.round(8000 / baseCount)); // spread across 8s
 
     let spawned = 0;
     asteroidState.spawnInterval = setInterval(() => {
