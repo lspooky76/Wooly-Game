@@ -1,4 +1,4 @@
-const CACHE_NAME = ‘baby-mammoth-v14’;
+const CACHE_NAME = ‘baby-mammoth-v15’;
 const ASSETS = [
 ‘./’,
 ‘./index.html’,
