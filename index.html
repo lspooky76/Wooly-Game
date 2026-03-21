@@ -664,7 +664,172 @@ text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 padding-bottom: 6px;
 }
 
-/* ── ASTEROID MINI-GAME ── */
+/* ── IDLE ACTIVITIES ── */
+
+/* Shared accessory positioning */
+.idle-accessory {
+position: absolute;
+pointer-events: none;
+z-index: 15;
+display: none;
+}
+.idle-accessory.show { display: block; }
+
+/* 1. DISCO — disco ball, floor lights */
+#discoBall {
+position: absolute;
+top: 5%;
+left: 50%;
+transform: translateX(-50%);
+font-size: 3rem;
+z-index: 14;
+display: none;
+animation: discoBallDrop 1s ease forwards, discoBallSpin 2s linear 1s infinite;
+transform-origin: top center;
+}
+#discoBall.show { display: block; }
+@keyframes discoBallDrop {
+0%   { transform: translateX(-50%) translateY(-80px); opacity: 0; }
+100% { transform: translateX(-50%) translateY(60px);  opacity: 1; }
+}
+@keyframes discoBallSpin { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 8px #ff00ff)} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 8px #00ffff)} }
+
+.disco-floor {
+position: absolute;
+bottom: 28px;
+left: 0; right: 0;
+height: 36px;
+border-radius: 8px;
+pointer-events: none;
+z-index: 4;
+display: none;
+animation: discoFloor 0.3s ease-in-out infinite alternate;
+}
+.disco-floor.show { display: block; }
+@keyframes discoFloor {
+0%   { background: linear-gradient(90deg, #ff006680, #7700ff80, #00aaff80, #00ff8880); }
+50%  { background: linear-gradient(90deg, #ffcc0080, #ff006680, #00ff8880, #7700ff80); }
+100% { background: linear-gradient(90deg, #00aaff80, #ffcc0080, #ff006680, #00ff8880); }
+}
+
+/* Afro wig — positioned via JS over mammoth head */
+#idleAfro {
+position: absolute;
+display: none;
+z-index: 16;
+pointer-events: none;
+animation: wiggleBounce 0.4s ease-in-out infinite alternate;
+transform-origin: bottom center;
+}
+#idleAfro.show { display: block; }
+
+/* 2. JUMP ROPE */
+#idleHeadband {
+position: absolute;
+font-size: 1.2rem;
+top: -18px; left: 50%;
+transform: translateX(-50%);
+display: none; z-index: 16; pointer-events: none;
+}
+#idleHeadband.show { display: block; }
+#idleRope {
+position: absolute;
+bottom: 0; left: 50%;
+transform: translateX(-50%);
+width: 120px; height: 60px;
+display: none; z-index: 14; pointer-events: none;
+}
+#idleRope.show { display: block; }
+.mammoth-wrapper.jumping {
+animation: jumpRope 0.5s ease-in-out infinite;
+}
+@keyframes jumpRope {
+0%,100% { transform: translateY(0); }
+50%     { transform: translateY(-18px); }
+}
+
+/* 3. ICE SKATES — blade overlays on his feet */
+#idleSkates {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: none;
+z-index: 16;
+pointer-events: none;
+}
+#idleSkates.show { display: block; }
+
+.mammoth-wrapper.skating {
+animation: skateWobble 0.6s ease-in-out infinite;
+}
+.mammoth-wrapper.falling {
+animation: skateFall 0.8s ease-in forwards;
+}
+.mammoth-wrapper.getup {
+animation: skateGetUp 0.6s ease-out forwards;
+}
+@keyframes skateWobble {
+0%,100% { transform: rotate(-2deg); }
+50%     { transform: rotate(2deg); }
+}
+@keyframes skateFall {
+0%   { transform: rotate(0deg)  translateY(0); }
+40%  { transform: rotate(30deg) translateY(5px); }
+100% { transform: rotate(65deg) translateY(12px); }
+}
+@keyframes skateGetUp {
+0%   { transform: rotate(65deg) translateY(12px); }
+100% { transform: rotate(0deg)  translateY(0); }
+}
+
+/* 4. GUITAR + COWBOY HAT */
+#idleCowboyHat {
+position: absolute;
+font-size: 1.8rem;
+display: none; z-index: 16; pointer-events: none;
+animation: hatBob 0.6s ease-in-out infinite alternate;
+}
+#idleCowboyHat.show { display: block; }
+#idleGuitar {
+position: absolute;
+display: none; z-index: 16; pointer-events: none;
+animation: guitarStrum 0.4s ease-in-out infinite alternate;
+transform-origin: center center;
+}
+#idleGuitar.show { display: block; }
+@keyframes hatBob   { 0%{transform:translateX(-50%) rotate(-4deg)} 100%{transform:translateX(-50%) rotate(4deg)} }
+@keyframes guitarStrum {
+0%   { transform: rotate(-95deg) translateX(-50%); }
+100% { transform: rotate(-85deg) translateX(-50%); }
+}
+
+/* 5. HOUSE ITEMS */
+#idleHouseItem {
+position: absolute;
+font-size: 2rem;
+bottom: 50%;
+right: 15%;
+display: none;
+z-index: 16;
+pointer-events: none;
+animation: houseItemArc 2s ease-in-out forwards;
+}
+#idleHouseItem.show { display: block; }
+@keyframes houseItemArc {
+0%   { transform: translateX(0)     translateY(0)   scale(0); opacity: 0; }
+20%  { transform: translateX(-15px) translateY(-40px) scale(1); opacity: 1; }
+50%  { transform: translateX(-30px) translateY(-20px) scale(1); opacity: 1; }
+80%  { transform: translateX(-45px) translateY(-40px) scale(1); opacity: 1; }
+100% { transform: translateX(-60px) translateY(20px) scale(0.5); opacity: 0; }
+}
+
+/* Shared bounce */
+@keyframes wiggleBounce {
+0%   { transform: translateX(-60%) rotate(-5deg); }
+100% { transform: translateX(-60%) rotate(5deg); }
+}
 #asteroidOverlay {
 position: absolute;
 inset: 0;
@@ -1951,6 +2116,101 @@ z-index: 10;
 <!-- Speech bubble -->
 <div class="speech-bubble" id="speechBubble">Mrooooo!</div>
 
+<!-- Idle activity accessories -->
+<div id="discoBall">🪩</div>
+<div class="disco-floor" id="discoFloor"></div>
+<div id="idleAfro"><svg width="44" height="32" viewBox="0 0 44 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Puffy afro wig - bottom flat to sit on head -->
+  <circle cx="22" cy="18" r="12" fill="#2a1a0a"/>
+  <circle cx="10" cy="19" r="9"  fill="#3a2010"/>
+  <circle cx="34" cy="19" r="9"  fill="#3a2010"/>
+  <circle cx="14" cy="11" r="9"  fill="#2a1a0a"/>
+  <circle cx="30" cy="11" r="9"  fill="#2a1a0a"/>
+  <circle cx="22" cy="8"  r="10" fill="#3a2010"/>
+  <circle cx="8"  cy="16" r="7"  fill="#2a1a0a"/>
+  <circle cx="36" cy="16" r="7"  fill="#2a1a0a"/>
+  <!-- Cover bottom flat so it looks like it sits on head -->
+  <rect x="0" y="24" width="44" height="8" fill="transparent"/>
+  <!-- Shine -->
+  <circle cx="16" cy="9" r="2.5" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="28" cy="7" r="1.8" fill="rgba(255,255,255,0.10)"/>
+</svg></div>
+<div id="idleHeadband">🎽</div>
+<svg id="idleRope" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+  <path id="ropePath" d="M10,30 Q60,5 110,30" stroke="#8B4513" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>
+<div id="idleCowboyHat"><svg width="54" height="36" viewBox="0 0 54 36" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wide brim -->
+  <ellipse cx="27" cy="28" rx="27" ry="8" fill="#8B5E1A"/>
+  <ellipse cx="27" cy="27" rx="27" ry="7" fill="#a06820"/>
+  <!-- Brim highlight -->
+  <ellipse cx="27" cy="26" rx="24" ry="5" fill="#b07828" opacity="0.5"/>
+  <!-- Crown -->
+  <rect x="13" y="8" width="28" height="20" rx="4" fill="#8B5E1A"/>
+  <!-- Crown sides curve -->
+  <ellipse cx="27" cy="8" rx="14" ry="5" fill="#9a6a20"/>
+  <!-- Crown top indent -->
+  <ellipse cx="27" cy="7" rx="10" ry="3.5" fill="#7a5018"/>
+  <!-- Hat band -->
+  <rect x="13" y="23" width="28" height="4" rx="1" fill="#5a3a08"/>
+  <!-- Band buckle -->
+  <rect x="24" y="23.5" width="6" height="3" rx="0.5" fill="#d4a820"/>
+  <rect x="25" y="24" width="4" height="2" rx="0.3" fill="#8B5E1A"/>
+  <!-- Crown shading -->
+  <rect x="13" y="8" width="5" height="15" rx="2" fill="rgba(0,0,0,0.12)"/>
+  <!-- Crown highlight -->
+  <rect x="22" y="9" width="6" height="12" rx="2" fill="rgba(255,255,255,0.08)"/>
+</svg></div>
+<div id="idleGuitar"><svg width="38" height="72" viewBox="0 0 38 72" xmlns="http://www.w3.org/2000/svg">
+  <!-- Neck -->
+  <rect x="17" y="2" width="6" height="30" rx="3" fill="#c8a060"/>
+  <!-- Nut -->
+  <rect x="15" y="2" width="10" height="3" rx="1" fill="#f5e8c0"/>
+  <!-- Tuning pegs -->
+  <circle cx="13" cy="5"  r="2.5" fill="#d4a820"/>
+  <circle cx="13" cy="11" r="2.5" fill="#d4a820"/>
+  <circle cx="13" cy="17" r="2.5" fill="#d4a820"/>
+  <circle cx="27" cy="5"  r="2.5" fill="#d4a820"/>
+  <circle cx="27" cy="11" r="2.5" fill="#d4a820"/>
+  <circle cx="27" cy="17" r="2.5" fill="#d4a820"/>
+  <!-- Fret lines -->
+  <line x1="17" y1="9"  x2="23" y2="9"  stroke="#a07840" stroke-width="0.8"/>
+  <line x1="17" y1="14" x2="23" y2="14" stroke="#a07840" stroke-width="0.8"/>
+  <line x1="17" y1="19" x2="23" y2="19" stroke="#a07840" stroke-width="0.8"/>
+  <line x1="17" y1="24" x2="23" y2="24" stroke="#a07840" stroke-width="0.8"/>
+  <!-- Neck heel -->
+  <rect x="15" y="28" width="10" height="5" rx="2" fill="#b08040"/>
+  <!-- Body — sunburst gradient (upper bout) -->
+  <ellipse cx="19" cy="43" rx="13" ry="11" fill="#c84800"/>
+  <ellipse cx="19" cy="43" rx="10" ry="8"  fill="#e06000"/>
+  <ellipse cx="19" cy="43" rx="7"  ry="5.5" fill="#f0a020"/>
+  <!-- Waist -->
+  <rect x="13" y="50" width="12" height="5" rx="2" fill="#c84800"/>
+  <!-- Body — lower bout (bigger) -->
+  <ellipse cx="19" cy="60" rx="15" ry="12" fill="#c84800"/>
+  <ellipse cx="19" cy="60" rx="12" ry="9"  fill="#e06000"/>
+  <ellipse cx="19" cy="60" rx="8"  ry="6"  fill="#f0a020"/>
+  <!-- Sound hole -->
+  <circle cx="19" cy="55" r="4.5" fill="#1a0a00"/>
+  <circle cx="19" cy="55" r="3.5" fill="#2a1000"/>
+  <!-- Rosette ring -->
+  <circle cx="19" cy="55" r="4.5" fill="none" stroke="#d4a820" stroke-width="0.8"/>
+  <!-- Bridge -->
+  <rect x="13" y="64" width="12" height="3" rx="1.5" fill="#4a2800"/>
+  <!-- Saddle -->
+  <rect x="14" y="64" width="10" height="1.5" rx="0.5" fill="#f5e8c0"/>
+  <!-- Strings (6) -->
+  <line x1="17" y1="3"  x2="14" y2="65" stroke="#c8c8c8" stroke-width="0.5" opacity="0.8"/>
+  <line x1="18" y1="3"  x2="15.5" y2="65" stroke="#c8c8c8" stroke-width="0.5" opacity="0.8"/>
+  <line x1="19" y1="3"  x2="17" y2="65" stroke="#d4b060" stroke-width="0.6" opacity="0.8"/>
+  <line x1="20" y1="3"  x2="19" y2="65" stroke="#d4b060" stroke-width="0.7" opacity="0.8"/>
+  <line x1="21" y1="3"  x2="21" y2="65" stroke="#d4b060" stroke-width="0.8" opacity="0.8"/>
+  <line x1="22" y1="3"  x2="23" y2="65" stroke="#d4b060" stroke-width="0.9" opacity="0.8"/>
+  <!-- Body shine -->
+  <ellipse cx="15" cy="52" rx="3" ry="4" fill="rgba(255,200,100,0.18)"/>
+</svg></div>
+<div id="idleHouseItem"></div>
+
 <!-- Crosshairs for snowball aiming -->
 <div id="crosshairs">
   <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
@@ -1996,29 +2256,33 @@ z-index: 10;
     <rect x="110" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
     <rect x="138" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
     <!-- Back feet -->
-    <ellipse cx="121" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-    <ellipse cx="149" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+    <ellipse id="mFootBL" cx="121" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+    <ellipse id="mFootBR" cx="149" cy="193" rx="14" ry="7" fill="#5C3A22"/>
     <!-- Toe lines back -->
+    <g id="mToeB">
     <line x1="113" y1="193" x2="113" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="121" y1="195" x2="121" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="129" y1="193" x2="129" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="141" y1="193" x2="141" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="149" y1="195" x2="149" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="157" y1="193" x2="157" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+    </g>
 
     <!-- Front legs -->
     <rect x="38" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
     <rect x="65" y="165" width="22" height="28" rx="8" fill="#6B4B32"/>
     <!-- Front feet -->
-    <ellipse cx="49" cy="193" rx="14" ry="7" fill="#5C3A22"/>
-    <ellipse cx="76" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+    <ellipse id="mFootFL" cx="49" cy="193" rx="14" ry="7" fill="#5C3A22"/>
+    <ellipse id="mFootFR" cx="76" cy="193" rx="14" ry="7" fill="#5C3A22"/>
     <!-- Toe lines front -->
+    <g id="mToeF">
     <line x1="41" y1="193" x2="41" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="49" y1="195" x2="49" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="57" y1="193" x2="57" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="68" y1="193" x2="68" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="76" y1="195" x2="76" y2="200" stroke="#4a2d18" stroke-width="1.5"/>
     <line x1="84" y1="193" x2="84" y2="198" stroke="#4a2d18" stroke-width="1.5"/>
+    </g>
 
     <!-- Head -->
     <ellipse cx="78" cy="88" rx="40" ry="36" fill="#7B5B42"/>
@@ -2107,8 +2371,8 @@ z-index: 10;
     <rect x="148" y="148" width="20" height="32" rx="7" fill="#5C4228"/>
     <rect x="170" y="148" width="18" height="30" rx="7" fill="#4e3820"/>
     <!-- Hooves back -->
-    <rect x="148" y="174" width="20" height="8" rx="4" fill="#1e1008"/>
-    <rect x="170" y="172" width="18" height="8" rx="4" fill="#1e1008"/>
+    <rect id="rFootBL" x="148" y="174" width="20" height="8" rx="4" fill="#1e1008"/>
+    <rect id="rFootBR" x="170" y="172" width="18" height="8" rx="4" fill="#1e1008"/>
 
     <!-- ── BODY — stocky, barrel-shaped ── -->
     <!-- Main body mass -->
@@ -2174,8 +2438,8 @@ z-index: 10;
     <rect x="60" y="152" width="20" height="34" rx="7" fill="#5C4228"/>
     <rect x="82" y="152" width="18" height="32" rx="7" fill="#4e3820"/>
     <!-- Hooves front -->
-    <rect x="60" y="180" width="20" height="8" rx="4" fill="#1e1008"/>
-    <rect x="82" y="178" width="18" height="8" rx="4" fill="#1e1008"/>
+    <rect id="rFootFL" x="60" y="180" width="20" height="8" rx="4" fill="#1e1008"/>
+    <rect id="rFootFR" x="82" y="178" width="18" height="8" rx="4" fill="#1e1008"/>
 
     <!-- ── SHORT STUBBY TAIL ── -->
     <path d="M185 118 Q196 110 194 122 Q190 130 186 126" stroke="#5C4228" stroke-width="5" fill="none" stroke-linecap="round"/>
@@ -3076,24 +3340,353 @@ z-index: 10;
   }, 8000);
 
   // Dance every 2 minutes if happiness >= 95%
+  // ── IDLE ACTIVITIES ─────────────────────────────────────────────
+  const HOUSE_ITEMS = ['🔨','🍴','🦆','🪣','🧸','📦','🪑','🕯️','📚','🧲',
+                       '🎀','🧴','🪥','🍵','🎮','🖼️','🧶','🪄','🔑','🎁'];
+
+  let idleBusy = false;
+
+  function clearIdleAccessories() {
+    ['discoBall','discoFloor','idleAfro','idleHeadband','idleRope',
+     'idleSkates','idleCowboyHat','idleGuitar','idleHouseItem'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('show');
+    });
+    const wrapper = getActiveWrapper();
+    if (wrapper) wrapper.classList.remove('dancing','jumping','skating');
+    const trunk = document.getElementById('trunkGroup');
+    if (trunk) trunk.classList.remove('trunk-raised');
+    idleBusy = false;
+  }
+
+  function idleDiscoParty() {
+    if (idleBusy || state.isAnimating) return;
+    idleBusy = true;
+    const wrapper = getActiveWrapper();
+
+    showBubble('🕺 Stayin\' Alive!');
+    document.getElementById('discoBall').classList.add('show');
+    setTimeout(() => document.getElementById('discoFloor').classList.add('show'), 500);
+    wrapper.classList.add('dancing');
+    soundHappyToot();
+    setTimeout(() => soundHappyToot(), 800);
+    setTimeout(() => soundHappyToot(), 1600);
+    setTimeout(() => soundHappyToot(), 2800);
+    setTimeout(() => soundHappyToot(), 4200);
+    setTimeout(() => showBubble('🪩 Boogie!'), 2500);
+    setTimeout(() => showBubble('✨ Disco fever!'), 4500);
+    setTimeout(() => {
+      wrapper.classList.remove('dancing');
+      clearIdleAccessories();
+    }, 7000);
+  }
+
+  function idleJumpRope() {
+    if (idleBusy || state.isAnimating) return;
+    idleBusy = true;
+    const wrapper = getActiveWrapper();
+    showBubble('🪢 Jump rope time!');
+    document.getElementById('idleHeadband').classList.add('show');
+    document.getElementById('idleRope').classList.add('show');
+    wrapper.classList.add('jumping');
+    let count = 0;
+    const ropeInterval = setInterval(() => {
+      count++;
+      const path = document.getElementById('ropePath');
+      if (path) {
+        path.setAttribute('d', count % 2 === 0
+          ? 'M10,30 Q60,5 110,30'
+          : 'M10,30 Q60,55 110,30');
+      }
+    }, 250);
+    setTimeout(() => {
+      clearInterval(ropeInterval);
+      clearIdleAccessories();
+      showBubble(`${count} jumps! 🏆`);
+    }, 5000);
+  }
+
+  function idleIceSkating() {
+    if (idleBusy || state.isAnimating) return;
+    idleBusy = true;
+    const wrapper = getActiveWrapper();
+
+    const isRhino = state.animalType === 'rhino';
+
+    // Swap hooves to skate boots + blades
+    function putOnSkates() {
+      if (isRhino) {
+        // Rhino: rect hooves — change fill and add blades
+        const hoofIds = ['rFootFL','rFootFR','rFootBL','rFootBR'];
+        // Rhino hoof positions: FL(60,180,20,8), FR(82,178,18,8), BL(148,174,20,8), BR(170,172,18,8)
+        const bladeData = [[58,188],[80,186],[146,182],[168,180]];
+        hoofIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.setAttribute('fill', '#e8eeff');
+        });
+        const svg = wrapper.querySelector('svg');
+        if (svg) {
+          const blades = document.createElementNS('http://www.w3.org/2000/svg','g');
+          blades.id = 'skateBlades';
+          bladeData.forEach(([x, y]) => {
+            const b = document.createElementNS('http://www.w3.org/2000/svg','rect');
+            b.setAttribute('x', x); b.setAttribute('y', y);
+            b.setAttribute('width', '24'); b.setAttribute('height', '3');
+            b.setAttribute('rx', '1.5'); b.setAttribute('fill', '#9ab0cc');
+            blades.appendChild(b);
+            const shine = document.createElementNS('http://www.w3.org/2000/svg','line');
+            shine.setAttribute('x1', x+1); shine.setAttribute('y1', y+1);
+            shine.setAttribute('x2', x+22); shine.setAttribute('y2', y+1);
+            shine.setAttribute('stroke','white'); shine.setAttribute('stroke-width','1');
+            shine.setAttribute('opacity','0.7');
+            blades.appendChild(shine);
+          });
+          svg.appendChild(blades);
+        }
+      } else {
+        // Mammoth: ellipse hooves
+        ['mToeF','mToeB'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
+        ['mFootFL','mFootFR','mFootBL','mFootBR'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.setAttribute('fill', '#e8eeff');
+          el.setAttribute('ry', '6');
+        });
+        const svg = wrapper.querySelector('svg');
+        if (svg) {
+          const blades = document.createElementNS('http://www.w3.org/2000/svg','g');
+          blades.id = 'skateBlades';
+          [[35,49],[62,76],[107,121],[134,149]].forEach(([x]) => {
+            const b = document.createElementNS('http://www.w3.org/2000/svg','rect');
+            b.setAttribute('x', x); b.setAttribute('y', '197');
+            b.setAttribute('width', '30'); b.setAttribute('height', '3');
+            b.setAttribute('rx', '1.5'); b.setAttribute('fill', '#9ab0cc');
+            blades.appendChild(b);
+            const shine = document.createElementNS('http://www.w3.org/2000/svg','line');
+            shine.setAttribute('x1', x+1); shine.setAttribute('y1', '198');
+            shine.setAttribute('x2', x+28); shine.setAttribute('y2', '198');
+            shine.setAttribute('stroke','white'); shine.setAttribute('stroke-width','1');
+            shine.setAttribute('opacity','0.7');
+            blades.appendChild(shine);
+          });
+          svg.appendChild(blades);
+        }
+      }
+    }
+
+    function takeOffSkates() {
+      if (isRhino) {
+        ['rFootFL','rFootFR','rFootBL','rFootBR'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.setAttribute('fill', '#1e1008');
+        });
+      } else {
+        ['mToeF','mToeB'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display=''; });
+        ['mFootFL','mFootFR','mFootBL','mFootBR'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.setAttribute('fill', '#5C3A22');
+          el.setAttribute('ry', '7');
+        });
+      }
+      const blades = document.getElementById('skateBlades');
+      if (blades) blades.remove();
+    }
+
+    putOnSkates();
+    showBubble('⛸️ Wheee!');
+
+    const sizer = getActiveSizer();
+    const scene = document.querySelector('.mammoth-scene');
+    let facingRight = true;
+
+    // Helper: smoothly move sizer to a left% position
+    function glideTo(leftPct, duration, then) {
+      if (!sizer || !scene) { if(then) then(); return; }
+      sizer.style.transition = `left ${duration}ms linear`;
+      sizer.style.position = 'absolute';
+      sizer.style.left = leftPct + '%';
+      setTimeout(() => { if(then) then(); }, duration);
+    }
+
+    // Helper: spin 180° by flipping scaleX
+    function spin(then) {
+      facingRight = !facingRight;
+      sizer.style.transition = 'transform 0.4s ease-in-out';
+      const scale = state.sizePercent / 100;
+      sizer.style.transform = `scaleX(${facingRight ? 1 : -1}) scale(${scale})`;
+      setTimeout(() => { if(then) then(); }, 420);
+    }
+
+    wrapper.classList.add('skating');
+
+    // Sequence: start center → glide left → spin → glide right → spin → glide left → fall
+    glideTo(15, 1200, () => {
+      showBubble('🌀 Spin!');
+      spin(() => {
+        glideTo(65, 1400, () => {
+          showBubble('🌀 Spin!');
+          spin(() => {
+            glideTo(25, 1000, () => {
+              // Fall!
+              wrapper.classList.remove('skating');
+              void wrapper.offsetWidth;
+              wrapper.classList.add('falling');
+              showBubble('😵 Whoops!!');
+
+              setTimeout(() => {
+                wrapper.classList.remove('falling');
+                void wrapper.offsetWidth;
+                wrapper.classList.add('getup');
+                showBubble('😅 I meant to do that!');
+              }, 900);
+
+              setTimeout(() => {
+                wrapper.classList.remove('getup');
+                // Reset position and facing
+                sizer.style.transition = 'left 0.6s ease, transform 0.6s ease';
+                sizer.style.left = '';
+                sizer.style.position = '';
+                const scale = state.sizePercent / 100;
+                sizer.style.transform = `scale(${scale})`;
+                setTimeout(() => {
+                  sizer.style.transition = '';
+                  takeOffSkates();
+                  clearIdleAccessories();
+                }, 650);
+              }, 1800);
+            });
+          });
+        });
+      });
+    });
+  }
+
+  function idleCowboyGuitar() {
+    if (idleBusy || state.isAnimating) return;
+    idleBusy = true;
+    const wrapper  = getActiveWrapper();
+    const sizer    = getActiveSizer();
+    const scene    = document.querySelector('.mammoth-scene');
+    const hatEl    = document.getElementById('idleCowboyHat');
+    const guitarEl = document.getElementById('idleGuitar');
+
+    if (sizer && scene) {
+      const sr = scene.getBoundingClientRect();
+      const mr = sizer.getBoundingClientRect();
+      // Hat on top of head
+      hatEl.style.left      = (mr.left - sr.left + mr.width * 0.42) + 'px';
+      hatEl.style.top       = (mr.top  - sr.top  - 8) + 'px';
+      hatEl.style.transform = 'translateX(-50%)';
+      // Guitar horizontal across body, higher up near chest/neck
+      guitarEl.style.left      = (mr.left - sr.left + mr.width * 0.45) + 'px';
+      guitarEl.style.top       = (mr.top  - sr.top  + mr.height * 0.30) + 'px';
+      guitarEl.style.transform = 'translateX(-50%)';
+    }
+
+    showBubble('🎸 Yeehaw!!');
+    hatEl.classList.add('show');
+    guitarEl.classList.add('show');
+    wrapper.classList.add('dancing');
+    const trunk = document.getElementById('trunkGroup');
+    if (trunk) trunk.classList.add('trunk-raised');
+    soundHappyToot();
+    setTimeout(() => soundHappyToot(), 600);
+    setTimeout(() => soundHappyToot(), 1000);
+    setTimeout(() => soundHappyToot(), 1300);
+    const lyrics = ['🎵 Moo-moo-moo!', '🎶 Yee-haw!', '🎵 Git along lil\' mammoth!'];
+    lyrics.forEach((l, i) => setTimeout(() => showBubble(l), 1500 + i * 1200));
+    setTimeout(() => {
+      clearIdleAccessories();
+      showBubble('🤠 Thank y\'all!');
+    }, 6000);
+  }
+
+  function idleHouseVisit() {
+    if (idleBusy || state.isAnimating) return;
+    idleBusy = true;
+    const wrapper = getActiveWrapper();
+    const sizer   = getActiveSizer();
+    const scene   = document.querySelector('.mammoth-scene');
+    const sceneW  = scene ? scene.getBoundingClientRect().width : 300;
+    showBubble('🏠 Hang on!');
+
+    // Walk toward cabin (move right + shrink slightly)
+    if (sizer) {
+      sizer.style.transition = 'transform 1.2s ease-in-out, left 1.2s ease-in-out';
+      sizer.style.left = '72%';
+      sizer.style.position = 'absolute';
+      sizer.style.bottom = '30px';
+    }
+
+    const itemEl = document.getElementById('idleHouseItem');
+    let giftCount = 0;
+    const maxGifts = 4;
+    const usedItems = new Set();
+
+    function giveItem() {
+      if (giftCount >= maxGifts) {
+        // Walk back
+        if (sizer) {
+          sizer.style.transition = 'transform 1.2s ease-in-out, left 1.2s ease-in-out';
+          sizer.style.left = '';
+          sizer.style.position = '';
+        }
+        setTimeout(() => {
+          showBubble('🏠 That\'s all I got!');
+          clearIdleAccessories();
+          if (sizer) { sizer.style.transition = ''; sizer.style.left = ''; sizer.style.position = ''; sizer.style.bottom = ''; }
+        }, 1400);
+        return;
+      }
+
+      // Pick random unused item
+      let item;
+      do { item = HOUSE_ITEMS[Math.floor(Math.random() * HOUSE_ITEMS.length)]; }
+      while (usedItems.has(item) && usedItems.size < HOUSE_ITEMS.length);
+      usedItems.add(item);
+
+      giftCount++;
+      itemEl.textContent = item;
+      itemEl.classList.remove('show');
+      void itemEl.offsetWidth;
+      itemEl.classList.add('show');
+      showBubble(`Here's a ${item}!`);
+      soundHappyToot();
+
+      setTimeout(() => { itemEl.classList.remove('show'); }, 1800);
+      setTimeout(giveItem, 2200);
+    }
+
+    // Walk to house first
+    setTimeout(() => {
+      showBubble('🏠 Be right back!');
+      // Slightly hide mammoth behind cabin
+      if (sizer) sizer.style.opacity = '0.3';
+    }, 1000);
+
+    setTimeout(() => {
+      if (sizer) sizer.style.opacity = '1';
+      if (sizer) {
+        sizer.style.left = '50%';
+        sizer.style.transform = `translateX(-50%) scale(${state.sizePercent / 100})`;
+      }
+      giveItem();
+    }, 2200);
+  }
+
   function triggerDance() {
     if (state.happiness >= 95 && !state.isAnimating) {
       const wrapper = getActiveWrapper();
       const trunk = document.getElementById('trunkGroup');
-
-      // Start dancing
       wrapper.classList.add('dancing');
       trunk.classList.add('trunk-raised');
       trunk.classList.remove('trunk-moving');
       const msgs = ['🎉 Woohoo!', '💃 Mrooooo!', '🎶 La la la!', '✨ So happy!', '🕺 Brrrrmph!'];
       showBubble(msgs[Math.floor(Math.random() * msgs.length)]);
       soundHappyToot();
-
-      // Toot again mid-dance
       setTimeout(() => soundHappyToot(), 1200);
       setTimeout(() => soundHappyToot(), 2400);
-
-      // Stop dancing after 4 seconds
       setTimeout(() => {
         wrapper.classList.remove('dancing');
         trunk.classList.remove('trunk-raised');
@@ -3101,7 +3694,16 @@ z-index: 10;
     }
   }
 
-  setInterval(triggerDance, 120000); // every 2 minutes
+  function triggerIdleActivity() {
+    if (idleBusy || state.isAnimating || state.happiness < 40) return;
+    const activities = [idleDiscoParty, idleJumpRope, idleIceSkating];
+    const pick = activities[Math.floor(Math.random() * activities.length)];
+    pick();
+  }
+
+  setInterval(triggerDance, 120000);          // dance every 2 min if happiness ≥ 95
+  setInterval(triggerIdleActivity, 90000);    // random idle activity every 90s if happiness ≥ 40
+  // ─────────────────────────────────────────────────────────────────
 
   // ─── SNOWBALL SYSTEM ────────────────────────────────────────────
   let throwState = {
