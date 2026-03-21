@@ -2932,11 +2932,12 @@ z-index: 10;
       masterGain = AC.createGain();
       masterGain.gain.value = 0.9;
       masterGain.connect(AC.destination);
-      // Play silent buffer - mobile unlock trick
       const b = AC.createBuffer(1, 1, AC.sampleRate);
       const s = AC.createBufferSource();
       s.buffer = b; s.connect(AC.destination); s.start(0);
       if (AC.state === 'suspended') AC.resume();
+      // Start ambient wind after a short delay
+      setTimeout(startWind, 500);
     } catch(e) { console.warn('AudioContext error', e); }
   }
 
@@ -2950,6 +2951,8 @@ z-index: 10;
     muted = !muted;
     if (masterGain) masterGain.gain.value = muted ? 0 : 0.9;
     document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if (!muted) setTimeout(startWind, 200);
+    else { stopNodes(ambientNodes); stopNodes(attackNodes); currentTheme = null; }
   });
 
   function soundMammothCall() {
@@ -3136,6 +3139,260 @@ z-index: 10;
       src.connect(hp); hp.connect(g); g.connect(d);
       src.start(t); src.stop(t + dur + 0.01);
     }
+  }
+  // ─────────────────────────────────────────────────────────────────
+
+  // ── AMBIENT & ATTACK MUSIC ───────────────────────────────────────
+  let ambientNodes = [];   // running background nodes
+  let attackNodes  = [];   // running attack music nodes
+  let currentTheme = null; // 'wind' | 'asteroid' | 'tiger' | 'caveman'
+
+  function dest() { return masterGain; } // reuse existing dest helper
+
+  function stopNodes(arr) {
+    arr.forEach(n => { try { n.stop && n.stop(); n.disconnect && n.disconnect(); } catch(e){} });
+    arr.length = 0;
+  }
+
+  // ── BACKGROUND: FRIGID WIND ──────────────────────────────────────
+  function startWind() {
+    if (!AC || muted || currentTheme === 'wind') return;
+    stopNodes(ambientNodes);
+    currentTheme = 'wind';
+
+    const now = AC.currentTime;
+
+    // Low howling wind — filtered noise
+    function makeWindLayer(freq, q, vol, lfoRate, lfoDepth) {
+      const buf = AC.createBuffer(1, AC.sampleRate * 3, AC.sampleRate);
+      const d   = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const src = AC.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const bp  = AC.createBiquadFilter(); bp.type = 'bandpass';
+      bp.frequency.value = freq; bp.Q.value = q;
+      const g   = AC.createGain(); g.gain.value = vol;
+      // LFO for wind swell
+      const lfo = AC.createOscillator(); lfo.frequency.value = lfoRate;
+      const lgn = AC.createGain(); lgn.gain.value = lfoDepth;
+      lfo.connect(lgn); lgn.connect(g.gain);
+      src.connect(bp); bp.connect(g); g.connect(masterGain);
+      src.start(now); lfo.start(now);
+      ambientNodes.push(src, lfo);
+    }
+
+    makeWindLayer(200,  0.8, 0.06, 0.08, 0.04);  // deep bass rumble
+    makeWindLayer(600,  1.2, 0.04, 0.12, 0.025); // mid howl
+    makeWindLayer(1400, 1.8, 0.02, 0.18, 0.015); // high whistle
+
+    // Occasional sharp gust
+    function gust() {
+      if (currentTheme !== 'wind' || !AC || muted) return;
+      const t   = AC.currentTime;
+      const buf = AC.createBuffer(1, AC.sampleRate * 0.6, AC.sampleRate);
+      const dta = buf.getChannelData(0);
+      for (let i = 0; i < dta.length; i++) dta[i] = Math.random() * 2 - 1;
+      const src = AC.createBufferSource(); src.buffer = buf;
+      const bp  = AC.createBiquadFilter(); bp.type = 'bandpass';
+      bp.frequency.value = 800 + Math.random() * 400; bp.Q.value = 0.6;
+      const g   = AC.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.08, t + 0.15);
+      g.gain.linearRampToValueAtTime(0, t + 0.6);
+      src.connect(bp); bp.connect(g); g.connect(masterGain);
+      src.start(t); src.stop(t + 0.65);
+      setTimeout(gust, 3000 + Math.random() * 5000);
+    }
+    gust();
+  }
+
+  function stopAmbient() {
+    stopNodes(ambientNodes);
+    currentTheme = null;
+  }
+
+  // ── ATTACK THEMES ────────────────────────────────────────────────
+
+  function startAttackMusic(theme) {
+    if (!AC || muted) return;
+    stopNodes(attackNodes);
+    // Dim wind during attack
+    ambientNodes.forEach(n => { try { if (n.gain) n.gain.value *= 0.3; } catch(e){} });
+    if (theme === 'asteroid') playAsteroidMusic();
+    else if (theme === 'tiger') playTigerMusic();
+    else if (theme === 'caveman') playCavemanMusic();
+  }
+
+  function stopAttackMusic() {
+    stopNodes(attackNodes);
+    // Restore wind
+    ambientNodes.forEach(n => { try { if (n.gain) n.gain.value /= 0.3; } catch(e){} });
+  }
+
+  // ASTEROID — eerie outer space: slow sine drones, alien arpeggios, deep pulses
+  function playAsteroidMusic() {
+    if (!AC) return;
+    const now = AC.currentTime;
+
+    // Deep space drone
+    [55, 82.5, 110].forEach((freq, i) => {
+      const osc = AC.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const g = AC.createGain(); g.gain.value = 0.06 - i * 0.015;
+      osc.connect(g); g.connect(masterGain);
+      osc.start(now); attackNodes.push(osc);
+    });
+
+    // Alien arpeggio — eerie tritone intervals
+    const arpNotes = [220, 277, 311, 370, 415, 370, 311, 277];
+    arpNotes.forEach((freq, i) => {
+      const t   = now + i * 0.35;
+      const osc = AC.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.08, t + 0.05);
+      g.gain.linearRampToValueAtTime(0, t + 0.32);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t); osc.stop(t + 0.35);
+      attackNodes.push(osc);
+    });
+
+    // Repeating alien pulse
+    let pulse = 0;
+    const pulseLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t = AC.currentTime;
+      const osc = AC.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = 55 + (pulse % 4) * 27.5;
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.07, t);
+      g.gain.linearRampToValueAtTime(0, t + 0.18);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t); osc.stop(t + 0.2);
+      attackNodes.push(osc);
+      pulse++;
+    }, 500);
+    attackNodes.push({ stop: () => clearInterval(pulseLoop), disconnect: () => {} });
+  }
+
+  // TIGER — tense hunting: low staccato strings, growling bass, urgent rhythm
+  function playTigerMusic() {
+    if (!AC) return;
+    const now = AC.currentTime;
+
+    // Growling bass drone
+    const bass = AC.createOscillator();
+    bass.type = 'sawtooth'; bass.frequency.value = 55;
+    const bassG = AC.createGain(); bassG.gain.value = 0.04;
+    const bassF = AC.createBiquadFilter(); bassF.type = 'lowpass'; bassF.frequency.value = 200;
+    bass.connect(bassF); bassF.connect(bassG); bassG.connect(masterGain);
+    bass.start(now); attackNodes.push(bass);
+
+    // Urgent tense staccato hits — minor 2nd tension
+    const tigerNotes = [220, 233, 220, 196, 220, 233, 247, 233];
+    let idx = 0;
+    const tigerLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t   = AC.currentTime;
+      const osc = AC.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = tigerNotes[idx % tigerNotes.length];
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.1, t);
+      g.gain.linearRampToValueAtTime(0, t + 0.08);
+      const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 2;
+      osc.connect(f); f.connect(g); g.connect(masterGain);
+      osc.start(t); osc.stop(t + 0.12);
+      attackNodes.push(osc);
+      idx++;
+    }, 280);
+
+    // Rhythmic low drum hits
+    const drumLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t   = AC.currentTime;
+      const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.15), AC.sampleRate);
+      const dta = buf.getChannelData(0);
+      for (let i = 0; i < dta.length; i++) dta[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / dta.length, 3);
+      const src = AC.createBufferSource(); src.buffer = buf;
+      const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 150;
+      const g = AC.createGain(); g.gain.value = 0.35;
+      src.connect(f); f.connect(g); g.connect(masterGain);
+      src.start(t);
+      attackNodes.push(src);
+    }, 560);
+
+    attackNodes.push(
+      { stop: () => clearInterval(tigerLoop),  disconnect: () => {} },
+      { stop: () => clearInterval(drumLoop),   disconnect: () => {} }
+    );
+  }
+
+  // CAVEMAN — tribal drums and chants: heavy percussion, pentatonic chant
+  function playCavemanMusic() {
+    if (!AC) return;
+    const now = AC.currentTime;
+
+    // Tribal bass drum — fast pattern
+    const drumPattern = [0, 0.25, 0.5, 0.625, 0.875, 1.0, 1.25, 1.5];
+    let drumOffset = 0;
+    const drumLoop = setInterval(() => {
+      if (!AC || muted) return;
+      drumPattern.forEach(beat => {
+        const t   = AC.currentTime + beat;
+        const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.2), AC.sampleRate);
+        const dta = buf.getChannelData(0);
+        for (let i = 0; i < dta.length; i++) dta[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / dta.length, 2.5);
+        const src = AC.createBufferSource(); src.buffer = buf;
+        const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = beat % 0.5 === 0 ? 200 : 400;
+        const g = AC.createGain(); g.gain.value = beat % 0.5 === 0 ? 0.45 : 0.2;
+        src.connect(f); f.connect(g); g.connect(masterGain);
+        src.start(t);
+        attackNodes.push(src);
+      });
+      drumOffset++;
+    }, 1750);
+
+    // Chanting vocals — pentatonic: A C D E G
+    const chantNotes = [220, 261, 293, 329, 392, 329, 261, 220, 196, 220];
+    let ci = 0;
+    const chantLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t   = AC.currentTime;
+      const osc = AC.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(chantNotes[ci % chantNotes.length], t);
+      osc.frequency.linearRampToValueAtTime(chantNotes[ci % chantNotes.length] * 1.02, t + 0.2);
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.1, t);
+      g.gain.linearRampToValueAtTime(0, t + 0.28);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t); osc.stop(t + 0.32);
+      attackNodes.push(osc);
+      ci++;
+    }, 300);
+
+    // High wood-block accent
+    const woodLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t   = AC.currentTime;
+      const osc = AC.createOscillator();
+      osc.type = 'square'; osc.frequency.value = 800;
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.06, t);
+      g.gain.linearRampToValueAtTime(0, t + 0.04);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t); osc.stop(t + 0.05);
+      attackNodes.push(osc);
+    }, 875);
+
+    attackNodes.push(
+      { stop: () => clearInterval(drumLoop),  disconnect: () => {} },
+      { stop: () => clearInterval(chantLoop), disconnect: () => {} },
+      { stop: () => clearInterval(woodLoop),  disconnect: () => {} }
+    );
   }
   // ─────────────────────────────────────────────────────────────────
 
@@ -4659,6 +4916,7 @@ z-index: 10;
   function launchCavemanAttack() {
     document.getElementById('cavemanReadyScreen').classList.remove('show');
     cavemanState.readyScreen = false;
+    startAttackMusic('caveman');
     startCavemanAttack();
   }
 
@@ -4863,6 +5121,8 @@ z-index: 10;
     cavemanState.active   = false;
     cavemanState.cooldown = true;
     cavemanState.dodging  = null;
+    stopAttackMusic();
+    setTimeout(startWind, 1000);
 
     clearInterval(cavemanState.moveInterval);
     document.querySelectorAll('.spear-el').forEach(el => el.remove());
@@ -4912,6 +5172,7 @@ z-index: 10;
   function launchTigerAttack() {
     document.getElementById('tigerReadyScreen').classList.remove('show');
     tigerState.readyScreen = false;
+    startAttackMusic('tiger');
     startTigerAttack();
   }
 
@@ -5055,6 +5316,8 @@ z-index: 10;
     tigerState.active   = false;
     tigerState.cooldown = true;
     tigerState.moveDir  = 0;
+    stopAttackMusic();
+    setTimeout(startWind, 1000);
 
     document.querySelectorAll('[id^="tigerActive_"]').forEach(el => el.remove());
 
@@ -5120,6 +5383,7 @@ z-index: 10;
   function launchAsteroidField() {
     document.getElementById('asteroidReadyScreen').classList.remove('show');
     asteroidState.readyScreen = false;
+    startAttackMusic('asteroid');
     startAsteroidField();
   }
 
@@ -5367,6 +5631,8 @@ z-index: 10;
     if (!asteroidState.active) return;
     asteroidState.active = false;
     asteroidState.cooldown = true;
+    stopAttackMusic();
+    setTimeout(startWind, 1000);
 
     clearInterval(asteroidState.spawnInterval);
     clearInterval(asteroidState.moveInterval);
