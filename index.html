@@ -947,6 +947,138 @@ margin-bottom: 4px;
 .tiger-ready-btn { width:100%; padding:12px; border:none; border-radius:16px; background:linear-gradient(135deg,#ff6600,#cc3300); color:white; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(1rem,3.5vw,1.15rem); cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,0.4),0 0 20px rgba(255,80,0,0.3); }
 .tiger-ready-btn:active { transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.4); }
 
+/* ── CAVEMAN ATTACK MINI-GAME ── */
+#cavemanOverlay {
+position: absolute;
+inset: 0;
+z-index: 28;
+display: none;
+pointer-events: none;
+overflow: visible;
+}
+#cavemanOverlay.active { display: block; pointer-events: all; }
+
+.caveman-warning {
+position: absolute;
+top: 12px; left: 50%;
+transform: translateX(-50%);
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1rem,3.5vw,1.3rem);
+color: #aa7700;
+text-shadow: 0 0 12px rgba(200,140,0,0.8), 0 2px 4px rgba(0,0,0,0.6);
+text-align: center;
+animation: warningPulse 0.5s ease-in-out infinite alternate;
+pointer-events: none;
+white-space: nowrap;
+}
+.caveman-hint {
+position: absolute;
+bottom: 20px; left: 50%;
+transform: translateX(-50%);
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(0.75rem,2.5vw,0.95rem);
+color: rgba(255,220,140,0.9);
+text-align: center;
+text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+pointer-events: none;
+white-space: nowrap;
+}
+/* Jump / duck dodge buttons — fixed over the control panel */
+.dodge-btns {
+position: fixed;
+bottom: calc(env(safe-area-inset-bottom) + 8px);
+left: 0; right: 0;
+display: flex;
+gap: 12px;
+padding: 0 16px;
+pointer-events: all;
+z-index: 10000;
+}
+.dodge-btn {
+flex: 1;
+padding: clamp(16px,4vh,22px) 8px;
+border: none;
+border-radius: 16px;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.1rem,4vw,1.4rem);
+cursor: pointer;
+box-shadow: 0 5px 0 rgba(0,0,0,0.4);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+-webkit-user-select: none;
+}
+.dodge-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+.dodge-btn-jump { background: linear-gradient(135deg,#66bb6a,#2e7d32); color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.dodge-btn-duck { background: linear-gradient(135deg,#ffa726,#e65100); color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+
+/* Spear element */
+.spear-el {
+position: absolute;
+pointer-events: none;
+z-index: 27;
+display: flex;
+align-items: center;
+}
+
+/* Animal jump/duck animations during caveman attack */
+.mammoth-wrapper.dodging-jump {
+animation: cavemanJump 0.5s ease-out forwards;
+}
+.mammoth-wrapper.dodging-duck {
+animation: cavemanDuck 0.4s ease-out forwards;
+}
+@keyframes cavemanJump {
+0%   { transform: translateY(0); }
+40%  { transform: translateY(-55px); }
+100% { transform: translateY(0); }
+}
+@keyframes cavemanDuck {
+0%   { transform: scaleY(1)   translateY(0); }
+40%  { transform: scaleY(0.5) translateY(20px); }
+100% { transform: scaleY(1)   translateY(0); }
+}
+
+/* Caveman ready screen */
+#cavemanReadyScreen {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100vw; height: 100vh;
+z-index: 9999;
+background: rgba(10,8,2,0.92);
+align-items: center;
+justify-content: center;
+padding: 20px;
+box-sizing: border-box;
+}
+#cavemanReadyScreen.show { display: flex; }
+.caveman-ready-box {
+background: linear-gradient(160deg, #1a1400, #2a2000);
+border: 2px solid rgba(200,160,0,0.6);
+border-radius: 24px;
+padding: 20px 22px;
+max-width: 340px;
+width: 100%;
+text-align: center;
+box-shadow: 0 0 40px rgba(200,150,0,0.2), 0 12px 40px rgba(0,0,0,0.7);
+animation: tigerBoxAppear 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards,
+tigerBoxShake 0.5s ease-in-out 0.35s 2;
+}
+.caveman-ready-box h2 {
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.4rem,5vw,1.8rem);
+color: #f0c030;
+text-shadow: 0 0 20px rgba(200,160,0,0.5);
+margin-bottom: 4px;
+}
+.crb-emoji  { font-size: 2.4rem; display: block; margin-bottom: 4px; animation: pulse 0.8s ease-in-out infinite; }
+.crb-sub    { color: rgba(255,220,140,0.9); font-size: clamp(0.78rem,2.4vw,0.9rem); font-weight:700; margin-bottom:10px; line-height:1.4; }
+.crb-instructions { background: rgba(255,255,255,0.06); border: 1px solid rgba(200,160,0,0.3); border-radius:12px; padding:8px 14px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; text-align:left; font-size:clamp(0.75rem,2.2vw,0.86rem); color:rgba(255,220,140,0.9); font-weight:700; line-height:1.5; }
+.crb-penalty { color:#f0c030; font-weight:800; font-size:clamp(0.82rem,2.4vw,0.95rem); margin-bottom:12px; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; }
+#cavemanIntensity { margin-bottom:10px; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(0.82rem,2.5vw,0.95rem); }
+.caveman-ready-btn { width:100%; padding:12px; border:none; border-radius:16px; background:linear-gradient(135deg,#f0c030,#c08000); color:#1a0f00; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(1rem,3.5vw,1.15rem); cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,0.4); font-weight:900; }
+.caveman-ready-btn:active { transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.4); }
+
 #asteroidOverlay {
 position: absolute;
 inset: 0;
@@ -1964,7 +2096,27 @@ z-index: 10;
 <!-- Asteroid mini-game overlay -->
 <div id="asteroidOverlay"></div>
 <div id="tigerOverlay"></div>
+<div id="cavemanOverlay"></div>
 ```
+
+<!-- Caveman ready screen -->
+
+<div id="cavemanReadyScreen">
+  <div class="caveman-ready-box">
+    <span class="crb-emoji">🪨</span>
+    <h2>CAVEMAN ATTACK!</h2>
+    <div class="crb-sub">Cavemen are throwing spears at your animal!</div>
+    <div id="cavemanIntensity"></div>
+    <div class="crb-instructions">
+      <span>⬆️ Press <strong>JUMP</strong> to dodge high spears</span>
+      <span>⬇️ Press <strong>DUCK</strong> to dodge low spears</span>
+      <span>🎯 Watch the spear height — react fast!</span>
+      <span>☀️🌙 Happens <strong>day or night!</strong></span>
+    </div>
+    <div class="crb-penalty">💥 Each hit = -50 points</div>
+    <button class="caveman-ready-btn" onclick="launchCavemanAttack()">🏃 DODGE! — START!</button>
+  </div>
+</div>
 
 <!-- Tiger ready screen -->
 
@@ -2760,9 +2912,12 @@ z-index: 10;
     animalX: 50, moveDir: 0, moveInterval: null,
     intensity: 1,
   };
-  // ─────────────────────────────────────────────────────────────────
-
-  // ─── AUDIO ENGINE ───────────────────────────────────────────────
+  const cavemanState = {
+    active: false, cooldown: false, readyScreen: false,
+    lastRollAt: 0, hitCooldown: false, duration: 8000,
+    dodging: null, // 'jump' | 'duck' | null
+    moveInterval: null, intensity: 1,
+  };
   // iOS Safari requires AudioContext to be created AND resumed
   // inside a synchronous user gesture handler. We use a visible
   // tap-to-start overlay to guarantee this.
@@ -3203,6 +3358,21 @@ z-index: 10;
             tigerState.cooldown = true;
             setTimeout(showTigerReadyScreen, 400);
           }
+        }
+      }
+    }
+
+    // ── CAVEMAN ATTACK TRIGGER (day or night) ──
+    if (!cavemanState.active && !cavemanState.cooldown && !cavemanState.readyScreen &&
+        !asteroidState.active && !asteroidState.readyScreen &&
+        !tigerState.active && !tigerState.readyScreen) {
+      const cavemanCentury = Math.floor(state.score / 100);
+      if (cavemanCentury > 0 && cavemanCentury !== cavemanState.lastRollAt) {
+        cavemanState.lastRollAt = cavemanCentury;
+        const roll = Math.floor(Math.random() * 10) + 1;
+        if (roll === 5) { // 7=asteroid, 3=tiger, 5=caveman
+          cavemanState.cooldown = true;
+          setTimeout(showCavemanReadyScreen, 400);
         }
       }
     }
@@ -4470,6 +4640,259 @@ z-index: 10;
   }
 
   updateStats();
+
+  // ── CAVEMAN ATTACK MINI-GAME ─────────────────────────────────────
+
+  const CAVEMAN_LABELS = ['Lone Scout','Hunting Duo','Raiding Party','War Band','FULL TRIBE!'];
+  const CAVEMAN_COLORS = ['#c8a820','#e09020','#e07010','#d05010','#b03000'];
+
+  function showCavemanReadyScreen() {
+    cavemanState.readyScreen = true;
+    cavemanState.intensity   = Math.floor(Math.random() * 5) + 1;
+    const lvl   = cavemanState.intensity;
+    const intEl = document.getElementById('cavemanIntensity');
+    if (intEl) {
+      const icons = '🪨'.repeat(lvl) + '⬜'.repeat(5 - lvl);
+      intEl.innerHTML = `<span style="color:${CAVEMAN_COLORS[lvl-1]};text-shadow:0 0 8px ${CAVEMAN_COLORS[lvl-1]}88;">${lvl} CAVEMAN${lvl>1?'':'S'} — ${CAVEMAN_LABELS[lvl-1]}<br>${icons}</span>`;
+    }
+    const gameArea = document.getElementById('gameArea');
+    gameArea.classList.add('shaking');
+    setTimeout(() => gameArea.classList.remove('shaking'), 650);
+    document.getElementById('cavemanReadyScreen').classList.add('show');
+  }
+
+  function launchCavemanAttack() {
+    document.getElementById('cavemanReadyScreen').classList.remove('show');
+    cavemanState.readyScreen = false;
+    startCavemanAttack();
+  }
+
+  function startCavemanAttack() {
+    if (cavemanState.active || state.isAnimating) return;
+    cavemanState.active      = true;
+    cavemanState.hitCooldown = false;
+    cavemanState.dodging     = null;
+
+    const overlay = document.getElementById('cavemanOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    const lvl     = cavemanState.intensity;
+
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+
+    // Warning banner
+    const warn = document.createElement('div');
+    warn.className   = 'caveman-warning';
+    warn.textContent = lvl > 1 ? `🪨 ${lvl} CAVEMEN ATTACKING!` : '🪨 CAVEMAN! DODGE!';
+    overlay.appendChild(warn);
+
+    const hint = document.createElement('div');
+    hint.className   = 'caveman-hint';
+    hint.textContent = 'Watch the spear — JUMP or DUCK to dodge!';
+    overlay.appendChild(hint);
+
+    // Jump / Duck buttons — appended to body so position:fixed works reliably
+    const btnWrap = document.createElement('div');
+    btnWrap.className = 'dodge-btns';
+    btnWrap.id = 'dodgeBtns';
+    btnWrap.innerHTML = `
+      <button class="dodge-btn dodge-btn-duck"
+        onmousedown="doCavemanDodge('duck')" ontouchstart="doCavemanDodge('duck')">
+        ⬇️ DUCK
+      </button>
+      <button class="dodge-btn dodge-btn-jump"
+        onmousedown="doCavemanDodge('jump')" ontouchstart="doCavemanDodge('jump')">
+        ⬆️ JUMP
+      </button>`;
+    document.body.appendChild(btnWrap);
+
+    // Spawn spears staggered — more spears at higher intensity
+    const spearCount   = [2, 3, 4, 6, 8][lvl - 1];
+    const spearInterval = Math.max(1000, 3000 / lvl);
+    let spawned = 0;
+    const spawnLoop = setInterval(() => {
+      if (!cavemanState.active || spawned >= spearCount) {
+        clearInterval(spawnLoop);
+        return;
+      }
+      spawned++;
+      spawnSpear(scene, overlay);
+    }, spearInterval);
+
+    cavemanState.moveInterval = spawnLoop;
+
+    const totalDuration = 2000 + spearCount * spearInterval + 1500;
+    setTimeout(() => endCavemanAttack(true), totalDuration);
+  }
+
+  function spawnSpear(scene, overlay) {
+    const sceneRect  = scene.getBoundingClientRect();
+    const fromLeft   = Math.random() < 0.5;
+    const isHigh     = Math.random() < 0.5;
+    const spearH     = isHigh ? 'high' : 'low';
+    const travelMs   = 750 + Math.random() * 200;
+
+    // Caveman size = 1:2 of full grown mammoth (100% scale = ~200px tall)
+    // Full grown mammoth ≈ 200px, caveman = 100px tall
+    const cavemanH  = 100;
+    const cavemanW  = 55;
+    const groundY   = 30; // scene bottom padding
+
+    // Caveman SVG — primitive club wielder throwing a spear
+    const caveEl = document.createElement('div');
+    caveEl.style.cssText = `position:absolute;bottom:${groundY}px;${fromLeft ? 'left:-' + cavemanW + 'px' : 'right:-' + cavemanW + 'px'};width:${cavemanW}px;height:${cavemanH}px;pointer-events:none;z-index:8;transform:scaleX(${fromLeft ? 1 : -1});transition:left 0.3s ease, right 0.3s ease;`;
+
+    caveEl.innerHTML = `<svg width="${cavemanW}" height="${cavemanH}" viewBox="0 0 55 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shadow -->
+      <ellipse cx="27" cy="97" rx="18" ry="4" fill="rgba(0,0,0,0.3)"/>
+      <!-- Legs -->
+      <rect x="18" y="68" width="8" height="26" rx="4" fill="#8B5A2B"/>
+      <rect x="29" y="70" width="8" height="24" rx="4" fill="#7a4e24"/>
+      <!-- Feet -->
+      <ellipse cx="22" cy="94" rx="7" ry="4" fill="#5a3010"/>
+      <ellipse cx="33" cy="93" rx="6" ry="4" fill="#5a3010"/>
+      <!-- Loincloth -->
+      <path d="M15 65 Q27 75 39 65 L36 52 Q27 60 18 52 Z" fill="#8B4513"/>
+      <!-- Body -->
+      <ellipse cx="27" cy="50" rx="14" ry="18" fill="#c8965a"/>
+      <!-- Fur vest patches -->
+      <path d="M16 42 Q20 38 24 44" stroke="#6b3a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <path d="M30 42 Q34 38 38 44" stroke="#6b3a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <!-- Throwing arm (extended forward) -->
+      <line x1="38" y1="44" x2="52" y2="38" stroke="#c8965a" stroke-width="6" stroke-linecap="round"/>
+      <!-- Other arm -->
+      <line x1="16" y1="46" x2="6"  y2="52" stroke="#c8965a" stroke-width="6" stroke-linecap="round"/>
+      <!-- Head -->
+      <ellipse cx="27" cy="26" rx="13" ry="14" fill="#d4a06a"/>
+      <!-- Messy hair -->
+      <path d="M14 22 Q15 10 20 12 Q22 6 27 8 Q32 6 34 12 Q39 10 40 22" fill="#3a2010"/>
+      <path d="M14 22 Q12 16 16 14" stroke="#3a2010" stroke-width="3" fill="none"/>
+      <path d="M40 22 Q42 16 38 14" stroke="#3a2010" stroke-width="3" fill="none"/>
+      <!-- Eyes -->
+      <circle cx="22" cy="27" r="2.5" fill="#2a1505"/>
+      <circle cx="32" cy="27" r="2.5" fill="#2a1505"/>
+      <circle cx="22.8" cy="26.2" r="1" fill="white" opacity="0.7"/>
+      <circle cx="32.8" cy="26.2" r="1" fill="white" opacity="0.7"/>
+      <!-- Angry eyebrows -->
+      <path d="M19 23 Q22 21 25 23" stroke="#3a2010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M29 23 Q32 21 35 23" stroke="#3a2010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <!-- Nose & mouth -->
+      <ellipse cx="27" cy="31" rx="2.5" ry="1.8" fill="#b88050" opacity="0.6"/>
+      <path d="M23 35 Q27 38 31 35" stroke="#8b5030" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- Beard stubble -->
+      <path d="M18 32 Q20 36 22 38 Q27 40 32 38 Q34 36 36 32" stroke="#6b4020" stroke-width="1.2" fill="none" opacity="0.5"/>
+    </svg>`;
+
+    scene.appendChild(caveEl);
+
+    // Slide caveman into view
+    setTimeout(() => {
+      if (fromLeft) { caveEl.style.left = '2px'; }
+      else          { caveEl.style.right = '2px'; }
+    }, 30);
+
+    // Spear SVG
+    const animalH   = Math.max(40, 60 * (state.sizePercent / 100));
+    const bottomPx  = groundY + (isHigh ? animalH * 0.6 : animalH * 0.15);
+    const startX    = fromLeft ? -(cavemanW + 5) : sceneRect.width + 5;
+    const endX      = fromLeft ? sceneRect.width + 5 : -(cavemanW + 5);
+    const dir       = fromLeft ? 1 : -1;
+
+    const spearEl = document.createElement('div');
+    spearEl.className      = 'spear-el';
+    spearEl.dataset.level  = spearH;
+    spearEl.innerHTML = `<svg width="90" height="18" viewBox="0 0 90 18" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(${dir})">
+      <rect x="10" y="7" width="62" height="4" rx="2" fill="#8B5E1A"/>
+      <rect x="10" y="8" width="62" height="2" rx="1" fill="#a07030" opacity="0.5"/>
+      <polygon points="72,0 90,9 72,18" fill="#c8c8d0"/>
+      <polygon points="72,3 88,9 72,15" fill="#e8e8f0"/>
+      <path d="M10,9 Q4,3 0,2 Q4,9 0,16 Q4,15 10,9" fill="#cc4422"/>
+    </svg>`;
+    spearEl.style.cssText = `position:absolute;bottom:${bottomPx}px;left:${startX}px;pointer-events:none;z-index:27;`;
+    scene.appendChild(spearEl);
+
+    // Spear flies after short throw delay
+    setTimeout(() => {
+      spearEl.style.transition = `left ${travelMs}ms linear`;
+      spearEl.style.left = endX + 'px';
+    }, 300);
+
+    // Hit check at midpoint of spear travel
+    setTimeout(() => {
+      if (!cavemanState.active) { spearEl.remove(); caveEl.remove(); return; }
+      const sizer = getActiveSizer();
+      if (!sizer || cavemanState.hitCooldown) { return; }
+
+      const dodged =
+        (spearH === 'high' && cavemanState.dodging === 'jump') ||
+        (spearH === 'low'  && cavemanState.dodging === 'duck');
+
+      if (!dodged) {
+        cavemanState.hitCooldown = true;
+        state.score = Math.max(0, state.score - 50);
+        updateStats();
+        showBubble(spearH === 'high' ? '😵 Spear hit!' : '🤕 Got low!');
+        getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
+        setTimeout(() => { getActiveWrapper().style.filter = ''; }, 300);
+        setTimeout(() => { cavemanState.hitCooldown = false; }, 1000);
+        spearEl.style.filter = 'brightness(3) saturate(5)';
+      } else {
+        showBubble(spearH === 'high' ? '⬆️ Nice jump!' : '⬇️ Good duck!');
+      }
+    }, 300 + travelMs * 0.5);
+
+    // Caveman retreats and spear disappears
+    setTimeout(() => {
+      if (fromLeft) { caveEl.style.left  = -cavemanW + 'px'; }
+      else          { caveEl.style.right = -cavemanW + 'px'; }
+    }, 300 + travelMs * 0.6);
+
+    setTimeout(() => { spearEl.remove(); caveEl.remove(); }, 300 + travelMs + 200);
+  }
+
+  function doCavemanDodge(type) {
+    if (!cavemanState.active) return;
+    cavemanState.dodging = type;
+    const wrapper = getActiveWrapper();
+    wrapper.classList.remove('dodging-jump','dodging-duck');
+    void wrapper.offsetWidth;
+    wrapper.classList.add(type === 'jump' ? 'dodging-jump' : 'dodging-duck');
+    setTimeout(() => {
+      wrapper.classList.remove('dodging-jump','dodging-duck');
+      cavemanState.dodging = null;
+    }, type === 'jump' ? 500 : 400);
+  }
+
+  function endCavemanAttack(survived) {
+    if (!cavemanState.active) return;
+    cavemanState.active   = false;
+    cavemanState.cooldown = true;
+    cavemanState.dodging  = null;
+
+    clearInterval(cavemanState.moveInterval);
+    document.querySelectorAll('.spear-el').forEach(el => el.remove());
+    const dodgeBtns = document.getElementById('dodgeBtns');
+    if (dodgeBtns) dodgeBtns.remove();
+
+    const overlay = document.getElementById('cavemanOverlay');
+    overlay.classList.remove('active');
+
+    forceRestoreAnimal();
+
+    if (survived) {
+      state.score     += 30;
+      state.happiness  = Math.min(100, state.happiness + 10);
+      const msgs = ['🦴 Dodged them all!', '🏃 Too quick!', '💪 Take that cavemen!'];
+      showBubble(msgs[Math.floor(Math.random() * msgs.length)]);
+      updateStats();
+    }
+
+    setTimeout(() => {
+      cavemanState.cooldown   = false;
+      cavemanState.lastRollAt = Math.floor(state.score / 100);
+    }, 15000);
+  }
+  // ─────────────────────────────────────────────────────────────────
 
   // ── SABER TOOTH TIGER MINI-GAME ─────────────────────────────────
 
