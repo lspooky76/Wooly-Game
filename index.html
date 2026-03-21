@@ -841,6 +841,69 @@ animation: slideUpBanner 0.4s ease forwards;
 100% { transform: translateY(0); }
 }
 
+/* How to Play */
+#howToPlayPopup.show { display: block !important; }
+.htp-section {
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(77,208,225,0.2);
+border-radius: 16px;
+margin-bottom: 12px;
+overflow: hidden;
+}
+.htp-section-title {
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(0.95rem, 3vw, 1.1rem);
+color: #4dd0e1;
+padding: 10px 14px 8px;
+background: rgba(77,208,225,0.1);
+border-bottom: 1px solid rgba(77,208,225,0.15);
+}
+.htp-body {
+padding: 10px 14px 12px;
+display: flex;
+flex-direction: column;
+gap: 7px;
+}
+.htp-row {
+display: flex;
+align-items: flex-start;
+gap: 8px;
+font-size: clamp(0.78rem, 2.4vw, 0.88rem);
+color: rgba(200,235,255,0.9);
+font-weight: 700;
+line-height: 1.4;
+}
+.htp-icon {
+font-size: 1rem;
+flex-shrink: 0;
+width: 22px;
+text-align: center;
+}
+.htp-tip {
+font-size: clamp(0.72rem, 2.2vw, 0.82rem);
+color: rgba(255,220,120,0.9);
+font-weight: 700;
+background: rgba(255,200,50,0.08);
+border-radius: 8px;
+padding: 6px 10px;
+margin-top: 2px;
+}
+.htp-table {
+background: rgba(0,0,0,0.2);
+border-radius: 10px;
+padding: 8px 10px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.htp-table-row {
+display: flex;
+justify-content: space-between;
+font-size: clamp(0.75rem, 2.2vw, 0.85rem);
+font-weight: 800;
+color: rgba(200,235,255,0.8);
+}
+
 /* Wyatt’s Facts */
 .wyatt-btn {
 background: rgba(255,255,255,0.15);
@@ -1401,6 +1464,106 @@ z-index: 10;
 <!-- iOS safe area bottom fill -->
 
 <div style="position:fixed;bottom:0;left:0;right:0;height:env(safe-area-inset-bottom);background:#081528;z-index:99998;"></div>
+
+<!-- How to Play Popup -->
+
+<div id="howToPlayPopup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(5,10,25,0.93);overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:20px;box-sizing:border-box;touch-action:pan-y;" class="">
+  <div style="max-width:380px;margin:0 auto;padding-bottom:20px;">
+
+```
+<!-- Header -->
+<div style="text-align:center;margin-bottom:18px;">
+  <div style="font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:clamp(1.6rem,5vw,2rem);color:#4dd0e1;text-shadow:0 0 20px rgba(77,208,225,0.4);">📖 How to Play</div>
+  <div style="color:rgba(180,220,255,0.7);font-size:0.8rem;font-weight:700;margin-top:4px;">Baby Mammoth & Wooly Rhino</div>
+</div>
+
+<!-- Section helper -->
+<!-- FEEDING -->
+<div class="htp-section">
+  <div class="htp-section-title">🍽️ Feeding Your Pet</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">🌾</span><span>Hay — fills hunger a lot, small happiness boost</span></div>
+    <div class="htp-row"><span class="htp-icon">🫐</span><span>Berries — big happiness boost!</span></div>
+    <div class="htp-row"><span class="htp-icon">🌿</span><span>Leaves — balanced hunger and happiness</span></div>
+    <div class="htp-tip">💡 When you tap a food button it appears on the ground — your pet eats it after 3 seconds!</div>
+  </div>
+</div>
+
+<!-- CLEANING -->
+<div class="htp-section">
+  <div class="htp-section-title">💩 Cleaning Up</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">👆</span><span>Your pet poops after eating — tap the poop to clean it up for <strong>+10 points</strong></span></div>
+    <div class="htp-tip">⚠️ If 4 poops pile up, your pet gets unhappy!</div>
+  </div>
+</div>
+
+<!-- SNOWBALL -->
+<div class="htp-section">
+  <div class="htp-section-title">❄️ Snowball Game</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">⏱</span><span><strong>Hold</strong> the snowball button — a power bar fills inside it</span></div>
+    <div class="htp-row"><span class="htp-icon">🎯</span><span>Crosshairs sweep back and forth — release when they're aimed where you want!</span></div>
+    <div class="htp-row"><span class="htp-icon">🥊</span><span>Hit your pet = snow splat + <strong>+20 pts</strong>. Full power hit = dizzy pterodactyls! 🦕</span></div>
+    <div class="htp-row"><span class="htp-icon">🏆</span><span>Miss = pet catches it and throws back at your screen for <strong>+15 pts</strong></span></div>
+  </div>
+</div>
+
+<!-- ASTEROID -->
+<div class="htp-section">
+  <div class="htp-section-title">☄️ Asteroid Attack!</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">🎲</span><span>Randomly triggered every 100 points — roll 1 in 10 chance!</span></div>
+    <div class="htp-row"><span class="htp-icon">📊</span><span>Intensity levels 1–5 determine how many asteroids and how fast</span></div>
+    <div class="htp-row"><span class="htp-icon">👈👉</span><span><strong>Drag</strong> across the screen or <strong>tap left/right</strong> sides to dodge</span></div>
+    <div class="htp-row"><span class="htp-icon">💥</span><span>Each hit = <strong>-50 points</strong>. Survive all 8 seconds = <strong>+30 pts</strong>!</span></div>
+  </div>
+</div>
+
+<!-- GROWING -->
+<div class="htp-section">
+  <div class="htp-section-title">📈 Growing Up</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">🍼</span><span>Your pet starts as a <strong>Baby</strong> at 30% size</span></div>
+    <div class="htp-row"><span class="htp-icon">⬆️</span><span>Every <strong>1,000 points</strong> your pet grows 2%</span></div>
+    <div class="htp-table">
+      <div class="htp-table-row"><span style="color:#f06292">Baby</span><span>30–40%</span></div>
+      <div class="htp-table-row"><span style="color:#ff8a65">Toddler</span><span>41–50%</span></div>
+      <div class="htp-table-row"><span style="color:#ab47bc">Teen</span><span>51–60%</span></div>
+      <div class="htp-table-row"><span style="color:#4dd0e1">Young Adult</span><span>61–70%</span></div>
+      <div class="htp-table-row"><span style="color:#66bb6a">Adult</span><span>71–99%</span></div>
+      <div class="htp-table-row"><span style="color:#ffd700">Full Grown 👑</span><span>100%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- BUTTONS -->
+<div class="htp-section">
+  <div class="htp-section-title">🎮 The Buttons</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">🔊</span><span>Mute button — tap to silence all sounds</span></div>
+    <div class="htp-row"><span class="htp-icon">❓</span><span>Wyatt's Facts — random fun fact about your pet!</span></div>
+    <div class="htp-row"><span class="htp-icon">📖</span><span>How to Play — you're reading it right now 😄</span></div>
+    <div class="htp-row"><span class="htp-icon">↺</span><span>Reset — start over with a new pet from scratch</span></div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div class="htp-section">
+  <div class="htp-section-title">💛 Tips</div>
+  <div class="htp-body">
+    <div class="htp-row"><span class="htp-icon">💃</span><span>Keep happiness above 95% and your pet will dance!</span></div>
+    <div class="htp-row"><span class="htp-icon">💾</span><span>Progress saves automatically — pick up right where you left off</span></div>
+    <div class="htp-row"><span class="htp-icon">🦏</span><span>You can choose a Wooly Mammoth or Wooly Rhino — reset to switch!</span></div>
+  </div>
+</div>
+
+<!-- Close button -->
+<button onclick="document.getElementById('howToPlayPopup').classList.remove('show');document.getElementById('howToPlayPopup').style.display='none';" style="width:100%;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#4dd0e1,#00bcd4);color:#0a2a3a;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:1.2rem;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.3);margin-top:8px;">Got it! Let's Play 🦣</button>
+```
+
+  </div>
+</div>
 
 <!-- Wyatt's Facts Popup -->
 
@@ -2056,7 +2219,10 @@ z-index: 10;
         <div class="snowball-power-fill" id="powerBarFill"></div>
         <span class="snowball-btn-text" id="snowballBtnText">❄️ Hold to Throw Snowball</span>
       </button>
-      <button onclick="resetGame()" style="background:linear-gradient(135deg,#c0392b,#922b21);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;width:100%;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35),0 5px 12px rgba(180,0,0,0.2);">↺ Reset Progress</button>
+      <div style="display:flex;gap:8px;">
+        <button onclick="document.getElementById('howToPlayPopup').classList.add('show')" style="background:linear-gradient(135deg,#1a4a7a,#0d2a4a);border:1.5px solid rgba(77,208,225,0.4);color:#4dd0e1;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;flex:1;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35);">📖 How to Play</button>
+        <button onclick="resetGame()" style="background:linear-gradient(135deg,#c0392b,#922b21);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;flex:1;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35),0 5px 12px rgba(180,0,0,0.2);">↺ Reset</button>
+      </div>
     </div>
   </div>
 </div>
@@ -3728,10 +3894,9 @@ z-index: 10;
 
   // ── PREVENT iOS SCROLL/BOUNCE ──
   document.addEventListener('touchmove', (e) => {
-    // Allow touchmove inside asteroid overlay (for dodging) but block everywhere else
-    if (!e.target.closest('#asteroidOverlay')) {
-      e.preventDefault();
-    }
+    // Allow scroll inside how-to-play popup and asteroid overlay
+    if (e.target.closest('#howToPlayPopup') || e.target.closest('#asteroidOverlay')) return;
+    e.preventDefault();
   }, { passive: false });
 
   document.addEventListener('touchstart', (e) => {
