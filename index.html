@@ -3147,8 +3147,6 @@ z-index: 10;
   let attackNodes  = [];   // running attack music nodes
   let currentTheme = null; // 'wind' | 'asteroid' | 'tiger' | 'caveman'
 
-  function dest() { return masterGain; } // reuse existing dest helper
-
   function stopNodes(arr) {
     arr.forEach(n => { try { n.stop && n.stop(); n.disconnect && n.disconnect(); } catch(e){} });
     arr.length = 0;
@@ -3189,7 +3187,7 @@ z-index: 10;
     function gust() {
       if (currentTheme !== 'wind' || !AC || muted) return;
       const t   = AC.currentTime;
-      const buf = AC.createBuffer(1, AC.sampleRate * 0.6, AC.sampleRate);
+      const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.6), AC.sampleRate);
       const dta = buf.getChannelData(0);
       for (let i = 0; i < dta.length; i++) dta[i] = Math.random() * 2 - 1;
       const src = AC.createBufferSource(); src.buffer = buf;
@@ -3209,6 +3207,177 @@ z-index: 10;
   function stopAmbient() {
     stopNodes(ambientNodes);
     currentTheme = null;
+  }
+
+  let idleNodes = [];
+  function stopIdleMusic() {
+    stopNodes(idleNodes);
+    if (!muted) setTimeout(startWind, 800);
+  }
+
+  // 🪩 DISCO — four-on-floor kick, funky bass, bright synth stabs
+  function playDiscoMusic(duration) {
+    if (!AC || muted) return;
+    stopNodes(ambientNodes); // hush wind
+    stopNodes(idleNodes);
+    const mg = masterGain; if (!mg) return;
+    const end = AC.currentTime + duration / 1000;
+
+    // Four-on-floor kick every beat (120bpm)
+    const beatMs = 500;
+    let beat = 0;
+    const kickLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t   = AC.currentTime;
+      if (t > end) { clearInterval(kickLoop); return; }
+      // Kick drum
+      const osc = AC.createOscillator(); osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, t);
+      osc.frequency.exponentialRampToValueAtTime(40, t + 0.12);
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.6, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      osc.connect(g); g.connect(mg); osc.start(t); osc.stop(t + 0.28);
+      idleNodes.push(osc);
+
+      // Hi-hat on offbeats
+      if (beat % 2 === 1) {
+        const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.05), AC.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        const src = AC.createBufferSource(); src.buffer = buf;
+        const hp = AC.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 8000;
+        const hg = AC.createGain(); hg.gain.setValueAtTime(0.15, t); hg.gain.linearRampToValueAtTime(0, t + 0.05);
+        src.connect(hp); hp.connect(hg); hg.connect(mg); src.start(t);
+        idleNodes.push(src);
+      }
+
+      // Funky synth bass stab — disco chord tones
+      const bassNotes = [110, 110, 138.6, 110, 146.8, 138.6, 110, 130.8];
+      const bosc = AC.createOscillator(); bosc.type = 'sawtooth';
+      bosc.frequency.value = bassNotes[beat % bassNotes.length];
+      const bf = AC.createBiquadFilter(); bf.type = 'lowpass'; bf.frequency.value = 400;
+      const bg = AC.createGain();
+      bg.gain.setValueAtTime(0.18, t); bg.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      bosc.connect(bf); bf.connect(bg); bg.connect(mg); bosc.start(t); bosc.stop(t + 0.25);
+      idleNodes.push(bosc);
+
+      // Bright synth stab on beats 2 & 4
+      if (beat % 4 === 1 || beat % 4 === 3) {
+        [440, 554, 659].forEach((f, i) => {
+          const s = AC.createOscillator(); s.type = 'square'; s.frequency.value = f;
+          const sg = AC.createGain(); sg.gain.setValueAtTime(0.06, t); sg.gain.linearRampToValueAtTime(0, t + 0.12);
+          s.connect(sg); sg.connect(mg); s.start(t); s.stop(t + 0.14);
+          idleNodes.push(s);
+        });
+      }
+      beat++;
+    }, beatMs);
+    idleNodes.push({ stop: () => clearInterval(kickLoop), disconnect: () => {} });
+  }
+
+  // 🥊 JUMP ROPE — rocky workout, driving 8th notes, power chords, pounding drums (Eye of the Tiger feel)
+  function playJumpRopeMusic(duration) {
+    if (!AC || muted) return;
+    stopNodes(ambientNodes);
+    stopNodes(idleNodes);
+    const mg = masterGain; if (!mg) return;
+    const end = AC.currentTime + duration / 1000;
+
+    // Driving power chord riff — G5 pentatonic
+    const riff = [196, 196, 220, 196, 0, 247, 0, 220];
+    let ri = 0;
+    const riffLoop = setInterval(() => {
+      if (!AC || muted || AC.currentTime > end) { clearInterval(riffLoop); return; }
+      const t = AC.currentTime;
+      const freq = riff[ri % riff.length];
+      if (freq > 0) {
+        [1, 1.5, 2].forEach(mult => {
+          const o = AC.createOscillator(); o.type = 'sawtooth'; o.frequency.value = freq * mult;
+          const f = AC.createBiquadFilter(); f.type = 'distortion';
+          const g = AC.createGain(); g.gain.setValueAtTime(0.08, t); g.gain.linearRampToValueAtTime(0, t + 0.1);
+          o.connect(g); g.connect(mg); o.start(t); o.stop(t + 0.12);
+          idleNodes.push(o);
+        });
+      }
+      // Snare on 3 & 7
+      if (ri % 8 === 2 || ri % 8 === 6) {
+        const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.12), AC.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
+        const src = AC.createBufferSource(); src.buffer = buf;
+        const g = AC.createGain(); g.gain.value = 0.3;
+        src.connect(g); g.connect(mg); src.start(t);
+        idleNodes.push(src);
+      }
+      // Kick on 1 & 5
+      if (ri % 8 === 0 || ri % 8 === 4) {
+        const o = AC.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+        const g = AC.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+        o.connect(g); g.connect(mg); o.start(t); o.stop(t + 0.22);
+        idleNodes.push(o);
+      }
+      ri++;
+    }, 125); // 120bpm 8th notes
+    idleNodes.push({ stop: () => clearInterval(riffLoop), disconnect: () => {} });
+  }
+
+  // 🎻 SKATE — Mozart-ish waltz (3/4): elegant strings, light and flowing
+  function playSkateMusic(duration) {
+    if (!AC || muted) return;
+    stopNodes(ambientNodes);
+    stopNodes(idleNodes);
+    const mg = masterGain; if (!mg) return;
+    const end = AC.currentTime + duration / 1000;
+
+    // Waltz melody — G major scale, Mozart-ish turns  (3/4 at ~160bpm)
+    const melody = [
+      [392,0.4],[440,0.2],[494,0.2],[523,0.4],[494,0.2],
+      [440,0.4],[392,0.2],[349,0.2],[392,0.8],
+      [330,0.4],[392,0.2],[440,0.2],[494,0.4],[440,0.2],
+      [392,0.4],[330,0.2],[294,0.2],[392,0.8],
+    ];
+    let mTime = AC.currentTime;
+    let mi = 0;
+    const schedMelody = () => {
+      while (mTime < AC.currentTime + 2 && mi < melody.length * 3) {
+        const [freq, dur] = melody[mi % melody.length];
+        const t = mTime;
+        if (t < end) {
+          const o = AC.createOscillator(); o.type = 'triangle'; o.frequency.value = freq;
+          const g = AC.createGain();
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.12, t + 0.02);
+          g.gain.setValueAtTime(0.1, t + dur - 0.05); g.gain.linearRampToValueAtTime(0, t + dur);
+          o.connect(g); g.connect(mg); o.start(t); o.stop(t + dur + 0.01);
+          idleNodes.push(o);
+        }
+        mTime += dur;
+        mi++;
+      }
+    };
+    const melodyLoop = setInterval(() => { if (AC.currentTime < end) schedMelody(); else clearInterval(melodyLoop); }, 500);
+    schedMelody();
+
+    // Waltz bass — oom-pah-pah
+    const bassNotes = [196, 246.9, 246.9];
+    let bi = 0;
+    const bassLoop = setInterval(() => {
+      if (!AC || muted || AC.currentTime > end) { clearInterval(bassLoop); return; }
+      const t = AC.currentTime;
+      const o = AC.createOscillator(); o.type = 'sine';
+      o.frequency.value = bi % 3 === 0 ? bassNotes[0] : bassNotes[1];
+      const g = AC.createGain();
+      const vol = bi % 3 === 0 ? 0.12 : 0.06;
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      o.connect(g); g.connect(mg); o.start(t); o.stop(t + 0.25);
+      idleNodes.push(o);
+      bi++;
+    }, 125); // 3/4 at ~160bpm
+
+    idleNodes.push(
+      { stop: () => clearInterval(melodyLoop), disconnect: () => {} },
+      { stop: () => clearInterval(bassLoop),   disconnect: () => {} }
+    );
   }
 
   // ── ATTACK THEMES ────────────────────────────────────────────────
@@ -4067,6 +4236,7 @@ z-index: 10;
     const trunk = document.getElementById('trunkGroup');
     if (trunk) trunk.classList.remove('trunk-raised');
     idleBusy = false;
+    stopIdleMusic();
   }
 
   function idleDiscoParty() {
@@ -4078,6 +4248,7 @@ z-index: 10;
     document.getElementById('discoBall').classList.add('show');
     setTimeout(() => document.getElementById('discoFloor').classList.add('show'), 500);
     wrapper.classList.add('dancing');
+    playDiscoMusic(7000);
     soundHappyToot();
     setTimeout(() => soundHappyToot(), 800);
     setTimeout(() => soundHappyToot(), 1600);
@@ -4099,6 +4270,7 @@ z-index: 10;
     document.getElementById('idleHeadband').classList.add('show');
     document.getElementById('idleRope').classList.add('show');
     wrapper.classList.add('jumping');
+    playJumpRopeMusic(5000);
     let count = 0;
     const ropeInterval = setInterval(() => {
       count++;
@@ -4205,6 +4377,7 @@ z-index: 10;
 
     putOnSkates();
     showBubble('⛸️ Wheee!');
+    playSkateMusic(7000);
 
     const sizer = getActiveSizer();
     const scene = document.querySelector('.mammoth-scene');
