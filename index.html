@@ -4713,7 +4713,6 @@ z-index: 10;
   function soundSplat() {
     const d = dest(); if (!d) return;
     const now = AC.currentTime;
-    // Wet smack
     const buf = AC.createBuffer(1, Math.floor(AC.sampleRate*0.12), AC.sampleRate);
     const data = buf.getChannelData(0);
     for (let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,0.8);
@@ -4721,7 +4720,6 @@ z-index: 10;
     const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=600;
     const g=AC.createGain(); g.gain.setValueAtTime(0.6,now); g.gain.linearRampToValueAtTime(0,now+0.15);
     src.connect(f); f.connect(g); g.connect(d); src.start(now); src.stop(now+0.17);
-    // Secondary wet slap
     setTimeout(()=>{
       const d2=dest(); if(!d2) return;
       const n2=AC.currentTime;
@@ -4730,6 +4728,50 @@ z-index: 10;
       const g2=AC.createGain(); g2.gain.setValueAtTime(0.3,n2); g2.gain.linearRampToValueAtTime(0,n2+0.12);
       osc.connect(g2); g2.connect(d2); osc.start(n2); osc.stop(n2+0.13);
     }, 60);
+  }
+
+  function soundDizzy(durationMs) {
+    const d = dest(); if (!d) return;
+    const now = AC.currentTime;
+    const dur = (durationMs || 2000) / 1000; // default 2s, pterodactyls pass 3s
+
+    // Low bonk on impact
+    const bonk = AC.createOscillator(); bonk.type = 'sine';
+    bonk.frequency.setValueAtTime(180, now);
+    bonk.frequency.exponentialRampToValueAtTime(60, now + 0.15);
+    const bg = AC.createGain();
+    bg.gain.setValueAtTime(0.5, now);
+    bg.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    bonk.connect(bg); bg.connect(d);
+    bonk.start(now); bonk.stop(now + 0.22);
+
+    // Wobbly descending spiral lasting full duration
+    const osc = AC.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.exponentialRampToValueAtTime(220, now + dur);
+    const vib = AC.createOscillator(); vib.frequency.value = 8;
+    const vibG = AC.createGain(); vibG.gain.value = 30;
+    vib.connect(vibG); vibG.connect(osc.frequency);
+    const g = AC.createGain();
+    g.gain.setValueAtTime(0.22, now);
+    g.gain.setValueAtTime(0.18, now + dur * 0.7);
+    g.gain.linearRampToValueAtTime(0, now + dur);
+    osc.connect(g); g.connect(d);
+    osc.start(now); osc.stop(now + dur + 0.05);
+    vib.start(now); vib.stop(now + dur + 0.05);
+
+    // Star tinkles spread across full duration
+    const tinkleCount = Math.round(dur / 0.28);
+    for (let i = 0; i < tinkleCount; i++) {
+      const t = now + 0.1 + i * (dur / tinkleCount);
+      const ping = AC.createOscillator(); ping.type = 'sine';
+      ping.frequency.value = 1200 + Math.random() * 800;
+      const pg = AC.createGain();
+      pg.gain.setValueAtTime(0.15, t);
+      pg.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      ping.connect(pg); pg.connect(d);
+      ping.start(t); ping.stop(t + 0.25);
+    }
   }
 
   function launchSnowball(power, aimPct, hitMammoth) {
@@ -4869,11 +4911,13 @@ z-index: 10;
                 p.style.animationDuration = (0.9 + i * 0.12) + 's';
                 p.style.animationDelay    = (i * 0.22) + 's';
                 p.style.opacity = '0';
-                // Make visible only once animation begins
                 setTimeout(() => { p.style.opacity = '1'; }, i * 220);
                 dizzyRing.appendChild(p);
               });
               scene.appendChild(dizzyRing);
+
+              // Start dizzy sound exactly when pterodactyls appear, lasting 3s
+              soundDizzy(3000);
 
               setTimeout(() => {
                 wrapper.classList.remove('dizzy');
@@ -5489,6 +5533,7 @@ z-index: 10;
     tigerState.active   = false;
     tigerState.cooldown = true;
     tigerState.moveDir  = 0;
+    tigerState.animalX  = 50;
     stopAttackMusic();
     setTimeout(startWind, 1000);
 
@@ -5784,12 +5829,31 @@ z-index: 10;
     ['mammothSizer','rhinoSizer'].forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.style.position   = '';
-      el.style.left       = '';
-      el.style.bottom     = '';
-      el.style.top        = '';
-      el.style.opacity    = '1';
-      el.style.transition = '';
+      // Smoothly slide back to center before snapping to flex flow
+      if (el.style.position === 'absolute') {
+        const scene  = document.querySelector('.mammoth-scene');
+        const sceneW = scene ? scene.getBoundingClientRect().width : 0;
+        const sizerW = el.getBoundingClientRect().width;
+        const centreLeft = (sceneW / 2 - sizerW / 2);
+        el.style.transition = 'left 0.4s ease';
+        el.style.left = centreLeft + 'px';
+        setTimeout(() => {
+          el.style.position   = '';
+          el.style.left       = '';
+          el.style.bottom     = '';
+          el.style.top        = '';
+          el.style.transition = '';
+          el.style.opacity    = '1';
+          applyMammothSize();
+        }, 420);
+      } else {
+        el.style.position   = '';
+        el.style.left       = '';
+        el.style.bottom     = '';
+        el.style.top        = '';
+        el.style.opacity    = '1';
+        el.style.transition = '';
+      }
     });
     ['mammothWrapper','rhinoWrapper'].forEach(id => {
       const el = document.getElementById(id);
@@ -5809,7 +5873,8 @@ z-index: 10;
 
     clearInterval(asteroidState.spawnInterval);
     clearInterval(asteroidState.moveInterval);
-    asteroidState.moveDir = 0;
+    asteroidState.moveDir  = 0;
+    asteroidState.animalX  = 50;
 
     const overlay = document.getElementById('asteroidOverlay');
     overlay.innerHTML = '';
