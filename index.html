@@ -366,6 +366,7 @@ display: flex;
 justify-content: center;
 align-items: flex-end;
 padding-bottom: 30px;
+overflow: hidden;
 }
 
 /* Poop steam */
@@ -563,7 +564,7 @@ animation: trunkRaise 0.8s ease-in-out infinite !important;
 position: relative;
 width: 100%;
 flex-shrink: 0;
-z-index: 10;
+z-index: 30;
 background: linear-gradient(180deg, #0a1e3d 0%, #081528 100%);
 border-top: 2px solid rgba(245, 200, 66, 0.4);
 padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
@@ -597,7 +598,7 @@ font-size: clamp(0.7rem, 2.5vw, 0.9rem);
 padding: 2px 16px;
 border-radius: 20px;
 white-space: nowrap;
-z-index: 2;
+z-index: 30;
 letter-spacing: 1px;
 box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
@@ -1159,6 +1160,28 @@ box-shadow: 0 4px 0 rgba(0,0,0,0.3);
 transition: transform 0.1s;
 }
 .wyatt-close:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+/* ── DAY / NIGHT CYCLE ── */
+#dayNightOverlay {
+position: absolute;
+inset: 0;
+pointer-events: none;
+z-index: 25;
+background: transparent;
+transition: background 4s linear;
+}
+#timeDisplay {
+position: absolute;
+top: 8px;
+right: 10px;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(0.65rem, 2vw, 0.8rem);
+color: rgba(200,230,255,0.85);
+text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+pointer-events: none;
+z-index: 27;
+letter-spacing: 0.5px;
+}
+
 /* Score popup */
 .score-popup {
 position: fixed;
@@ -1824,6 +1847,8 @@ z-index: 10;
 ```
 <!-- Asteroid mini-game overlay -->
 <div id="asteroidOverlay"></div>
+<div id="dayNightOverlay"></div>
+<div id="timeDisplay">6:00 AM</div>
 
 <!-- BIG SNOWY MOUNTAIN - behind everything -->
 <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg"
@@ -4493,6 +4518,91 @@ z-index: 10;
     document.getElementById('wyattPopup').classList.add('show');
   }
   // ───────────────────────────────────────────────────────────────
+
+  // ── DAY / NIGHT CYCLE ────────────────────────────────────────────
+  // Real time: 30 min = 3 game hours → 1 real minute = 6 game minutes
+  // Game day: 24 hours. Starts at 6:00 AM game time on load.
+  // Darkness: 6pm start getting dark, fully dark at 8pm
+  //           6am start getting light, fully light at 7am
+  const GAME_MINS_PER_REAL_MS = 6 / 60000; // 6 game-mins per real ms
+
+  const dayNightState = {
+    startRealMs: Date.now(),
+    startGameMins: 6 * 60, // start at 6:00 AM
+  };
+
+  function getGameMins() {
+    const elapsed = Date.now() - dayNightState.startRealMs;
+    return (dayNightState.startGameMins + elapsed * GAME_MINS_PER_REAL_MS) % (24 * 60);
+  }
+
+  function formatGameTime(mins) {
+    const h = Math.floor(mins / 60) % 24;
+    const m = Math.floor(mins % 60);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+  }
+
+  function getNightOpacity(gameMins) {
+    const h = gameMins / 60; // game hour as float (0-24)
+    // Getting dark: 18→20 (6pm to 8pm)
+    if (h >= 18 && h < 20) return (h - 18) / 2;       // 0→1
+    // Full night: 20→30 (wraps through midnight to 6am)
+    if (h >= 20 || h < 6)  return 1;
+    // Getting light: 6am→7am
+    if (h >= 6  && h < 7)  return 1 - (h - 6);        // 1→0
+    // Full day
+    return 0;
+  }
+
+  function updateDayNight() {
+    const gameMins   = getGameMins();
+    const gameHour   = gameMins / 60;
+    const nightAlpha = getNightOpacity(gameMins);
+
+    // Overlay — dark blue-black tint at night, slightly dimmer moonlight
+    const overlay = document.getElementById('dayNightOverlay');
+    if (overlay) {
+      if (nightAlpha > 0) {
+        // Night: deep blue-black overlay, max 0.72 so moonlight keeps things visible
+        const a = (nightAlpha * 0.72).toFixed(3);
+        overlay.style.background = `rgba(5, 8, 22, ${a})`;
+      } else {
+        overlay.style.background = 'transparent';
+      }
+    }
+
+    // Time display
+    const timeEl = document.getElementById('timeDisplay');
+    if (timeEl) timeEl.textContent = formatGameTime(gameMins);
+  }
+
+  // Run every 5 real seconds (= 30 game minutes)
+  setInterval(updateDayNight, 5000);
+  updateDayNight(); // run immediately on load
+  // ─────────────────────────────────────────────────────────────────
+
+  let dayNightTestMode = null; // null = real time, 'day' or 'night'
+  function toggleDayNightTest() {
+    const btn = document.getElementById('dayNightTestBtn');
+    if (dayNightTestMode !== 'night') {
+      // Switch to night (midnight)
+      dayNightTestMode = 'night';
+      dayNightState.startRealMs = Date.now();
+      dayNightState.startGameMins = 0; // midnight
+      btn.textContent = '🌕 TEST: Switch to Day';
+      btn.style.background = 'rgba(5,10,30,0.8)';
+    } else {
+      // Switch to day (10am)
+      dayNightTestMode = 'day';
+      dayNightState.startRealMs = Date.now();
+      dayNightState.startGameMins = 10 * 60; // 10am
+      btn.textContent = '☀️ TEST: Switch to Night';
+      btn.style.background = 'rgba(20,30,60,0.7)';
+    }
+    updateDayNight();
+  }
 
   // ── PREVENT iOS SCROLL/BOUNCE ──
   document.addEventListener('touchmove', (e) => {
