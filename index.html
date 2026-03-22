@@ -647,6 +647,45 @@ pointer-events: none;
 
 .btn-hay { background: linear-gradient(135deg, #F5C842, #E8A820); color: #5C3A00; }
 .btn-berries { background: linear-gradient(135deg, #E84393, #C01F72); color: white; }
+.btn-leaves { background: linear-gradient(135deg, #43b89c, #2a9d7c); color: white; }
+
+/* Food inventory fill overlay */
+.food-fill {
+position: absolute;
+bottom: 0; left: 0; right: 0;
+height: 0%;
+border-radius: inherit;
+z-index: 0;
+transition: height 0.8s ease, background 0.5s ease;
+pointer-events: none;
+}
+.btn-hay    .food-fill { background: rgba(245,200,66,0.55); }
+.btn-berries .food-fill { background: rgba(232,67,147,0.55); }
+.btn-leaves .food-fill { background: rgba(67,184,156,0.55); }
+
+.food-btn-content {
+position: relative;
+z-index: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 2px;
+pointer-events: none;
+}
+.food-emoji { font-size: clamp(1rem, 3.5vw, 1.4rem); line-height: 1; }
+.food-count {
+font-size: clamp(0.55rem, 1.8vw, 0.75rem);
+font-weight: 900;
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+line-height: 1;
+opacity: 0.95;
+}
+/* Empty / depleted state */
+.feed-btn.empty {
+opacity: 0.45;
+cursor: not-allowed;
+}
+.feed-btn.empty:active { transform: none; box-shadow: 0 5px 0 rgba(0,0,0,0.35); }
 
 .btn-row {
 display: flex;
@@ -835,6 +874,59 @@ animation: houseItemArc 2s ease-in-out forwards;
 100% { transform: translateX(-60%) rotate(5deg); }
 }
 
+/* ── FORAGE MINI-GAME ── */
+#forageReadyScreen {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100vw; height: 100vh;
+z-index: 9999;
+background: rgba(5,20,5,0.93);
+align-items: center;
+justify-content: center;
+padding: 20px;
+box-sizing: border-box;
+}
+#forageReadyScreen.show { display: flex; }
+.forage-ready-box {
+background: linear-gradient(160deg, #0a1f0a, #162816);
+border: 2px solid rgba(100,200,80,0.5);
+border-radius: 24px;
+padding: 20px 22px;
+max-width: 340px;
+width: 100%;
+text-align: center;
+box-shadow: 0 0 40px rgba(60,180,40,0.2), 0 12px 40px rgba(0,0,0,0.7);
+animation: tigerBoxAppear 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+}
+.forage-ready-box h2 {
+font-family: ‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif;
+font-size: clamp(1.3rem,4.5vw,1.7rem);
+color: #88dd44;
+text-shadow: 0 0 16px rgba(100,200,60,0.5);
+margin-bottom: 4px;
+}
+.frb-emoji  { font-size: 2.4rem; display: block; margin-bottom: 4px; animation: pulse 0.8s ease-in-out infinite; }
+.frb-sub    { color: rgba(180,240,140,0.9); font-size: clamp(0.78rem,2.4vw,0.9rem); font-weight:700; margin-bottom:8px; line-height:1.4; }
+.frb-risk   { background: rgba(255,80,0,0.15); border: 1px solid rgba(255,100,0,0.3); border-radius:10px; padding:6px 12px; margin-bottom:10px; font-size:clamp(0.72rem,2.2vw,0.82rem); color:rgba(255,180,120,0.95); font-weight:700; }
+.frb-instructions { background: rgba(255,255,255,0.06); border: 1px solid rgba(100,200,80,0.25); border-radius:12px; padding:8px 14px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; text-align:left; font-size:clamp(0.75rem,2.2vw,0.86rem); color:rgba(200,255,160,0.9); font-weight:700; line-height:1.5; }
+#forageIntensity { margin-bottom:8px; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(0.82rem,2.5vw,0.95rem); }
+.forage-btns { display:flex; gap:8px; }
+.forage-ready-btn { flex:1; padding:12px; border:none; border-radius:16px; background:linear-gradient(135deg,#66bb44,#338820); color:white; font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(0.9rem,3vw,1.1rem); cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,0.4); }
+.forage-ready-btn:active { transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.4); }
+.forage-skip-btn { flex:1; padding:12px; border:none; border-radius:16px; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); font-family:‘Fredoka One’,‘Arial Rounded MT Bold’,Arial,sans-serif; font-size:clamp(0.9rem,3vw,1.1rem); cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,0.25); }
+
+/* Food item falling during forage */
+.forage-food-item {
+position: absolute;
+font-size: 28px;
+pointer-events: none;
+z-index: 32;
+filter: drop-shadow(0 2px 6px rgba(0,200,0,0.5));
+animation: foodSpin 1s linear infinite;
+}
+@keyframes foodSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
 /* ── SABER TOOTH TIGER MINI-GAME ── */
 #tigerOverlay {
 position: absolute;
@@ -1013,6 +1105,13 @@ user-select: none;
 
 /* Spear element */
 .spear-el {
+position: absolute;
+pointer-events: none;
+z-index: 27;
+display: flex;
+align-items: center;
+}
+.forage-spear {
 position: absolute;
 pointer-events: none;
 z-index: 27;
@@ -2861,14 +2960,17 @@ z-index: 10;
     <div class="actions">
       <div class="btn-row">
         <button class="mute-btn" id="muteBtn" title="Toggle sound">🔊</button>
-        <button class="feed-btn btn-hay" onclick="startAudio();feedMammoth('hay')">
-          🌾
+        <button class="feed-btn btn-hay" id="btnHay" onclick="startAudio();feedMammoth('hay')">
+          <div class="food-fill" id="fillHay"></div>
+          <span class="food-btn-content"><span class="food-emoji">🌾</span><span class="food-count" id="countHay">5</span></span>
         </button>
-        <button class="feed-btn btn-berries" onclick="startAudio();feedMammoth('berries')">
-          🫐
+        <button class="feed-btn btn-berries" id="btnBerries" onclick="startAudio();feedMammoth('berries')">
+          <div class="food-fill" id="fillBerries"></div>
+          <span class="food-btn-content"><span class="food-emoji">🫐</span><span class="food-count" id="countBerries">10</span></span>
         </button>
-        <button class="feed-btn" style="background:linear-gradient(135deg,#43b89c,#2a9d7c);color:white;" onclick="startAudio();feedMammoth('leaves')">
-          🌿
+        <button class="feed-btn btn-leaves" id="btnLeaves" onclick="startAudio();feedMammoth('leaves')">
+          <div class="food-fill" id="fillLeaves"></div>
+          <span class="food-btn-content"><span class="food-emoji">🌿</span><span class="food-count" id="countLeaves">10</span></span>
         </button>
         <button class="wyatt-btn" onclick="showWyattFact()" title="Wyatt's Facts">?</button>
       </div>
@@ -2917,6 +3019,12 @@ z-index: 10;
     lastRollAt: 0, hitCooldown: false, duration: 8000,
     dodging: null, // 'jump' | 'duck' | null
     moveInterval: null, intensity: 1,
+  };
+  const forageState = {
+    active: false, readyScreen: false,
+    foodType: null, intensity: 1,
+    animalX: 50, moveDir: 0, jumping: false, ducking: false,
+    moveInterval: null, spawnInterval: null, hitCooldown: false,
   };
   // iOS Safari requires AudioContext to be created AND resumed
   // inside a synchronous user gesture handler. We use a visible
@@ -3690,10 +3798,99 @@ z-index: 10;
   state.lastGrowthAt = Math.floor((state.sizePercent - 30) / 2) * 1000;
 
   const FOOD_DATA = {
-    hay:     { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 25, happy: 10, poopChance: 0.45 },
-    berries: { emoji: '🫐', sounds: ['Ooooh yum!','Mmmberry!','*slurp*','YUMMY!'], hunger: 15, happy: 30, poopChance: 0.6 },
-    leaves:  { emoji: '🌿', sounds: ['Crunch!','Rustle rustle','Mmm greens!','Chomp!'], hunger: 20, happy: 20, poopChance: 0.5 },
+    hay:     { emoji: '🌾', sounds: ['Mmmmph!','Nom nom!','Grrrumph!','Munch munch!'], hunger: 30, happy: 8,  poopChance: 0.45, max: 5,  replenishMs: 30 * 60 * 1000 },
+    berries: { emoji: '🫐', sounds: ['Ooooh yum!','Mmmberry!','*slurp*','YUMMY!'],    hunger: 5,  happy: 20, poopChance: 0.6,  max: 10, replenishMs: 10 * 60 * 1000 },
+    leaves:  { emoji: '🌿', sounds: ['Crunch!','Rustle rustle','Mmm greens!','Chomp!'],hunger: 5,  happy: 12, poopChance: 0.5,  max: 10, replenishMs: 10 * 60 * 1000 },
   };
+
+  // ── FOOD INVENTORY ──────────────────────────────────────────────
+  // inventory[type] = { count, nextReplenishAt }
+  const inventory = {
+    hay:     { count: 5,  nextReplenishAt: [] },
+    berries: { count: 10, nextReplenishAt: [] },
+    leaves:  { count: 10, nextReplenishAt: [] },
+  };
+
+  const INV_KEY = 'mammoth_inventory';
+
+  function saveInventory() {
+    try { localStorage.setItem(INV_KEY, JSON.stringify(inventory)); } catch(e) {}
+  }
+
+  function loadInventory() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(INV_KEY) || '{}');
+      ['hay','berries','leaves'].forEach(type => {
+        if (saved[type]) {
+          inventory[type].count = saved[type].count ?? FOOD_DATA[type].max;
+          inventory[type].nextReplenishAt = saved[type].nextReplenishAt || [];
+        }
+      });
+    } catch(e) {}
+  }
+
+  function updateFoodButtons() {
+    ['hay','berries','leaves'].forEach(type => {
+      const fd   = FOOD_DATA[type];
+      const inv  = inventory[type];
+      const btn  = document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1));
+      const fill = document.getElementById('fill' + type.charAt(0).toUpperCase() + type.slice(1));
+      const cnt  = document.getElementById('count' + type.charAt(0).toUpperCase() + type.slice(1));
+      if (!btn || !fill || !cnt) return;
+
+      const pct = (inv.count / fd.max) * 100;
+      fill.style.height = pct + '%';
+      cnt.textContent   = inv.count;
+
+      if (inv.count === 0) {
+        btn.classList.add('empty');
+        // Show time until next replenish
+        const next = inv.nextReplenishAt[0];
+        if (next) {
+          const secsLeft = Math.max(0, Math.ceil((next - Date.now()) / 1000));
+          const m = Math.floor(secsLeft / 60), s = secsLeft % 60;
+          cnt.textContent = m > 0 ? `${m}m` : `${s}s`;
+        }
+      } else {
+        btn.classList.remove('empty');
+      }
+    });
+  }
+
+  function tickInventory() {
+    const now = Date.now();
+    let changed = false;
+    ['hay','berries','leaves'].forEach(type => {
+      const fd  = FOOD_DATA[type];
+      const inv = inventory[type];
+      // Process any replenishments that are due
+      while (inv.nextReplenishAt.length > 0 && inv.nextReplenishAt[0] <= now && inv.count < fd.max) {
+        inv.nextReplenishAt.shift();
+        inv.count++;
+        changed = true;
+      }
+    });
+    if (changed) saveInventory();
+    updateFoodButtons();
+  }
+
+  function consumeFood(type) {
+    const fd  = FOOD_DATA[type];
+    const inv = inventory[type];
+    if (inv.count <= 0) return false;
+    inv.count--;
+    // Schedule a replenishment for this consumed unit
+    const delay = fd.replenishMs;
+    const replenishAt = Date.now() + delay;
+    inv.nextReplenishAt.push(replenishAt);
+    inv.nextReplenishAt.sort((a, b) => a - b);
+    saveInventory();
+    updateFoodButtons();
+    return true;
+  }
+
+  // Tick every 10 seconds to check replenishments
+  setInterval(tickInventory, 10000);
 
   const POOP_SOUNDS = ['Grrrrrp... 💨','Pbbbbbt!💨','Uhhhhhh...','Plop! 💩','Oh no...',];
   const CLEAN_MSGS = ['Ewww +10!','Squeaky clean!','Good job! +10','No more stink!','Spotless! +10'];
@@ -4093,6 +4290,18 @@ z-index: 10;
 
   // Feed mammoth
   function feedMammoth(type) {
+    // Check inventory FIRST — before any other guard
+    if (!consumeFood(type)) {
+      // Only block if a mini-game is actively running right now
+      if (!forageState.active && !forageState.readyScreen &&
+          !asteroidState.active && !tigerState.active && !cavemanState.active &&
+          !asteroidState.readyScreen && !tigerState.readyScreen && !cavemanState.readyScreen) {
+        showForageReadyScreen(type);
+      } else {
+        showBubble('😤 No ' + FOOD_DATA[type].emoji + ' — busy!');
+      }
+      return;
+    }
     if (state.isAnimating) return;
     const wrapper = getActiveWrapper();
     const food = FOOD_DATA[type];
@@ -4237,6 +4446,9 @@ z-index: 10;
     if (trunk) trunk.classList.remove('trunk-raised');
     idleBusy = false;
     stopIdleMusic();
+    // Idle activity costs 1% hunger
+    state.hunger = Math.max(0, state.hunger - 1);
+    updateStats();
   }
 
   function idleDiscoParty() {
@@ -4577,8 +4789,12 @@ z-index: 10;
     }
   }
 
+  let lastAttackEndTime = 0;
+  const IDLE_ATTACK_BUFFER_MS = 60000; // 60s buffer after any attack before idle resumes
+
   function triggerIdleActivity() {
     if (idleBusy || state.isAnimating || state.happiness < 40) return;
+    if (Date.now() - lastAttackEndTime < IDLE_ATTACK_BUFFER_MS) return;
     const activities = [idleDiscoParty, idleJumpRope, idleIceSkating];
     const pick = activities[Math.floor(Math.random() * activities.length)];
     pick();
@@ -5070,6 +5286,7 @@ z-index: 10;
     if (document.getElementById('npCancelBtn').style.display !== 'none') {
       // Remove save FIRST — this triggers storage event in other tabs → they reload
       localStorage.removeItem('mammoth_save');
+      localStorage.removeItem(INV_KEY);
       state.score = 0;
       state.sizePercent = 30;
       state.hunger = 80;
@@ -5077,7 +5294,13 @@ z-index: 10;
       state.feedCount = 0;
       state.grownUp = false;
       state.lastGrowthAt = 0;
-      state.resetToken = Date.now().toString(); // new token = other tabs reload
+      state.resetToken = Date.now().toString();
+      // Reset inventory to starting values
+      inventory.hay     = { count: 5,  nextReplenishAt: [] };
+      inventory.berries = { count: 10, nextReplenishAt: [] };
+      inventory.leaves  = { count: 10, nextReplenishAt: [] };
+      saveInventory();
+      updateFoodButtons();
       const labelEl = document.getElementById('mammothNameDisplay');
       if (labelEl) { labelEl.textContent = ''; labelEl.classList.remove('show'); }
       const playerLabel = document.getElementById('playerNameDisplay');
@@ -5100,6 +5323,7 @@ z-index: 10;
   // ── ASTEROID STATE — declared here so updateStats can reference it on load ──
 
   applyMammothSize();
+  loadInventory();
   if (!state.playerName || !state.mammothName) {
     selectAnimal(state.animalType || 'mammoth');
     document.getElementById('namePopup').style.display = 'flex';
@@ -5109,6 +5333,7 @@ z-index: 10;
   }
 
   updateStats();
+  tickInventory(); // initialize fill bars immediately
 
   // ── CAVEMAN ATTACK MINI-GAME ─────────────────────────────────────
 
@@ -5299,7 +5524,8 @@ z-index: 10;
 
       if (!dodged) {
         cavemanState.hitCooldown = true;
-        state.score = Math.max(0, state.score - 50);
+        state.score  = Math.max(0, state.score - 50);
+        state.hunger = Math.max(0, state.hunger - 10);
         updateStats();
         showBubble(spearH === 'high' ? '😵 Spear hit!' : '🤕 Got low!');
         getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
@@ -5350,6 +5576,7 @@ z-index: 10;
     overlay.classList.remove('active');
 
     forceRestoreAnimal();
+    lastAttackEndTime = Date.now();
 
     if (survived) {
       state.score     += 30;
@@ -5497,6 +5724,7 @@ z-index: 10;
             if (!(tr.right < mr.left || tr.left > mr.right || tr.bottom < mr.top || tr.top > mr.bottom)) {
               tigerState.hitCooldown = true;
               state.score = Math.max(0, state.score - 50);
+              state.hunger = Math.max(0, state.hunger - 10);
               updateStats();
               showBubble('😱 Ouch!!');
               getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
@@ -5553,6 +5781,7 @@ z-index: 10;
     sceneEl.removeEventListener('touchend',   _onUp);
 
     forceRestoreAnimal();
+    lastAttackEndTime = Date.now();
 
     if (survived) {
       state.score     += 30;
@@ -5568,6 +5797,659 @@ z-index: 10;
     }, 15000);
   }
   // ─────────────────────────────────────────────────────────────────
+
+  // ── FORAGE MINI-GAME ─────────────────────────────────────────────
+
+  // Descriptions per food type
+  const FORAGE_INFO = {
+    hay:     { theme:'asteroid', music:'asteroid', hazard:'☄️ asteroids',  enemy:'rocks',   action:'dodge' },
+    berries: { theme:'tiger',    music:'tiger',    hazard:'🐯 tigers',     enemy:'tigers',  action:'dodge' },
+    leaves:  { theme:'caveman',  music:'caveman',  hazard:'🪨 spears',     enemy:'spears',  action:'jump/duck' },
+  };
+
+  function showForageReadyScreen(foodType) {
+    forageState.readyScreen = true;
+    forageState.foodType    = foodType;
+    forageState.intensity   = Math.floor(Math.random() * 5) + 1;
+    const lvl    = forageState.intensity;
+    const fd     = FOOD_DATA[foodType];
+    const fi     = FORAGE_INFO[foodType];
+    const labels = ['Light','Moderate','Heavy','Fierce','EXTREME'];
+    const colors = ['#88dd44','#ffcc00','#ff8800','#ff4400','#ff0044'];
+    const countTable = [5, 9, 13, 18, 25];
+    const foodCount  = Math.ceil(countTable[lvl-1] / 4);
+
+    const existing = document.getElementById('forageReadyScreen');
+    if (existing) existing.remove();
+
+    const themeColors = {
+      hay:     { bg:'rgba(5,20,5,0.93)',    border:'rgba(100,200,80,0.5)',  h2:'#88dd44',  btn:'linear-gradient(135deg,#66bb44,#338820)' },
+      berries: { bg:'rgba(20,5,20,0.93)',   border:'rgba(200,80,180,0.5)', h2:'#dd66dd',  btn:'linear-gradient(135deg,#bb44bb,#883388)' },
+      leaves:  { bg:'rgba(15,10,2,0.93)',   border:'rgba(200,160,0,0.5)',  h2:'#f0c030',  btn:'linear-gradient(135deg,#c08020,#805010)' },
+    };
+    const tc = themeColors[foodType];
+
+    const controlsText = foodType === 'leaves'
+      ? '<span>⬅️➡️ Tap sides to <strong>move</strong></span><span>⬆️ Tap <strong>JUMP</strong> button to leap over spears</span>'
+      : '<span>👆 <strong>Drag</strong> or tap sides to move</span>';
+
+    const screen = document.createElement('div');
+    screen.id = 'forageReadyScreen';
+    screen.style.cssText = `display:flex;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:${tc.bg};align-items:center;justify-content:center;padding:20px;box-sizing:border-box;`;
+    screen.innerHTML = `
+      <div class="forage-ready-box" style="border-color:${tc.border}">
+        <span class="frb-emoji">${fd.emoji}</span>
+        <h2 style="color:${tc.h2}">FORAGE FOR ${fd.emoji.toUpperCase()}?</h2>
+        <div class="frb-sub">You're out of ${fd.emoji}! Brave the wilds to find more?</div>
+        <div style="margin-bottom:8px;font-family:'Fredoka One',Arial,sans-serif;font-size:0.9rem;">
+          <span style="color:${colors[lvl-1]};">LEVEL ${lvl} — ${labels[lvl-1]}<br>${'⚡'.repeat(lvl)}${'·'.repeat(5-lvl)}<br>
+          <span style="color:${tc.h2};font-size:0.85em;">Up to ${foodCount} ${fd.emoji} to catch!</span></span>
+        </div>
+        <div class="frb-instructions">
+          ${controlsText}
+          <span>${fd.emoji} <strong>Catch the food</strong> falling from above!</span>
+          <span>${fi.hazard} — each hit = <strong>-50 pts & -10% hunger</strong></span>
+        </div>
+        <div class="frb-risk">⚠️ <strong>Risky!</strong> You could come back worse — or with a haul!</div>
+        <div class="forage-btns">
+          <button class="forage-ready-btn" style="background:${tc.btn}" onclick="launchForageGame()">🏃 Let's Forage!</button>
+          <button class="forage-skip-btn" onclick="closeForageScreen()">✖ Skip</button>
+        </div>
+      </div>`;
+    document.body.appendChild(screen);
+
+    const gameArea = document.getElementById('gameArea');
+    if (gameArea) { gameArea.classList.add('shaking'); setTimeout(() => gameArea.classList.remove('shaking'), 650); }
+  }
+
+  function closeForageScreen() {
+    const s = document.getElementById('forageReadyScreen');
+    if (s) s.remove();
+    forageState.readyScreen = false;
+    showBubble('😤 Staying hungry then!');
+  }
+
+  function launchForageGame() {
+    const s = document.getElementById('forageReadyScreen');
+    if (s) s.remove();
+    forageState.readyScreen = false;
+    const type = forageState.foodType;
+    if (type === 'hay')     startForageHay();
+    else if (type === 'berries') startForageBerries();
+    else if (type === 'leaves')  startForageLeaves();
+  }
+
+  // ── SHARED FORAGE HELPERS ────────────────────────────────────────
+
+  function _forageEndCleanup(overlayId, foodCaught, removeListeners) {
+    if (!forageState.active) return;
+    forageState.active  = false;
+    forageState.moveDir = 0;
+    forageState.jumping = false;
+    forageState.ducking = false;
+    clearInterval(forageState.spawnInterval);
+    clearInterval(forageState.moveInterval);
+
+    const overlay = document.getElementById(overlayId);
+    if (overlay) {
+      if (removeListeners) removeListeners(overlay);
+      overlay.innerHTML = '';
+      overlay.classList.remove('active');
+    }
+    // Remove leaves forage button panels
+    const lp  = document.getElementById('forageLeavesBtns');
+    if (lp) lp.remove();
+    const lp2 = document.getElementById('forageLeavesBtns2');
+    if (lp2) lp2.remove();
+    // Remove old single jump button if present
+    const jb = document.getElementById('forageJumpBtn');
+    if (jb) jb.remove();
+
+    stopAttackMusic();
+    setTimeout(startWind, 1000);
+    forceRestoreAnimal();
+    lastAttackEndTime = Date.now();
+    updateFoodButtons();
+
+    const fd = FOOD_DATA[forageState.foodType];
+    if (foodCaught > 0) {
+      showBubble(`${fd.emoji} Foraged ${foodCaught}! 🎉`);
+      state.score     += foodCaught * 10;
+      state.happiness  = Math.min(100, state.happiness + 5);
+    } else {
+      showBubble('😞 Nothing foraged...');
+    }
+    updateStats();
+  }
+
+  function _spawnFallingFood(overlay, scene, speedMult, fd, onCatch) {
+    const sceneRect = scene.getBoundingClientRect();
+    const size      = 36;
+    const startX    = 20 + Math.random() * (sceneRect.width - size - 40);
+    const fallDist  = sceneRect.height + size + 20;
+    const duration  = Math.max(500, 1800 / speedMult);
+
+    const el = document.createElement('div');
+    el.style.cssText = `position:absolute;left:${startX}px;top:-${size}px;font-size:${size}px;pointer-events:none;z-index:32;transition:none;`;
+    el.textContent = fd.emoji;
+    overlay.appendChild(el);
+
+    const startTime = performance.now();
+    function tick(now) {
+      if (!forageState.active) { el.remove(); return; }
+      const p = (now - startTime) / duration;
+      if (p >= 1) { el.remove(); return; }
+      el.style.top       = (-size + p * fallDist) + 'px';
+      el.style.transform = `rotate(${p * 360}deg)`;
+
+      const fRect = el.getBoundingClientRect();
+      const sizer = getActiveSizer();
+      if (sizer) {
+        const mRect = sizer.getBoundingClientRect();
+        if (!(fRect.right < mRect.left || fRect.left > mRect.right || fRect.bottom < mRect.top || fRect.top > mRect.bottom)) {
+          const inv = inventory[forageState.foodType];
+          if (inv.count < FOOD_DATA[forageState.foodType].max) { inv.count++; saveInventory(); updateFoodButtons(); }
+          onCatch();
+          el.style.transform = 'scale(2)'; el.style.opacity = '0';
+          setTimeout(() => el.remove(), 200);
+          showBubble(fd.emoji + ' Got one!');
+          return;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── HAY FORAGE — asteroid style ──────────────────────────────────
+
+  function startForageHay() {
+    if (forageState.active) return;
+    forageState.active = true; forageState.hitCooldown = false;
+    forageState.animalX = 50; forageState.moveDir = 0;
+
+    const overlay = document.getElementById('asteroidOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    const lvl     = forageState.intensity;
+    overlay.innerHTML = ''; overlay.classList.add('active');
+
+    const warn = document.createElement('div'); warn.className = 'asteroid-warning';
+    warn.textContent = '🌾 FORAGE HAY! Dodge rocks, catch hay!'; overlay.appendChild(warn);
+    const hint = document.createElement('div'); hint.className = 'asteroid-controls-hint';
+    hint.textContent = '← drag or tap sides to dodge →'; overlay.appendChild(hint);
+
+    _applyAnimalX();
+
+    overlay.addEventListener('mousemove',  _onMove);
+    overlay.addEventListener('touchmove',  _onTouch,      { passive: false });
+    overlay.addEventListener('mousedown',  _onDown);
+    overlay.addEventListener('touchstart', _onTouchStart, { passive: false });
+    overlay.addEventListener('mouseup',    _onUp);
+    overlay.addEventListener('touchend',   _onUp);
+
+    const countTable = [5,9,13,18,25], speedTable = [1,1.5,2,3,4];
+    const baseCount = countTable[lvl-1], baseSpeed = speedTable[lvl-1];
+    const spawnInt  = Math.max(150, Math.round(8000 / baseCount));
+    let spawned = 0, foodCaught = 0;
+
+    forageState.spawnInterval = setInterval(() => {
+      if (!forageState.active) return;
+      if (spawned >= baseCount) { clearInterval(forageState.spawnInterval); return; }
+      spawned++;
+      if (spawned % 4 === 0) _spawnFallingFood(overlay, scene, baseSpeed, FOOD_DATA.hay, () => foodCaught++);
+      else _spawnForageAsteroid(overlay, scene, baseSpeed);
+    }, spawnInt);
+
+    forageState.moveInterval = setInterval(() => {
+      if (forageState.moveDir !== 0) {
+        forageState.animalX = Math.max(5, Math.min(90, forageState.animalX + forageState.moveDir * 2.5));
+        _applyAnimalX();
+      }
+    }, 30);
+
+    startAttackMusic('asteroid');
+    setTimeout(() => _forageEndCleanup('asteroidOverlay', foodCaught, ov => {
+      ov.removeEventListener('mousemove',  _onMove);
+      ov.removeEventListener('touchmove',  _onTouch);
+      ov.removeEventListener('mousedown',  _onDown);
+      ov.removeEventListener('touchstart', _onTouchStart);
+      ov.removeEventListener('mouseup',    _onUp);
+      ov.removeEventListener('touchend',   _onUp);
+    }), 9000);
+  }
+
+  // ── BERRIES FORAGE — tiger style: move to catch berries, dodge tigers ──
+
+  function startForageBerries() {
+    if (forageState.active) return;
+    forageState.active = true; forageState.hitCooldown = false;
+    forageState.animalX = 50; forageState.moveDir = 0;
+
+    const overlay = document.getElementById('asteroidOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    const lvl     = forageState.intensity;
+    overlay.innerHTML = ''; overlay.classList.add('active');
+
+    const warn = document.createElement('div'); warn.className = 'asteroid-warning';
+    warn.textContent = '🫐 FORAGE BERRIES! Dodge tigers, catch berries!'; overlay.appendChild(warn);
+    const hint = document.createElement('div'); hint.className = 'asteroid-controls-hint';
+    hint.textContent = '← drag or tap sides to move →'; overlay.appendChild(hint);
+
+    _applyAnimalX();
+
+    overlay.addEventListener('mousemove',  _onMove);
+    overlay.addEventListener('touchmove',  _onTouch,      { passive: false });
+    overlay.addEventListener('mousedown',  _onDown);
+    overlay.addEventListener('touchstart', _onTouchStart, { passive: false });
+    overlay.addEventListener('mouseup',    _onUp);
+    overlay.addEventListener('touchend',   _onUp);
+
+    const countTable = [3,5,7,10,13], speedTable = [1,1.5,2,3,4];
+    const tigerCount = countTable[lvl-1], baseSpeed = speedTable[lvl-1];
+    const berryCount = Math.ceil(tigerCount / 3); // 1 berry per 3 tigers
+    const totalItems = tigerCount + berryCount;
+    const spawnInt   = Math.max(200, Math.round(9000 / totalItems));
+    let spawned = 0, foodCaught = 0;
+
+    // Shuffle sequence: insert berries at 1-in-4 positions
+    const sequence = [];
+    for (let i = 0; i < totalItems; i++) sequence.push(i % 4 === 0 ? 'berry' : 'tiger');
+
+    forageState.spawnInterval = setInterval(() => {
+      if (!forageState.active) return;
+      if (spawned >= sequence.length) { clearInterval(forageState.spawnInterval); return; }
+      const type = sequence[spawned++];
+      if (type === 'berry') {
+        _spawnFallingFood(overlay, scene, baseSpeed * 0.7, FOOD_DATA.berries, () => foodCaught++);
+      } else {
+        _spawnForageWalkingTiger(scene, spawned);
+      }
+    }, spawnInt);
+
+    forageState.moveInterval = setInterval(() => {
+      if (forageState.moveDir !== 0) {
+        forageState.animalX = Math.max(5, Math.min(90, forageState.animalX + forageState.moveDir * 2.5));
+        _applyAnimalX();
+      }
+    }, 30);
+
+    startAttackMusic('tiger');
+    setTimeout(() => _forageEndCleanup('asteroidOverlay', foodCaught, ov => {
+      ov.removeEventListener('mousemove',  _onMove);
+      ov.removeEventListener('touchmove',  _onTouch);
+      ov.removeEventListener('mousedown',  _onDown);
+      ov.removeEventListener('touchstart', _onTouchStart);
+      ov.removeEventListener('mouseup',    _onUp);
+      ov.removeEventListener('touchend',   _onUp);
+      // Remove any stray tigers
+      document.querySelectorAll('[id^="forageTiger_"]').forEach(e => e.remove());
+    }), 10000);
+  }
+
+  function _spawnForageWalkingTiger(scene, idx) {
+    const src      = document.getElementById('tigerEl');
+    const el       = src.cloneNode(true);
+    el.id          = 'forageTiger_' + (idx || Date.now());
+    const fromLeft = Math.random() < 0.5;
+    const sceneW   = scene.getBoundingClientRect().width;
+    const bott     = getAnimalBottom();
+
+    el.style.cssText = 'position:absolute;bottom:' + bott + 'px;left:' + (fromLeft ? '-85' : sceneW) + 'px;width:80px;height:68px;pointer-events:none;transition:none;z-index:7;transform:scaleX(' + (fromLeft ? -1 : 1) + ')';
+    el.classList.remove('prowl', 'pounce');
+    scene.appendChild(el);
+
+    // Prowl to near edge
+    const edgeX = fromLeft ? 5 : sceneW - 85;
+    setTimeout(() => {
+      el.style.transition = 'left 0.8s ease';
+      el.style.left = edgeX + 'px';
+    }, 50);
+
+    // After arriving, pounce at animal
+    setTimeout(() => {
+      el.classList.add('prowl');
+      let pounces = 0;
+      const maxPounces = 2;
+
+      function doPounce() {
+        if (!forageState.active) { el.remove(); return; }
+        pounces++;
+        el.classList.remove('prowl');
+
+        const sizer     = getActiveSizer();
+        const sceneRect = scene.getBoundingClientRect();
+        const sr        = sizer ? sizer.getBoundingClientRect() : null;
+        const targetX   = sr ? (sr.left - sceneRect.left + sr.width * 0.4) : sceneRect.width * (forageState.animalX / 100);
+        const clampedX  = Math.max(0, Math.min(sceneW - 80, targetX - 40));
+        const facing    = clampedX > parseFloat(el.style.left) ? -1 : 1;
+        const b         = getAnimalBottom();
+
+        el.style.transform  = 'scaleX(' + facing + ')';
+        el.style.transition = 'left 0.5s cubic-bezier(0.3,0,0.6,1), bottom 0.25s ease-out';
+        el.style.left       = clampedX + 'px';
+        el.style.bottom     = (b + 30) + 'px';
+
+        setTimeout(() => {
+          if (!forageState.active) { el.remove(); return; }
+          el.style.bottom = b + 'px';
+
+          // Hit check
+          if (!forageState.hitCooldown && sizer) {
+            const tr = el.getBoundingClientRect();
+            const mr = sizer.getBoundingClientRect();
+            if (!(tr.right < mr.left || tr.left > mr.right || tr.bottom < mr.top || tr.top > mr.bottom)) {
+              forageState.hitCooldown = true;
+              state.score  = Math.max(0, state.score - 50);
+              state.hunger = Math.max(0, state.hunger - 10);
+              updateStats();
+              showBubble('😱 Tiger got me!');
+              getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
+              setTimeout(() => { getActiveWrapper().style.filter = ''; }, 300);
+              setTimeout(() => { forageState.hitCooldown = false; }, 1200);
+            }
+          }
+
+          setTimeout(() => {
+            if (!forageState.active) { el.remove(); return; }
+            if (pounces < maxPounces) {
+              el.classList.add('prowl');
+              setTimeout(doPounce, 700 + Math.random() * 400);
+            } else {
+              el.style.transition = 'left 0.7s ease';
+              el.style.left = (fromLeft ? -90 : sceneW) + 'px';
+              setTimeout(() => el.remove(), 800);
+            }
+          }, 400);
+        }, 280);
+      }
+      doPounce();
+    }, 900);
+  }
+
+  // ── LEAVES FORAGE — caveman style: move + jump/duck to dodge spears + cavemen, catch falling leaves ──
+
+  function startForageLeaves() {
+    if (forageState.active) return;
+    forageState.active   = true;
+    forageState.hitCooldown = false;
+    forageState.animalX  = 50;
+    forageState.moveDir  = 0;
+    forageState.jumping  = false;
+    forageState.ducking  = false;
+
+    const overlay = document.getElementById('asteroidOverlay');
+    const scene   = document.querySelector('.mammoth-scene');
+    const lvl     = forageState.intensity;
+    overlay.innerHTML = ''; overlay.classList.add('active');
+
+    const warn = document.createElement('div'); warn.className = 'asteroid-warning';
+    warn.textContent = '🌿 FORAGE LEAVES! Dodge cavemen & spears!'; overlay.appendChild(warn);
+    const hint = document.createElement('div'); hint.className = 'asteroid-controls-hint';
+    hint.textContent = 'Move ← → to catch leaves · Jump or Duck to dodge spears'; overlay.appendChild(hint);
+
+    _applyAnimalX();
+
+    // ── 4-button panel — two rows appended to body, same as caveman dodge buttons ──
+    // Row 1: LEFT / RIGHT
+    const moveRow = document.createElement('div');
+    moveRow.id = 'forageLeavesBtns';
+    moveRow.className = 'dodge-btns';
+    moveRow.style.bottom = 'calc(env(safe-area-inset-bottom) + 8px + clamp(52px,12vh,76px) + 8px)';
+
+    const leftBtn  = document.createElement('button');
+    leftBtn.className = 'dodge-btn';
+    leftBtn.style.cssText = 'background:linear-gradient(135deg,#1565c0,#0d47a1);color:white;font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
+    leftBtn.textContent = '◀ LEFT';
+    leftBtn.addEventListener('mousedown',  () => { forageState.moveDir = -1; });
+    leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); forageState.moveDir = -1; }, { passive: false });
+    leftBtn.addEventListener('mouseup',    () => { forageState.moveDir = 0; });
+    leftBtn.addEventListener('touchend',   (e) => { e.preventDefault(); forageState.moveDir = 0; }, { passive: false });
+
+    const rightBtn = document.createElement('button');
+    rightBtn.className = 'dodge-btn';
+    rightBtn.style.cssText = 'background:linear-gradient(135deg,#1565c0,#0d47a1);color:white;font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
+    rightBtn.textContent = 'RIGHT ▶';
+    rightBtn.addEventListener('mousedown',  () => { forageState.moveDir = 1; });
+    rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); forageState.moveDir = 1; }, { passive: false });
+    rightBtn.addEventListener('mouseup',    () => { forageState.moveDir = 0; });
+    rightBtn.addEventListener('touchend',   (e) => { e.preventDefault(); forageState.moveDir = 0; }, { passive: false });
+
+    moveRow.appendChild(leftBtn);
+    moveRow.appendChild(rightBtn);
+    document.body.appendChild(moveRow);
+
+    // Row 2: DUCK / JUMP
+    const dodgeRow = document.createElement('div');
+    dodgeRow.id = 'forageLeavesBtns2';
+    dodgeRow.className = 'dodge-btns';
+
+    const duckBtn = document.createElement('button');
+    duckBtn.className = 'dodge-btn dodge-btn-duck';
+    duckBtn.style.cssText = 'font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
+    duckBtn.textContent = '⬇️ DUCK';
+    duckBtn.addEventListener('mousedown',  () => doForageDuck());
+    duckBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doForageDuck(); }, { passive: false });
+
+    const jumpBtn = document.createElement('button');
+    jumpBtn.className = 'dodge-btn dodge-btn-jump';
+    jumpBtn.style.cssText = 'font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
+    jumpBtn.textContent = '⬆️ JUMP';
+    jumpBtn.addEventListener('mousedown',  () => doForageJump());
+    jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doForageJump(); }, { passive: false });
+
+    dodgeRow.appendChild(duckBtn);
+    dodgeRow.appendChild(jumpBtn);
+    document.body.appendChild(dodgeRow);
+
+    const countTable = [2,3,5,7,9], speedTable = [1,1.3,1.8,2.5,3.5];
+    const spearCount = countTable[lvl-1], baseSpeed = speedTable[lvl-1];
+    const leafCount  = Math.ceil(spearCount / 3);
+    const totalItems = spearCount + leafCount;
+    const spawnInt   = Math.max(300, Math.round(9000 / totalItems));
+    let spawned = 0, foodCaught = 0;
+
+    // Build sequence: every 4th = leaf, rest = caveman+spear combos
+    const sequence = [];
+    for (let i = 0; i < totalItems; i++) {
+      sequence.push(i % 4 === 0 ? 'leaf' : 'caveman');
+    }
+
+    forageState.spawnInterval = setInterval(() => {
+      if (!forageState.active) return;
+      if (spawned >= sequence.length) { clearInterval(forageState.spawnInterval); return; }
+      const type = sequence[spawned++];
+      if (type === 'leaf') _spawnFallingFood(overlay, scene, baseSpeed * 0.6, FOOD_DATA.leaves, () => foodCaught++);
+      else                 _spawnForageCavemanWithSpear(scene, baseSpeed);
+    }, spawnInt);
+
+    forageState.moveInterval = setInterval(() => {
+      if (forageState.moveDir !== 0) {
+        forageState.animalX = Math.max(5, Math.min(90, forageState.animalX + forageState.moveDir * 2.5));
+        _applyAnimalX();
+      }
+    }, 30);
+
+    startAttackMusic('caveman');
+    setTimeout(() => _forageEndCleanup('asteroidOverlay', foodCaught, ov => {
+      document.querySelectorAll('.forage-spear,.forage-caveman').forEach(e => e.remove());
+    }), 10000);
+  }
+
+  function doForageJump() {
+    if (!forageState.active || forageState.jumping) return;
+    forageState.jumping = true;
+    const wrapper = getActiveWrapper();
+    wrapper.classList.add('dodging-jump');
+    setTimeout(() => { wrapper.classList.remove('dodging-jump'); forageState.jumping = false; }, 500);
+  }
+
+  function doForageDuck() {
+    if (!forageState.active || forageState.ducking) return;
+    forageState.ducking = true;
+    const wrapper = getActiveWrapper();
+    wrapper.classList.add('dodging-duck');
+    setTimeout(() => { wrapper.classList.remove('dodging-duck'); forageState.ducking = false; }, 400);
+  }
+
+  function _spawnForageCavemanWithSpear(scene, speedMult) {
+    const sceneRect = scene.getBoundingClientRect();
+    const fromLeft  = Math.random() < 0.5;
+    const isHigh    = Math.random() < 0.5;
+    const spearH    = isHigh ? 'high' : 'low';
+    const travelMs  = Math.max(600, (750 + Math.random() * 200) / speedMult);
+    const cavemanH  = 100, cavemanW = 55, groundY = 30;
+
+    // Caveman SVG — exact same as caveman attack
+    const caveEl = document.createElement('div');
+    caveEl.className = 'forage-caveman';
+    caveEl.style.cssText = `position:absolute;bottom:${groundY}px;${fromLeft ? 'left:-' + cavemanW + 'px' : 'right:-' + cavemanW + 'px'};width:${cavemanW}px;height:${cavemanH}px;pointer-events:none;z-index:8;transform:scaleX(${fromLeft ? 1 : -1});transition:left 0.3s ease, right 0.3s ease;`;
+    caveEl.innerHTML = `<svg width="${cavemanW}" height="${cavemanH}" viewBox="0 0 55 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="27" cy="97" rx="18" ry="4" fill="rgba(0,0,0,0.3)"/>
+      <rect x="18" y="68" width="8" height="26" rx="4" fill="#8B5A2B"/>
+      <rect x="29" y="70" width="8" height="24" rx="4" fill="#7a4e24"/>
+      <ellipse cx="22" cy="94" rx="7" ry="4" fill="#5a3010"/>
+      <ellipse cx="33" cy="93" rx="6" ry="4" fill="#5a3010"/>
+      <path d="M15 65 Q27 75 39 65 L36 52 Q27 60 18 52 Z" fill="#8B4513"/>
+      <ellipse cx="27" cy="50" rx="14" ry="18" fill="#c8965a"/>
+      <path d="M16 42 Q20 38 24 44" stroke="#6b3a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <path d="M30 42 Q34 38 38 44" stroke="#6b3a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <line x1="38" y1="44" x2="52" y2="38" stroke="#c8965a" stroke-width="6" stroke-linecap="round"/>
+      <line x1="16" y1="46" x2="6"  y2="52" stroke="#c8965a" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="27" cy="26" rx="13" ry="14" fill="#d4a06a"/>
+      <path d="M14 22 Q15 10 20 12 Q22 6 27 8 Q32 6 34 12 Q39 10 40 22" fill="#3a2010"/>
+      <circle cx="22" cy="27" r="2.5" fill="#2a1505"/>
+      <circle cx="32" cy="27" r="2.5" fill="#2a1505"/>
+      <path d="M19 23 Q22 21 25 23" stroke="#3a2010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M29 23 Q32 21 35 23" stroke="#3a2010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="27" cy="31" rx="2.5" ry="1.8" fill="#b88050" opacity="0.6"/>
+      <path d="M23 35 Q27 38 31 35" stroke="#8b5030" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>`;
+    scene.appendChild(caveEl);
+
+    // Slide caveman in
+    setTimeout(() => {
+      if (fromLeft) caveEl.style.left  = '2px';
+      else          caveEl.style.right = '2px';
+    }, 30);
+
+    // Spear — same positioning as caveman attack
+    const animalH  = Math.max(40, 60 * (state.sizePercent / 100));
+    const bottomPx = groundY + (isHigh ? animalH * 0.6 : animalH * 0.15);
+    const startX   = fromLeft ? -(cavemanW + 5) : sceneRect.width + 5;
+    const endX     = fromLeft ? sceneRect.width + 5 : -(cavemanW + 5);
+    const dir      = fromLeft ? 1 : -1;
+
+    const spearEl = document.createElement('div');
+    spearEl.className = 'forage-spear';
+    spearEl.innerHTML = `<svg width="90" height="18" viewBox="0 0 90 18" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(${dir})">
+      <rect x="10" y="7" width="62" height="4" rx="2" fill="#8B5E1A"/>
+      <rect x="10" y="8" width="62" height="2" rx="1" fill="#a07030" opacity="0.5"/>
+      <polygon points="72,0 90,9 72,18" fill="#c8c8d0"/>
+      <polygon points="72,3 88,9 72,15" fill="#e8e8f0"/>
+      <path d="M10,9 Q4,3 0,2 Q4,9 0,16 Q4,15 10,9" fill="#cc4422"/>
+    </svg>`;
+    spearEl.style.cssText = `position:absolute;bottom:${bottomPx}px;left:${startX}px;pointer-events:none;z-index:27;`;
+    scene.appendChild(spearEl);
+
+    // Spear flies after throw delay
+    setTimeout(() => {
+      spearEl.style.transition = `left ${travelMs}ms linear`;
+      spearEl.style.left = endX + 'px';
+    }, 300);
+
+    // Track whether player dodged correctly at any point during the crossing window
+    // Window = spear in flight, roughly centered on the animal
+    let dodgedInWindow = false;
+    let hitRegistered  = false;
+
+    // Poll every 50ms during the crossing window (300ms throw delay + full travel)
+    const pollStart = 300 + travelMs * 0.2;
+    const pollEnd   = 300 + travelMs * 0.8;
+
+    const pollInterval = setInterval(() => {
+      if (!forageState.active) { clearInterval(pollInterval); return; }
+      if (isHigh && forageState.jumping) dodgedInWindow = true;
+      if (!isHigh && forageState.ducking) dodgedInWindow = true;
+    }, 50);
+
+    // Final verdict at 80% through travel
+    setTimeout(() => {
+      clearInterval(pollInterval);
+      if (!forageState.active || forageState.hitCooldown || hitRegistered) return;
+      if (!dodgedInWindow) {
+        hitRegistered = true;
+        forageState.hitCooldown = true;
+        state.score  = Math.max(0, state.score - 50);
+        state.hunger = Math.max(0, state.hunger - 10);
+        updateStats();
+        showBubble(isHigh ? '😵 Spear hit!' : '🤕 Duck next time!');
+        getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
+        setTimeout(() => { getActiveWrapper().style.filter = ''; }, 300);
+        setTimeout(() => { forageState.hitCooldown = false; }, 1000);
+        spearEl.style.filter = 'brightness(3) saturate(5)';
+      } else {
+        showBubble(isHigh ? '⬆️ Nice jump!' : '⬇️ Good duck!');
+      }
+    }, pollEnd);
+
+    // Caveman retreats
+    setTimeout(() => {
+      if (fromLeft) caveEl.style.left  = -cavemanW + 'px';
+      else          caveEl.style.right = -cavemanW + 'px';
+    }, 300 + travelMs * 0.6);
+
+    setTimeout(() => { clearInterval(pollInterval); spearEl.remove(); caveEl.remove(); }, 300 + travelMs + 200);
+  }
+
+  // Reuse the old asteroid spawner for hay forage
+  function _spawnForageAsteroid(overlay, scene, speedMult) {
+    // identical to _spawnAsteroid but checks forageState instead of asteroidState
+    const sceneRect = scene.getBoundingClientRect();
+    const minSize = 24 + speedMult * 2;
+    const size = minSize + Math.random() * (20 + speedMult * 2);
+    const startX = Math.random() * (sceneRect.width - size);
+    const fallDist = sceneRect.height + size + 20;
+    const duration = Math.max(350, (1200 + Math.random() * 600) / speedMult);
+    const rotation = Math.random() * 360;
+
+    const el = document.createElement('div');
+    el.className = 'asteroid';
+    el.style.cssText = `width:${size}px;height:${size}px;left:${startX}px;top:-${size}px;transform:rotate(${rotation}deg);border-radius:${35+Math.random()*20}% ${65-Math.random()*20}% ${45+Math.random()*20}% ${55-Math.random()*20}%/${40+Math.random()*20}% ${50+Math.random()*15}% ${60-Math.random()*15}% ${50+Math.random()*15}%;`;
+    overlay.appendChild(el);
+
+    const startTime = performance.now();
+    const rotSpeed  = (Math.random() - 0.5) * 400;
+
+    function tick(now) {
+      if (!forageState.active) { el.remove(); return; }
+      const p = (now - startTime) / duration;
+      if (p >= 1) { el.remove(); return; }
+      el.style.top       = (-size + p * fallDist) + 'px';
+      el.style.transform = `rotate(${rotation + p * rotSpeed}deg)`;
+
+      if (!forageState.hitCooldown) {
+        const aRect = el.getBoundingClientRect();
+        const sizer = getActiveSizer();
+        if (sizer) {
+          const mRect = sizer.getBoundingClientRect();
+          const hit = !(aRect.right < mRect.left + mRect.width*0.15 || aRect.left > mRect.right - mRect.width*0.15 ||
+                        aRect.bottom < mRect.top + mRect.height*0.2 || aRect.top > mRect.bottom - mRect.height*0.1);
+          if (hit) {
+            forageState.hitCooldown = true; el.remove();
+            state.score  = Math.max(0, state.score - 50);
+            state.hunger = Math.max(0, state.hunger - 10);
+            updateStats(); showBubble('😵 Ouch!!');
+            const wrapper = getActiveWrapper();
+            if (wrapper) { wrapper.classList.add('catching'); setTimeout(() => wrapper.classList.remove('catching'), 500); }
+            setTimeout(() => { forageState.hitCooldown = false; }, 1200);
+            return;
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
 
   // ── ASTEROID MINI-GAME ────────────────────────────────────────────────────────────────
 
@@ -5679,7 +6561,9 @@ z-index: 10;
     const scene  = document.querySelector('.mammoth-scene');
     const sceneW = scene.getBoundingClientRect().width;
     const sizerW = sizer.getBoundingClientRect().width;
-    const xPct   = tigerState.active ? tigerState.animalX : asteroidState.animalX;
+    const xPct   = tigerState.active ? tigerState.animalX
+                 : forageState.active ? forageState.animalX
+                 : asteroidState.animalX;
     const newLeft = (xPct / 100) * sceneW - sizerW / 2;
     sizer.style.position = 'absolute';
     sizer.style.left     = Math.max(0, Math.min(sceneW - sizerW, newLeft)) + 'px';
@@ -5691,6 +6575,7 @@ z-index: 10;
     const x    = e.clientX - rect.left;
     const pct  = Math.max(5, Math.min(90, (x / rect.width) * 100));
     if (tigerState.active)    tigerState.animalX    = pct;
+    else if (forageState.active) forageState.animalX = pct;
     else                      asteroidState.animalX = pct;
     _applyAnimalX();
   }
@@ -5699,25 +6584,29 @@ z-index: 10;
     const rect = e.currentTarget.getBoundingClientRect();
     const pct  = Math.max(5, Math.min(90, (e.touches[0].clientX - rect.left) / rect.width * 100));
     if (tigerState.active) tigerState.animalX    = pct;
+    else if (forageState.active) forageState.animalX = pct;
     else                   asteroidState.animalX = pct;
     _applyAnimalX();
   }
   function _onDown(e) {
     const rect = e.currentTarget.getBoundingClientRect();
     const dir  = e.clientX - rect.left < rect.width / 2 ? -1 : 1;
-    if (tigerState.active) tigerState.moveDir    = dir;
-    else                   asteroidState.moveDir = dir;
+    if (tigerState.active)    tigerState.moveDir    = dir;
+    else if (forageState.active) forageState.moveDir = dir;
+    else                      asteroidState.moveDir = dir;
   }
   function _onTouchStart(e) {
     e.preventDefault();
     const rect = e.currentTarget.getBoundingClientRect();
     const dir  = e.touches[0].clientX - rect.left < rect.width / 2 ? -1 : 1;
-    if (tigerState.active) tigerState.moveDir    = dir;
-    else                   asteroidState.moveDir = dir;
+    if (tigerState.active)    tigerState.moveDir    = dir;
+    else if (forageState.active) forageState.moveDir = dir;
+    else                      asteroidState.moveDir = dir;
   }
   function _onUp() {
     asteroidState.moveDir = 0;
     tigerState.moveDir    = 0;
+    forageState.moveDir   = 0;
   }
 
   function _onTouchTiger(e) {
@@ -5800,6 +6689,7 @@ z-index: 10;
 
     // Score penalty
     state.score = Math.max(0, state.score - 50);
+    state.hunger = Math.max(0, state.hunger - 10);
 
     // Float text
     const txt = document.createElement('div');
@@ -5881,6 +6771,7 @@ z-index: 10;
     overlay.classList.remove('active');
 
     forceRestoreAnimal();
+    lastAttackEndTime = Date.now();
 
     if (survived) {
       showBubble('🎉 Survived!');
