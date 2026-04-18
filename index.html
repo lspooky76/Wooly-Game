@@ -874,7 +874,110 @@ animation: houseItemArc 2s ease-in-out forwards;
 100% { transform: translateX(-60%) rotate(5deg); }
 }
 
-/* ── FORAGE MINI-GAME ── */
+/* ── SICK SYSTEM ── */
+.mammoth-wrapper.sick {
+animation: sickPulse 2s ease-in-out infinite;
+}
+@keyframes sickPulse {
+0%,100% { filter: sepia(1) hue-rotate(170deg) saturate(1.5); }
+50%     { filter: sepia(1) hue-rotate(170deg) saturate(2) brightness(1.1); }
+}
+.stat-card.sick-cause {
+border: 2px solid #ff2222 !important;
+box-shadow: 0 0 12px rgba(255,30,30,0.6);
+cursor: pointer;
+animation: sickCardPulse 1s ease-in-out infinite;
+}
+@keyframes sickCardPulse {
+0%,100% { box-shadow: 0 0 8px rgba(255,30,30,0.5); }
+50%     { box-shadow: 0 0 18px rgba(255,30,30,0.9); }
+}
+.stat-card.sick-cause:active { transform: scale(0.96); }
+
+/* Dr Sloth ready screen */
+#drSlothScreen {
+display: none;
+position: fixed;
+top:0;left:0;width:100vw;height:100vh;
+z-index:99999;
+background:rgba(5,15,5,0.95);
+align-items:center;justify-content:center;
+padding:20px;box-sizing:border-box;
+}
+#drSlothScreen.show { display:flex; }
+.drs-box {
+background:linear-gradient(160deg,#0a1a0a,#162816);
+border:2px solid rgba(100,220,100,0.5);
+border-radius:24px;padding:20px 22px;max-width:340px;
+width:100%;text-align:center;
+box-shadow:0 0 40px rgba(60,200,60,0.2),0 12px 40px rgba(0,0,0,0.7);
+animation:tigerBoxAppear 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+}
+.drs-box h2 { font-family:‘Fredoka One’,Arial,sans-serif;font-size:clamp(1.3rem,4.5vw,1.7rem);color:#88ff88;margin-bottom:4px; }
+.drs-emoji { font-size:2.8rem;display:block;margin-bottom:4px;animation:pulse 0.8s ease-in-out infinite; }
+.drs-sub { color:rgba(180,255,180,0.9);font-size:clamp(0.78rem,2.4vw,0.9rem);font-weight:700;margin-bottom:8px;line-height:1.4; }
+.drs-info { background:rgba(255,255,255,0.06);border:1px solid rgba(100,220,100,0.25);border-radius:12px;padding:8px 14px;margin-bottom:8px;font-size:clamp(0.75rem,2.2vw,0.84rem);color:rgba(200,255,180,0.9);font-weight:700;line-height:1.5;text-align:left; }
+.drs-cost { color:#ffdd44;font-weight:900;font-size:clamp(0.9rem,2.8vw,1rem);margin-bottom:10px;font-family:‘Fredoka One’,Arial,sans-serif; }
+.drs-btns { display:flex;gap:8px; }
+.drs-play-btn { flex:1;padding:12px;border:none;border-radius:16px;background:linear-gradient(135deg,#22cc44,#118822);color:white;font-family:‘Fredoka One’,Arial,sans-serif;font-size:clamp(0.9rem,3vw,1.1rem);cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.4); }
+.drs-skip-btn { flex:1;padding:12px;border:none;border-radius:16px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-family:‘Fredoka One’,Arial,sans-serif;font-size:clamp(0.9rem,3vw,1.1rem);cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.25); }
+
+/* Dr Sloth mini-game overlay */
+#drSlothOverlay {
+position:absolute;inset:0;z-index:28;
+display:none;pointer-events:none;overflow:visible;
+}
+#drSlothOverlay.active { display:block;pointer-events:all; }
+
+/* Tar bog */
+.tar-bog {
+position:absolute;pointer-events:none;z-index:26;
+}
+/* Forbs bundle */
+.forbs-bundle {
+position:absolute;font-size:32px;pointer-events:none;z-index:27;
+animation:forbsSway 1s ease-in-out infinite alternate;
+}
+@keyframes forbsSway { 0%{transform:translateY(0) rotate(-5deg)} 100%{transform:translateY(-6px) rotate(5deg)} }
+
+/* Tar bubbles */
+.tar-bubble {
+position: absolute;
+border-radius: 50%;
+background: radial-gradient(circle at 35% 35%, #6b3a00, #1a0800);
+border: 2px solid #3a2000;
+pointer-events: none;
+z-index: 28;
+opacity: 0;
+}
+
+/* Jump power bar for Dr Sloth */
+#slothJumpBar {
+position:fixed;bottom:calc(env(safe-area-inset-bottom)+8px);left:16px;right:16px;
+z-index:10001;display:none;
+background:rgba(0,0,0,0.5);border-radius:16px;overflow:hidden;height:52px;border:2px solid rgba(100,220,100,0.5);
+}
+#slothJumpBar.active { display:block; }
+#slothJumpFill {
+height:100%;width:0%;
+background:linear-gradient(90deg,#22cc44,#ffdd00,#ff4422);
+transition:none;
+display:flex;align-items:center;justify-content:center;
+font-family:‘Fredoka One’,Arial,sans-serif;color:white;font-size:1rem;
+}
+/* Extinct screen */
+#extinctScreen {
+display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;
+z-index:999999;background:rgba(0,0,0,0.96);
+align-items:center;justify-content:center;padding:20px;box-sizing:border-box;
+}
+#extinctScreen.show { display:flex; }
+.extinct-box { text-align:center;max-width:320px; }
+.extinct-box h1 { font-family:‘Fredoka One’,Arial,sans-serif;font-size:2rem;color:#ff4422;margin-bottom:8px; }
+.extinct-box p  { color:rgba(255,200,180,0.9);font-size:0.9rem;margin-bottom:20px;line-height:1.5; }
+.extinct-btn { padding:14px 32px;border:none;border-radius:16px;background:linear-gradient(135deg,#ff6644,#cc2200);color:white;font-family:‘Fredoka One’,Arial,sans-serif;font-size:1.1rem;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.4); }
+
+/* ── END SICK SYSTEM ── */
 #forageReadyScreen {
 display: none;
 position: fixed;
@@ -1125,6 +1228,11 @@ animation: cavemanJump 0.5s ease-out forwards;
 }
 .mammoth-wrapper.dodging-duck {
 animation: cavemanDuck 0.4s ease-out forwards;
+}
+/* Hold-duck: stay squashed until class is removed */
+.mammoth-wrapper.ducked-hold {
+transform: scaleY(0.5) translateY(20px);
+transition: transform 0.12s ease-out;
 }
 @keyframes cavemanJump {
 0%   { transform: translateY(0); }
@@ -1974,11 +2082,11 @@ z-index: 10;
     <div class="animal-picker">
       <button class="animal-btn selected" id="animalBtnMammoth" onclick="selectAnimal('mammoth')">
         <span class="ab-emoji">🦣</span>
-        Woolly Mammoth
+        Wooly Mammoth
       </button>
       <button class="animal-btn" id="animalBtnRhino" onclick="selectAnimal('rhino')">
         <span class="ab-emoji">🦏</span>
-        Woolly Rhino
+        Wooly Rhino
       </button>
     </div>
     <label>Your name</label>
@@ -1998,6 +2106,19 @@ z-index: 10;
 
 <!-- iOS safe area bottom fill -->
 
+<!-- Dr Sloth jump power bar created dynamically in JS -->
+
+<!-- Extinct screen -->
+
+<div id="extinctScreen">
+  <div class="extinct-box">
+    <div style="font-size:4rem;margin-bottom:8px;">💀</div>
+    <h1>EXTINCT!</h1>
+    <p id="extinctMsg">Your mammoth couldn't recover in time and has gone extinct. Start a new adventure?</p>
+    <button class="extinct-btn" onclick="extinctReset()">🥚 Start New Game</button>
+  </div>
+</div>
+
 <div style="position:fixed;bottom:0;left:0;right:0;height:env(safe-area-inset-bottom);background:#081528;z-index:99998;"></div>
 
 <!-- How to Play Popup -->
@@ -2009,7 +2130,7 @@ z-index: 10;
 <!-- Header -->
 <div style="text-align:center;margin-bottom:18px;">
   <div style="font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;font-size:clamp(1.6rem,5vw,2rem);color:#4dd0e1;text-shadow:0 0 20px rgba(77,208,225,0.4);">📖 How to Play</div>
-  <div style="color:rgba(180,220,255,0.7);font-size:0.8rem;font-weight:700;margin-top:4px;">Baby Mammoth & Woolly Rhino</div>
+  <div style="color:rgba(180,220,255,0.7);font-size:0.8rem;font-weight:700;margin-top:4px;">Baby Mammoth & Wooly Rhino</div>
 </div>
 
 <!-- Section helper -->
@@ -2089,7 +2210,7 @@ z-index: 10;
   <div class="htp-body">
     <div class="htp-row"><span class="htp-icon">💃</span><span>Keep happiness above 95% and your pet will dance!</span></div>
     <div class="htp-row"><span class="htp-icon">💾</span><span>Progress saves automatically — pick up right where you left off</span></div>
-    <div class="htp-row"><span class="htp-icon">🦏</span><span>You can choose a Woolly Mammoth or Woolly Rhino — reset to switch!</span></div>
+    <div class="htp-row"><span class="htp-icon">🦏</span><span>You can choose a Wooly Mammoth or Wooly Rhino — reset to switch!</span></div>
   </div>
 </div>
 
@@ -2158,12 +2279,12 @@ z-index: 10;
 <div class="stats-container">
   <div class="stats-border-label" id="mammothNameDisplay"></div>
   <div class="stats">
-    <div class="stat-card">
+    <div class="stat-card" id="hungerCard" onclick="onStatCardClick('hunger')">
       <div class="stat-label">🍖 Hunger</div>
       <div class="stat-value" id="hungerVal" style="color:#ff6b6b">80%</div>
       <div class="stat-bar"><div class="stat-fill hunger-fill" id="hungerBar" style="width:80%"></div></div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" id="happyCard" onclick="onStatCardClick('happy')">
       <div class="stat-label">😊 Happy</div>
       <div class="stat-value" id="happyVal" style="color:#ffd700">70%</div>
       <div class="stat-bar"><div class="stat-fill happy-fill" id="happyBar" style="width:70%"></div></div>
@@ -2196,6 +2317,7 @@ z-index: 10;
 <div id="asteroidOverlay"></div>
 <div id="tigerOverlay"></div>
 <div id="cavemanOverlay"></div>
+<div id="drSlothOverlay"></div>
 ```
 
 <!-- Caveman ready screen -->
@@ -2853,7 +2975,7 @@ z-index: 10;
 </div>
 </div><!-- /mammothSizer -->
 
-<!-- Woolly Rhino SVG -->
+<!-- Wooly Rhino SVG -->
 <div id="rhinoSizer" style="position:relative;z-index:6;transform-origin:bottom center;transition:transform 0.8s ease;transform:scale(0.3);display:none;">
 <div class="mammoth-wrapper" id="rhinoWrapper">
   <svg width="210" height="195" viewBox="0 0 210 195" xmlns="http://www.w3.org/2000/svg">
@@ -2984,7 +3106,16 @@ z-index: 10;
         <button onclick="document.getElementById('howToPlayPopup').classList.add('show')" style="background:linear-gradient(135deg,#1a4a7a,#0d2a4a);border:1.5px solid rgba(77,208,225,0.4);color:#4dd0e1;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;flex:1;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35);">📖 How to Play</button>
         <button onclick="resetGame()" style="background:linear-gradient(135deg,#c0392b,#922b21);border:none;color:white;font-size:0.85rem;cursor:pointer;padding:10px 16px;font-family:'Fredoka One','Arial Rounded MT Bold',Arial,sans-serif;letter-spacing:0.5px;text-align:center;flex:1;border-radius:14px;box-shadow:0 4px 0 rgba(0,0,0,0.35),0 5px 12px rgba(180,0,0,0.2);">↺ Reset</button>
       </div>
-    </div>
+
+```
+  <!-- ══ DEV TEST PANEL ══ -->
+  <div id="testPanelWrap" style="margin-top:4px;display:none;">
+    <button id="testPanelToggleBtn" style="width:100%;padding:6px;border:1px dashed rgba(255,220,50,0.4);border-radius:10px;background:rgba(60,50,0,0.35);color:rgba(255,220,80,0.85);font-size:0.68rem;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;">🧪 DEV TEST PANEL</button>
+  </div>
+  <!-- ══ END DEV TEST PANEL ══ -->
+</div>
+```
+
   </div>
 </div>
 
@@ -3017,15 +3148,29 @@ z-index: 10;
   const cavemanState = {
     active: false, cooldown: false, readyScreen: false,
     lastRollAt: 0, hitCooldown: false, duration: 8000,
-    dodging: null, // 'jump' | 'duck' | null
+    dodging: null,
     moveInterval: null, intensity: 1,
+    animalX: 50, moveDir: 0, _moveTick: null,
+    _snowBtn: null, _snowText: null,
   };
   const forageState = {
     active: false, readyScreen: false,
     foodType: null, intensity: 1,
     animalX: 50, moveDir: 0, jumping: false, ducking: false,
     moveInterval: null, spawnInterval: null, hitCooldown: false,
+    _snowBtn: null, _snowText: null,
   };
+  const drSlothState = {
+    active: false, readyScreen: false,
+    intensity: 1, tries: 2,
+    slothX: 10, jumping: false, jumpPower: 0, jumpHeld: false,
+    jumpInterval: null, moveDir: 1,
+    bogsCleared: 0, bogCount: 0,
+    bogPositions: [], forbsX: 0, forbsMirrorX: 0,
+    bogWidth: 0, gapWidth: 0, hitCooldown: false,
+    _snowBtn: null, _snowText: null, _snowFill: null, _jumpBtn: null,
+  };
+  let pendingAttackTimeout = null; // cancel if Dr Sloth fires
   // iOS Safari requires AudioContext to be created AND resumed
   // inside a synchronous user gesture handler. We use a visible
   // tap-to-start overlay to guarantee this.
@@ -3490,6 +3635,77 @@ z-index: 10;
 
   // ── ATTACK THEMES ────────────────────────────────────────────────
 
+  // 🦥 DR SLOTH — urgent adventure: driving bass, heroic horn stabs, tense strings
+  let slothMusicNodes = [];
+  function playSlothMusic() {
+    if (!AC || muted) return;
+    stopNodes(slothMusicNodes);
+    stopNodes(ambientNodes); // hush wind
+    const mg = masterGain; if (!mg) return;
+
+    // Driving ostinato bass — repeated urgent pattern in D minor
+    const bassNotes = [147, 147, 175, 147, 131, 147, 175, 196];
+    let bi = 0;
+    const bassLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const t = AC.currentTime;
+      const o = AC.createOscillator(); o.type = 'sawtooth';
+      o.frequency.value = bassNotes[bi % bassNotes.length];
+      const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 350;
+      const g = AC.createGain();
+      g.gain.setValueAtTime(0.14, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.17);
+      o.connect(f); f.connect(g); g.connect(mg); o.start(t); o.stop(t + 0.19);
+      slothMusicNodes.push(o);
+      bi++;
+    }, 200); // fast 8th notes at ~150bpm
+
+    // Heroic horn stab melody — major 3rds for urgency/hope
+    const hornMelody = [392, 0, 494, 0, 440, 392, 0, 523, 494, 0, 392, 0, 349, 392];
+    let hi = 0;
+    const hornLoop = setInterval(() => {
+      if (!AC || muted) return;
+      const freq = hornMelody[hi % hornMelody.length];
+      if (freq > 0) {
+        const t = AC.currentTime;
+        const o = AC.createOscillator(); o.type = 'square'; o.frequency.value = freq;
+        const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 1.5;
+        const g = AC.createGain();
+        g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+        o.connect(f); f.connect(g); g.connect(mg); o.start(t); o.stop(t + 0.32);
+        slothMusicNodes.push(o);
+      }
+      hi++;
+    }, 300);
+
+    // Snare hits on beats 2 & 4
+    let si = 0;
+    const snareLoop = setInterval(() => {
+      if (!AC || muted) return;
+      si++;
+      if (si % 2 === 0) {
+        const t = AC.currentTime;
+        const buf = AC.createBuffer(1, Math.floor(AC.sampleRate * 0.1), AC.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i/d.length, 2);
+        const src = AC.createBufferSource(); src.buffer = buf;
+        const g = AC.createGain(); g.gain.value = 0.28;
+        src.connect(g); g.connect(mg); src.start(t);
+        slothMusicNodes.push(src);
+      }
+    }, 400);
+
+    slothMusicNodes.push(
+      { stop: () => clearInterval(bassLoop),  disconnect: () => {} },
+      { stop: () => clearInterval(hornLoop),  disconnect: () => {} },
+      { stop: () => clearInterval(snareLoop), disconnect: () => {} }
+    );
+  }
+
+  function stopSlothMusic() {
+    stopNodes(slothMusicNodes);
+    if (!muted) setTimeout(startWind, 800);
+  }
+
   function startAttackMusic(theme) {
     if (!AC || muted) return;
     stopNodes(attackNodes);
@@ -3708,6 +3924,12 @@ z-index: 10;
         mammothName: state.mammothName,
         animalType: state.animalType,
         resetToken: state.resetToken,
+        sick: state.sick,
+        sickCause: state.sickCause,
+        sickSince: state.sickSince,
+        lowHungerSince: state.lowHungerSince,
+        lowHappySince: state.lowHappySince,
+        extinctTimer: state.extinctTimer,
       }));
     } catch(e) {}
   }
@@ -3727,6 +3949,12 @@ z-index: 10;
         state.mammothName  = d.mammothName || '';
         state.animalType   = d.animalType  || 'mammoth';
         state.resetToken   = d.resetToken  || Date.now().toString();
+        state.sick           = d.sick         || false;
+        state.sickCause      = state.sick ? (d.sickCause || null) : null;
+        state.sickSince      = state.sick ? (d.sickSince || 0)    : 0;
+        state.lowHungerSince = d.lowHungerSince || 0;
+        state.lowHappySince  = d.lowHappySince  || 0;
+        state.extinctTimer   = d.extinctTimer   || 0;
       } else {
         // No save — generate a fresh token for this session
         state.resetToken = Date.now().toString();
@@ -3752,6 +3980,12 @@ z-index: 10;
     mammothName: '',
     animalType: 'mammoth',
     resetToken: Date.now().toString(),
+    sick: false,
+    sickCause: null,        // 'hunger' | 'happy'
+    sickSince: 0,           // real timestamp when sickness started
+    lowHungerSince: 0,      // real timestamp hunger first dropped below 20%
+    lowHappySince: 0,       // real timestamp happiness first dropped below 20%
+    extinctTimer: 0,        // real timestamp when extinction clock started
   };
 
   function getActiveWrapper() {
@@ -3814,60 +4048,81 @@ z-index: 10;
   const INV_KEY = 'mammoth_inventory';
 
   function saveInventory() {
-    try { localStorage.setItem(INV_KEY, JSON.stringify(inventory)); } catch(e) {}
+    try { localStorage.setItem(INV_KEY, JSON.stringify({
+      hay:     { count: inventory.hay.count,     nextReplenishAt: inventory.hay.nextReplenishAt     },
+      berries: { count: inventory.berries.count, nextReplenishAt: inventory.berries.nextReplenishAt },
+      leaves:  { count: inventory.leaves.count,  nextReplenishAt: inventory.leaves.nextReplenishAt  },
+    })); } catch(e) {}
   }
 
   function loadInventory() {
     try {
       const saved = JSON.parse(localStorage.getItem(INV_KEY) || '{}');
+      const now   = Date.now();
       ['hay','berries','leaves'].forEach(type => {
-        if (saved[type]) {
-          inventory[type].count = saved[type].count ?? FOOD_DATA[type].max;
-          inventory[type].nextReplenishAt = saved[type].nextReplenishAt || [];
-        }
+        const fd  = FOOD_DATA[type];
+        if (!saved[type]) return;
+
+        let count   = typeof saved[type].count === 'number' ? saved[type].count : fd.max;
+        let timers  = Array.isArray(saved[type].nextReplenishAt) ? saved[type].nextReplenishAt : [];
+
+        // Process all replenishments that elapsed while the app was closed
+        timers = timers.filter(t => {
+          if (t <= now && count < fd.max) { count++; return false; } // elapsed — credit it
+          return true; // still pending
+        });
+
+        // Never exceed max
+        count = Math.min(count, fd.max);
+
+        inventory[type].count           = count;
+        inventory[type].nextReplenishAt = timers;
       });
+      saveInventory(); // write back the resolved state
     } catch(e) {}
   }
 
   function updateFoodButtons() {
-    ['hay','berries','leaves'].forEach(type => {
+    const types = ['hay','berries','leaves'];
+    const names = ['Hay','Berries','Leaves'];
+    types.forEach((type, i) => {
       const fd   = FOOD_DATA[type];
       const inv  = inventory[type];
-      const btn  = document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1));
-      const fill = document.getElementById('fill' + type.charAt(0).toUpperCase() + type.slice(1));
-      const cnt  = document.getElementById('count' + type.charAt(0).toUpperCase() + type.slice(1));
+      const btn  = document.getElementById('btn'   + names[i]);
+      const fill = document.getElementById('fill'  + names[i]);
+      const cnt  = document.getElementById('count' + names[i]);
       if (!btn || !fill || !cnt) return;
 
       const pct = (inv.count / fd.max) * 100;
       fill.style.height = pct + '%';
-      cnt.textContent   = inv.count;
 
       if (inv.count === 0) {
         btn.classList.add('empty');
-        // Show time until next replenish
         const next = inv.nextReplenishAt[0];
         if (next) {
           const secsLeft = Math.max(0, Math.ceil((next - Date.now()) / 1000));
           const m = Math.floor(secsLeft / 60), s = secsLeft % 60;
           cnt.textContent = m > 0 ? `${m}m` : `${s}s`;
+        } else {
+          cnt.textContent = '0';
         }
       } else {
         btn.classList.remove('empty');
+        cnt.textContent = inv.count;
       }
     });
   }
 
   function tickInventory() {
-    const now = Date.now();
-    let changed = false;
+    const now     = Date.now();
+    let   changed = false;
     ['hay','berries','leaves'].forEach(type => {
       const fd  = FOOD_DATA[type];
       const inv = inventory[type];
-      // Process any replenishments that are due
-      while (inv.nextReplenishAt.length > 0 && inv.nextReplenishAt[0] <= now && inv.count < fd.max) {
+      // Drain all due replenishments, capped at max
+      while (inv.nextReplenishAt.length > 0 && inv.nextReplenishAt[0] <= now) {
         inv.nextReplenishAt.shift();
-        inv.count++;
-        changed = true;
+        if (inv.count < fd.max) { inv.count++; changed = true; }
       }
     });
     if (changed) saveInventory();
@@ -3879,18 +4134,15 @@ z-index: 10;
     const inv = inventory[type];
     if (inv.count <= 0) return false;
     inv.count--;
-    // Schedule a replenishment for this consumed unit
-    const delay = fd.replenishMs;
-    const replenishAt = Date.now() + delay;
-    inv.nextReplenishAt.push(replenishAt);
+    // Schedule one replenishment unit
+    inv.nextReplenishAt.push(Date.now() + fd.replenishMs);
     inv.nextReplenishAt.sort((a, b) => a - b);
     saveInventory();
     updateFoodButtons();
     return true;
   }
 
-  // Tick every 10 seconds to check replenishments
-  setInterval(tickInventory, 10000);
+  // (tickInventory interval started after loadInventory below)
 
   const POOP_SOUNDS = ['Grrrrrp... 💨','Pbbbbbt!💨','Uhhhhhh...','Plop! 💩','Oh no...',];
   const CLEAN_MSGS = ['Ewww +10!','Squeaky clean!','Good job! +10','No more stink!','Spotless! +10'];
@@ -3954,10 +4206,13 @@ z-index: 10;
     else happyEl.style.color = '#f44336';
 
     // ── MINI-GAME TRIGGERS ──
-    // Helper: true if any mini-game is currently active or pending
+    // Block all attack mini-games when Dr Sloth is active/pending OR pet is sick
     const anyBusy = asteroidState.active || asteroidState.cooldown || asteroidState.readyScreen ||
                     tigerState.active    || tigerState.cooldown    || tigerState.readyScreen    ||
                     cavemanState.active  || cavemanState.cooldown  || cavemanState.readyScreen  ||
+                    forageState.active   || forageState.readyScreen ||
+                    drSlothState.active  || drSlothState.readyScreen ||
+                    state.sick           ||
                     state.isAnimating;
 
     if (!anyBusy) {
@@ -3973,20 +4228,19 @@ z-index: 10;
           if (roll === 7) {
             asteroidState.lastRollAt = century;
             asteroidState.cooldown   = true;
-            setTimeout(showAsteroidReadyScreen, 400);
+            pendingAttackTimeout = setTimeout(showAsteroidReadyScreen, 400);
 
           } else if (roll === 3 && getNightOpacity(getGameMins()) > 0.3) {
             tigerState.lastRollAt = century;
             tigerState.cooldown   = true;
-            setTimeout(showTigerReadyScreen, 400);
+            pendingAttackTimeout = setTimeout(showTigerReadyScreen, 400);
 
           } else if (roll === 5) {
             cavemanState.lastRollAt = century;
             cavemanState.cooldown   = true;
-            setTimeout(showCavemanReadyScreen, 400);
+            pendingAttackTimeout = setTimeout(showCavemanReadyScreen, 400);
 
           } else {
-            // No game triggered — mark all so we don't re-roll this century
             asteroidState.lastRollAt = century;
             tigerState.lastRollAt    = century;
             cavemanState.lastRollAt  = century;
@@ -4069,7 +4323,7 @@ z-index: 10;
     const el = document.createElement('div');
     el.className = 'grow-popup';
     el.innerHTML = `
-      <div class="grow-emoji">${isFinal ? '🦣👑' : '🦣'}</div>
+      <div class="grow-emoji">${isFinal ? (state.animalType==='rhino'?'🦏👑':'🦣👑') : (state.animalType==='rhino'?'🦏':'🦣')}</div>
       <div class="grow-title">${title}</div>
       <div class="grow-sub">${sub}</div>
     `;
@@ -4290,6 +4544,8 @@ z-index: 10;
 
   // Feed mammoth
   function feedMammoth(type) {
+    // Sick animals refuse to eat
+    if (state.sick) { showBubble('😷 Too sick to eat... Need Forbs! 🌿'); return; }
     // Check inventory FIRST — before any other guard
     if (!consumeFood(type)) {
       // Only block if a mini-game is actively running right now
@@ -4361,7 +4617,7 @@ z-index: 10;
         wrapper.classList.remove('eating');
         state.isAnimating = false;
 
-        if (Math.random() < food.poopChance) {
+        if (Math.random() < food.poopChance && !state.sick) {
           setTimeout(() => {
             if (state.isAnimating) return;
             state.isAnimating = true;
@@ -4402,19 +4658,26 @@ z-index: 10;
 
   // Hunger decay over time
   setInterval(() => {
-    state.hunger = Math.max(0, state.hunger - 2);
-    state.happiness = Math.max(0, state.happiness - 1);
+    if (!state.sick) {
+      state.hunger    = Math.max(0, state.hunger    - 2);
+      state.happiness = Math.max(0, state.happiness - 1);
+    }
 
-    if (state.hunger < 20 && Math.random() < 0.3) {
+    if (!state.sick && state.hunger < 20 && Math.random() < 0.3) {
       const sound = HUNGRY_SOUNDS[Math.floor(Math.random() * HUNGRY_SOUNDS.length)];
       showBubble(sound);
       soundHungry();
-      // Shake mammoth
       const wrapper = getActiveWrapper();
       wrapper.style.animation = 'none';
       void wrapper.offsetWidth;
     }
 
+    // Sick bubble
+    if (state.sick && Math.random() < 0.4) {
+      showBubble(sickMsgs[Math.floor(Math.random() * sickMsgs.length)]);
+    }
+
+    checkSickness();
     updateStats();
   }, 5000);
 
@@ -4433,20 +4696,21 @@ z-index: 10;
                        '🎀','🧴','🪥','🍵','🎮','🖼️','🧶','🪄','🔑','🎁'];
 
   let idleBusy = false;
+  let idleGen  = 0; // incremented each time an activity starts; stale callbacks self-cancel
 
   function clearIdleAccessories() {
+    idleGen++; // invalidate any running activity's callbacks
     ['discoBall','discoFloor','idleAfro','idleHeadband','idleRope',
      'idleSkates','idleCowboyHat','idleGuitar','idleHouseItem'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.remove('show');
     });
     const wrapper = getActiveWrapper();
-    if (wrapper) wrapper.classList.remove('dancing','jumping','skating');
+    if (wrapper) wrapper.classList.remove('dancing','jumping','skating','falling','getup');
     const trunk = document.getElementById('trunkGroup');
     if (trunk) trunk.classList.remove('trunk-raised');
     idleBusy = false;
     stopIdleMusic();
-    // Idle activity costs 1% hunger
     state.hunger = Math.max(0, state.hunger - 1);
     updateStats();
   }
@@ -4454,11 +4718,13 @@ z-index: 10;
   function idleDiscoParty() {
     if (idleBusy || state.isAnimating) return;
     idleBusy = true;
+    idleGen++;
+    const myGen = idleGen;
     const wrapper = getActiveWrapper();
 
     showBubble('🕺 Stayin\' Alive!');
     document.getElementById('discoBall').classList.add('show');
-    setTimeout(() => document.getElementById('discoFloor').classList.add('show'), 500);
+    setTimeout(() => { if (idleGen !== myGen) return; document.getElementById('discoFloor').classList.add('show'); }, 500);
     wrapper.classList.add('dancing');
     playDiscoMusic(7000);
     soundHappyToot();
@@ -4466,9 +4732,10 @@ z-index: 10;
     setTimeout(() => soundHappyToot(), 1600);
     setTimeout(() => soundHappyToot(), 2800);
     setTimeout(() => soundHappyToot(), 4200);
-    setTimeout(() => showBubble('🪩 Boogie!'), 2500);
-    setTimeout(() => showBubble('✨ Disco fever!'), 4500);
+    setTimeout(() => { if (idleGen === myGen) showBubble('🪩 Boogie!'); }, 2500);
+    setTimeout(() => { if (idleGen === myGen) showBubble('✨ Disco fever!'); }, 4500);
     setTimeout(() => {
+      if (idleGen !== myGen) return;
       wrapper.classList.remove('dancing');
       clearIdleAccessories();
     }, 7000);
@@ -4477,6 +4744,8 @@ z-index: 10;
   function idleJumpRope() {
     if (idleBusy || state.isAnimating) return;
     idleBusy = true;
+    idleGen++;
+    const myGen = idleGen;
     const wrapper = getActiveWrapper();
     showBubble('🪢 Jump rope time!');
     document.getElementById('idleHeadband').classList.add('show');
@@ -4485,6 +4754,7 @@ z-index: 10;
     playJumpRopeMusic(5000);
     let count = 0;
     const ropeInterval = setInterval(() => {
+      if (idleGen !== myGen) { clearInterval(ropeInterval); return; }
       count++;
       const path = document.getElementById('ropePath');
       if (path) {
@@ -4495,6 +4765,7 @@ z-index: 10;
     }, 250);
     setTimeout(() => {
       clearInterval(ropeInterval);
+      if (idleGen !== myGen) return;
       clearIdleAccessories();
       showBubble(`${count} jumps! 🏆`);
     }, 5000);
@@ -4503,6 +4774,8 @@ z-index: 10;
   function idleIceSkating() {
     if (idleBusy || state.isAnimating) return;
     idleBusy = true;
+    idleGen++;
+    const myGen = idleGen;
     const wrapper = getActiveWrapper();
 
     const isRhino = state.animalType === 'rhino';
@@ -4597,6 +4870,7 @@ z-index: 10;
 
     // Helper: smoothly move sizer to a left% position
     function glideTo(leftPct, duration, then) {
+      if (idleGen !== myGen) { if(then) then(); return; }
       if (!sizer || !scene) { if(then) then(); return; }
       sizer.style.transition = `left ${duration}ms linear`;
       sizer.style.position = 'absolute';
@@ -4606,6 +4880,7 @@ z-index: 10;
 
     // Helper: spin 180° by flipping scaleX
     function spin(then) {
+      if (idleGen !== myGen) { if(then) then(); return; }
       facingRight = !facingRight;
       sizer.style.transition = 'transform 0.4s ease-in-out';
       const scale = state.sizePercent / 100;
@@ -4615,21 +4890,23 @@ z-index: 10;
 
     wrapper.classList.add('skating');
 
-    // Sequence: start center → glide left → spin → glide right → spin → glide left → fall
     glideTo(15, 1200, () => {
+      if (idleGen !== myGen) return;
       showBubble('🌀 Spin!');
       spin(() => {
         glideTo(65, 1400, () => {
+          if (idleGen !== myGen) return;
           showBubble('🌀 Spin!');
           spin(() => {
             glideTo(25, 1000, () => {
-              // Fall!
+              if (idleGen !== myGen) return;
               wrapper.classList.remove('skating');
               void wrapper.offsetWidth;
               wrapper.classList.add('falling');
               showBubble('😵 Whoops!!');
 
               setTimeout(() => {
+                if (idleGen !== myGen) return;
                 wrapper.classList.remove('falling');
                 void wrapper.offsetWidth;
                 wrapper.classList.add('getup');
@@ -4637,14 +4914,15 @@ z-index: 10;
               }, 900);
 
               setTimeout(() => {
+                if (idleGen !== myGen) return;
                 wrapper.classList.remove('getup');
-                // Reset position and facing
                 sizer.style.transition = 'left 0.6s ease, transform 0.6s ease';
                 sizer.style.left = '';
                 sizer.style.position = '';
                 const scale = state.sizePercent / 100;
                 sizer.style.transform = `scale(${scale})`;
                 setTimeout(() => {
+                  if (idleGen !== myGen) return;
                   sizer.style.transition = '';
                   takeOffSkates();
                   clearIdleAccessories();
@@ -4771,6 +5049,7 @@ z-index: 10;
   }
 
   function triggerDance() {
+    if (state.sick) return;
     if (state.happiness >= 95 && !state.isAnimating) {
       const wrapper = getActiveWrapper();
       const trunk = document.getElementById('trunkGroup');
@@ -4793,6 +5072,7 @@ z-index: 10;
   const IDLE_ATTACK_BUFFER_MS = 60000; // 60s buffer after any attack before idle resumes
 
   function triggerIdleActivity() {
+    if (state.sick) return;
     if (idleBusy || state.isAnimating || state.happiness < 40) return;
     if (Date.now() - lastAttackEndTime < IDLE_ATTACK_BUFFER_MS) return;
     const activities = [idleDiscoParty, idleJumpRope, idleIceSkating];
@@ -4801,6 +5081,95 @@ z-index: 10;
   }
 
   setInterval(triggerDance, 120000);          // dance every 2 min if happiness ≥ 95
+
+  // ── DEV TEST PANEL ──────────────────────────────────────────────
+  (function buildTestPanel() {
+    const toggleBtn = document.getElementById('testPanelToggleBtn');
+    if (!toggleBtn) return;
+
+    // Build overlay appended to body so iOS fixed positioning works
+    const overlay = document.createElement('div');
+    overlay.id = 'testPanelOverlay';
+    overlay.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99995;background:rgba(0,0,0,0.93);overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:16px 14px 40px;box-sizing:border-box;';
+
+    function btn(label, color, fn) {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.style.cssText = `flex:1;min-width:80px;padding:10px 4px;font-size:0.75rem;border:none;border-radius:9px;background:${color};color:white;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;`;
+      b.addEventListener('touchstart', (e) => { e.preventDefault(); fn(); }, { passive: false });
+      b.addEventListener('mousedown', fn);
+      return b;
+    }
+    function row(...btns) {
+      const d = document.createElement('div');
+      d.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;';
+      btns.forEach(b => d.appendChild(b));
+      return d;
+    }
+    function label(text) {
+      const d = document.createElement('div');
+      d.textContent = text;
+      d.style.cssText = 'color:rgba(255,220,80,0.8);font-size:0.7rem;font-weight:700;font-family:"Nunito",sans-serif;margin:8px 0 4px;border-bottom:1px solid rgba(255,220,50,0.2);padding-bottom:3px;';
+      return d;
+    }
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;';
+    const title = document.createElement('div');
+    title.textContent = '🧪 DEV TEST PANEL';
+    title.style.cssText = 'color:#ffdd44;font-size:1rem;font-weight:900;font-family:"Fredoka One",Arial,sans-serif;';
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕ Close';
+    closeBtn.style.cssText = 'padding:8px 18px;border:none;border-radius:10px;background:rgba(255,255,255,0.15);color:white;font-size:0.85rem;font-family:"Nunito",sans-serif;font-weight:700;cursor:pointer;';
+    closeBtn.addEventListener('touchstart', (e) => { e.preventDefault(); overlay.style.display='none'; }, { passive: false });
+    closeBtn.addEventListener('mousedown', () => overlay.style.display='none');
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+    overlay.appendChild(header);
+
+    // Attack mini-games
+    overlay.appendChild(label('— ATTACK MINI-GAMES —'));
+    overlay.appendChild(row(
+      btn('☄️ Asteroid', 'rgba(220,100,20,0.8)', () => { asteroidState.cooldown=false; asteroidState.readyScreen=false; showAsteroidReadyScreen(); overlay.style.display='none'; }),
+      btn('🐯 Tiger',    'rgba(220,60,20,0.8)',  () => { tigerState.cooldown=false; tigerState.readyScreen=false; showTigerReadyScreen(); overlay.style.display='none'; }),
+      btn('🪨 Caveman',  'rgba(160,100,20,0.8)', () => { cavemanState.cooldown=false; cavemanState.readyScreen=false; showCavemanReadyScreen(); overlay.style.display='none'; })
+    ));
+
+    // Forage mini-games
+    overlay.appendChild(label('— FORAGE MINI-GAMES —'));
+    overlay.appendChild(row(
+      btn('🌾 Hay Forage',   'rgba(180,160,20,0.8)', () => { forageState.intensity=Math.floor(Math.random()*5)+1; showForageReadyScreen('hay'); overlay.style.display='none'; }),
+      btn('🫐 Berry Forage', 'rgba(200,40,120,0.8)', () => { forageState.intensity=Math.floor(Math.random()*5)+1; showForageReadyScreen('berries'); overlay.style.display='none'; }),
+      btn('🌿 Leaf Forage',  'rgba(20,160,80,0.8)',  () => { forageState.intensity=Math.floor(Math.random()*5)+1; showForageReadyScreen('leaves'); overlay.style.display='none'; })
+    ));
+
+    // Dr Sloth / Sick
+    overlay.appendChild(label('— SICK SYSTEM —'));
+    overlay.appendChild(row(
+      btn('🤒 Sick (Hunger)', 'rgba(220,20,20,0.8)',  () => { makeSick('hunger'); overlay.style.display='none'; }),
+      btn('🤒 Sick (Happy)',  'rgba(180,20,180,0.8)', () => { makeSick('happy'); overlay.style.display='none'; })
+    ));
+    overlay.appendChild(row(
+      btn('🦥 Dr. Sloth', 'rgba(20,160,40,0.8)',  () => { state.sick=true; state.sickCause=state.sickCause||'hunger'; applySickVisuals(); showDrSlothReadyScreen(false); overlay.style.display='none'; }),
+      btn('💚 Heal Pet',  'rgba(20,120,20,0.8)',   () => { healPet(); overlay.style.display='none'; }),
+      btn('💀 Extinction','rgba(80,30,10,0.9)',    () => { triggerExtinction(); overlay.style.display='none'; })
+    ));
+
+    // Other
+    overlay.appendChild(label('— OTHER —'));
+    overlay.appendChild(row(
+      btn('💰 +1000 pts',  'rgba(180,140,20,0.8)', () => { state.score+=1000; updateStats(); showBubble('💰 +1000 pts'); }),
+      btn('📉 Low Stats',  'rgba(140,20,20,0.8)',  () => { state.hunger=10; state.happiness=10; updateStats(); showBubble('📉 Low stats'); }),
+      btn('📈 Full Stats', 'rgba(20,140,60,0.8)',  () => { state.hunger=100; state.happiness=100; updateStats(); showBubble('📈 Full stats!'); }),
+      btn('🌙 Night',      'rgba(20,20,120,0.8)',  () => toggleDayNightTest())
+    ));
+
+    document.body.appendChild(overlay);
+
+    toggleBtn.addEventListener('touchstart', (e) => { e.preventDefault(); overlay.style.display = overlay.style.display==='none' ? 'block' : 'none'; }, { passive: false });
+    toggleBtn.addEventListener('mousedown', () => { overlay.style.display = overlay.style.display==='none' ? 'block' : 'none'; });
+  })();
   setInterval(triggerIdleActivity, 90000);    // random idle activity every 90s if happiness ≥ 40
 
   // ── SAFETY NET: restore animal if it ever goes missing after a mini-game crash ──
@@ -4828,6 +5197,9 @@ z-index: 10;
 
   function startThrow(e) {
     e.preventDefault();
+    if (drSlothState.active) return;
+    if (cavemanState.active) return;
+    if (forageState.active && forageState.foodType === 'leaves') return;
     startAudio();
     if (throwState.busy || state.isAnimating) return;
     throwState.charging = true;
@@ -5295,6 +5667,9 @@ z-index: 10;
       state.grownUp = false;
       state.lastGrowthAt = 0;
       state.resetToken = Date.now().toString();
+      state.sick = false; state.sickCause = null; state.sickSince = 0;
+      state.lowHungerSince = 0; state.lowHappySince = 0; state.extinctTimer = 0;
+      clearSickVisuals();
       // Reset inventory to starting values
       inventory.hay     = { count: 5,  nextReplenishAt: [] };
       inventory.berries = { count: 10, nextReplenishAt: [] };
@@ -5333,7 +5708,15 @@ z-index: 10;
   }
 
   updateStats();
-  tickInventory(); // initialize fill bars immediately
+  tickInventory();
+  setInterval(tickInventory, 10000);
+
+  // Restore sick visuals and check if already sick on load
+  if (state.sick) {
+    applySickVisuals();
+    // Re-show Dr Sloth popup after a short delay so game is ready
+    setTimeout(() => { if (state.sick) showDrSlothReadyScreen(true); }, 2000);
+  }
 
   // ── CAVEMAN ATTACK MINI-GAME ─────────────────────────────────────
 
@@ -5341,6 +5724,7 @@ z-index: 10;
   const CAVEMAN_COLORS = ['#c8a820','#e09020','#e07010','#d05010','#b03000'];
 
   function showCavemanReadyScreen() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     cavemanState.readyScreen = true;
     cavemanState.intensity   = Math.floor(Math.random() * 5) + 1;
     const lvl   = cavemanState.intensity;
@@ -5363,9 +5747,11 @@ z-index: 10;
   }
 
   function startCavemanAttack() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     if (cavemanState.active || state.isAnimating) return;
     cavemanState.active      = true;
     cavemanState.hitCooldown = false;
+    cavemanState.possiblePoints = 100 * Math.pow(2, cavemanState.intensity - 1);
     cavemanState.dodging     = null;
 
     const overlay = document.getElementById('cavemanOverlay');
@@ -5383,23 +5769,61 @@ z-index: 10;
 
     const hint = document.createElement('div');
     hint.className   = 'caveman-hint';
-    hint.textContent = 'Watch the spear — JUMP or DUCK to dodge!';
+    hint.textContent = 'Hold to DUCK — Release to JUMP!';
     overlay.appendChild(hint);
 
-    // Jump / Duck buttons — appended to body so position:fixed works reliably
-    const btnWrap = document.createElement('div');
-    btnWrap.className = 'dodge-btns';
-    btnWrap.id = 'dodgeBtns';
-    btnWrap.innerHTML = `
-      <button class="dodge-btn dodge-btn-duck"
-        onmousedown="doCavemanDodge('duck')" ontouchstart="doCavemanDodge('duck')">
-        ⬇️ DUCK
-      </button>
-      <button class="dodge-btn dodge-btn-jump"
-        onmousedown="doCavemanDodge('jump')" ontouchstart="doCavemanDodge('jump')">
-        ⬆️ JUMP
-      </button>`;
-    document.body.appendChild(btnWrap);
+    // Hijack snowball button as DUCK/JUMP control
+    const caveSnowBtn  = document.getElementById('snowballBtn');
+    const caveSnowText = document.getElementById('snowballBtnText');
+    const cavePowerFill = document.getElementById('powerBarFill');
+    if (caveSnowBtn) {
+      caveSnowBtn.style.background  = 'linear-gradient(135deg,#e65100,#bf360c)';
+      caveSnowBtn.style.borderColor = 'rgba(255,160,80,0.6)';
+      if (caveSnowText) caveSnowText.textContent = '⬆️ Tap to JUMP — Hold to DUCK ⬇️';
+      if (cavePowerFill) { cavePowerFill.style.width = '0%'; }
+      cavemanState._snowBtn  = caveSnowBtn;
+      cavemanState._snowText = caveSnowText;
+
+      let _caveDuckTimeout = null;
+      const HOLD_THRESHOLD = 180; // ms — longer than this = duck, shorter = jump
+      let _caveHoldStart = 0;
+
+      function _caveStart(e) {
+        if (e) e.preventDefault();
+        if (!cavemanState.active) return;
+        _caveHoldStart = Date.now();
+        _caveDuckTimeout = setTimeout(() => {
+          // Held long enough — start duck, stay ducked until release
+          cavemanState.dodging = 'duck';
+          const w = getActiveWrapper();
+          w.classList.remove('dodging-jump','dodging-duck','ducked-hold');
+          w.classList.add('ducked-hold');
+          if (caveSnowText) caveSnowText.textContent = '⬇️ DUCKING...';
+        }, HOLD_THRESHOLD);
+      }
+      function _caveEnd(e) {
+        if (e) e.preventDefault();
+        clearTimeout(_caveDuckTimeout);
+        if (!cavemanState.active) return;
+        const held = Date.now() - _caveHoldStart;
+        if (held < HOLD_THRESHOLD) {
+          // Tap — jump
+          doCavemanDodge('jump');
+          if (caveSnowText) caveSnowText.textContent = '⬆️ JUMPING!';
+        } else {
+          // Release hold — stop ducking
+          cavemanState.dodging = null;
+          getActiveWrapper().classList.remove('ducked-hold');
+        }
+        setTimeout(() => { if (caveSnowText && cavemanState.active) caveSnowText.textContent = '⬆️ Tap to JUMP — Hold to DUCK ⬇️'; }, 500);
+      }
+      caveSnowBtn._caveStart = _caveStart;
+      caveSnowBtn._caveEnd   = _caveEnd;
+      caveSnowBtn.addEventListener('mousedown',  _caveStart);
+      caveSnowBtn.addEventListener('touchstart', _caveStart, { passive: false });
+      caveSnowBtn.addEventListener('mouseup',    _caveEnd);
+      caveSnowBtn.addEventListener('touchend',   _caveEnd,   { passive: false });
+    }
 
     // Spawn spears staggered — more spears at higher intensity
     const spearCount   = [2, 3, 4, 6, 8][lvl - 1];
@@ -5526,6 +5950,7 @@ z-index: 10;
         cavemanState.hitCooldown = true;
         state.score  = Math.max(0, state.score - 50);
         state.hunger = Math.max(0, state.hunger - 10);
+        cavemanState.possiblePoints = Math.max(0, cavemanState.possiblePoints - 25);
         updateStats();
         showBubble(spearH === 'high' ? '😵 Spear hit!' : '🤕 Got low!');
         getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
@@ -5572,6 +5997,18 @@ z-index: 10;
     const dodgeBtns = document.getElementById('dodgeBtns');
     if (dodgeBtns) dodgeBtns.remove();
 
+    // Restore snowball button
+    const csb = cavemanState._snowBtn;
+    const cst = cavemanState._snowText;
+    if (csb) {
+      csb.style.background  = '';
+      csb.style.borderColor = '';
+      if (cst) cst.textContent = '❄️ Hold to Throw Snowball';
+      if (csb._caveStart) { csb.removeEventListener('mousedown',  csb._caveStart); csb.removeEventListener('touchstart', csb._caveStart); }
+      if (csb._caveEnd)   { csb.removeEventListener('mouseup',    csb._caveEnd);   csb.removeEventListener('touchend',   csb._caveEnd); }
+      csb._caveStart = null; csb._caveEnd = null;
+    }
+
     const overlay = document.getElementById('cavemanOverlay');
     overlay.classList.remove('active');
 
@@ -5579,10 +6016,11 @@ z-index: 10;
     lastAttackEndTime = Date.now();
 
     if (survived) {
-      state.score     += 30;
+      const pts = cavemanState.possiblePoints || 0;
+      state.score     += pts;
       state.happiness  = Math.min(100, state.happiness + 10);
       const msgs = ['🦴 Dodged them all!', '🏃 Too quick!', '💪 Take that cavemen!'];
-      showBubble(msgs[Math.floor(Math.random() * msgs.length)]);
+      showBubble((pts > 0 ? `+${pts} pts! ` : '') + msgs[Math.floor(Math.random() * msgs.length)]);
       updateStats();
     }
 
@@ -5599,6 +6037,7 @@ z-index: 10;
   const TIGER_PACK_COLORS = ['#ff9944','#ff6600','#ff3300','#dd0000','#aa0000'];
 
   function showTigerReadyScreen() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     tigerState.readyScreen = true;
     tigerState.intensity   = Math.floor(Math.random() * 5) + 1;
     const lvl   = tigerState.intensity;
@@ -5621,9 +6060,11 @@ z-index: 10;
   }
 
   function startTigerAttack() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     if (tigerState.active || state.isAnimating) return;
     tigerState.active      = true;
     tigerState.hitCooldown = false;
+    tigerState.possiblePoints = 100 * Math.pow(2, tigerState.intensity - 1);
     tigerState.animalX     = 50;
 
     const overlay = document.getElementById('tigerOverlay');
@@ -5725,6 +6166,7 @@ z-index: 10;
               tigerState.hitCooldown = true;
               state.score = Math.max(0, state.score - 50);
               state.hunger = Math.max(0, state.hunger - 10);
+              tigerState.possiblePoints = Math.max(0, tigerState.possiblePoints - 25);
               updateStats();
               showBubble('😱 Ouch!!');
               getActiveWrapper().style.filter = 'brightness(2) saturate(3)';
@@ -5784,10 +6226,11 @@ z-index: 10;
     lastAttackEndTime = Date.now();
 
     if (survived) {
-      state.score     += 30;
+      const pts = tigerState.possiblePoints || 0;
+      state.score     += pts;
       state.happiness  = Math.min(100, state.happiness + 10);
       const msgs = ['😤 Ran away!!', '🏃 Too fast for them!', '😅 That was close!'];
-      showBubble(msgs[Math.floor(Math.random() * msgs.length)]);
+      showBubble((pts > 0 ? `+${pts} pts! ` : '') + msgs[Math.floor(Math.random() * msgs.length)]);
       updateStats();
     }
 
@@ -5896,14 +6339,26 @@ z-index: 10;
       overlay.innerHTML = '';
       overlay.classList.remove('active');
     }
-    // Remove leaves forage button panels
+    // Remove old button panels (no longer used but guard anyway)
     const lp  = document.getElementById('forageLeavesBtns');
     if (lp) lp.remove();
     const lp2 = document.getElementById('forageLeavesBtns2');
     if (lp2) lp2.remove();
-    // Remove old single jump button if present
     const jb = document.getElementById('forageJumpBtn');
     if (jb) jb.remove();
+
+    // Restore snowball button if leaves forage hijacked it
+    const fsb = forageState._snowBtn;
+    const fst = forageState._snowText;
+    if (fsb) {
+      fsb.style.background  = '';
+      fsb.style.borderColor = '';
+      if (fst) fst.textContent = '❄️ Hold to Throw Snowball';
+      if (fsb._flStart) { fsb.removeEventListener('mousedown',  fsb._flStart); fsb.removeEventListener('touchstart', fsb._flStart); }
+      if (fsb._flEnd)   { fsb.removeEventListener('mouseup',    fsb._flEnd);   fsb.removeEventListener('touchend',   fsb._flEnd); }
+      fsb._flStart = null; fsb._flEnd = null;
+      forageState._snowBtn = null; forageState._snowText = null;
+    }
 
     stopAttackMusic();
     setTimeout(startWind, 1000);
@@ -6185,61 +6640,67 @@ z-index: 10;
     const warn = document.createElement('div'); warn.className = 'asteroid-warning';
     warn.textContent = '🌿 FORAGE LEAVES! Dodge cavemen & spears!'; overlay.appendChild(warn);
     const hint = document.createElement('div'); hint.className = 'asteroid-controls-hint';
-    hint.textContent = 'Move ← → to catch leaves · Jump or Duck to dodge spears'; overlay.appendChild(hint);
+    hint.textContent = 'Drag to move · Tap to JUMP · Hold to DUCK'; overlay.appendChild(hint);
 
     _applyAnimalX();
 
-    // ── 4-button panel — two rows appended to body, same as caveman dodge buttons ──
-    // Row 1: LEFT / RIGHT
-    const moveRow = document.createElement('div');
-    moveRow.id = 'forageLeavesBtns';
-    moveRow.className = 'dodge-btns';
-    moveRow.style.bottom = 'calc(env(safe-area-inset-bottom) + 8px + clamp(52px,12vh,76px) + 8px)';
+    // Hijack snowball button as DUCK/JUMP control (same as caveman attack)
+    const fLeaveBtn  = document.getElementById('snowballBtn');
+    const fLeaveText = document.getElementById('snowballBtnText');
+    if (fLeaveBtn) {
+      fLeaveBtn.style.background  = 'linear-gradient(135deg,#e65100,#bf360c)';
+      fLeaveBtn.style.borderColor = 'rgba(255,160,80,0.6)';
+      if (fLeaveText) fLeaveText.textContent = '⬆️ Tap to JUMP — Hold to DUCK ⬇️';
+      forageState._snowBtn  = fLeaveBtn;
+      forageState._snowText = fLeaveText;
 
-    const leftBtn  = document.createElement('button');
-    leftBtn.className = 'dodge-btn';
-    leftBtn.style.cssText = 'background:linear-gradient(135deg,#1565c0,#0d47a1);color:white;font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
-    leftBtn.textContent = '◀ LEFT';
-    leftBtn.addEventListener('mousedown',  () => { forageState.moveDir = -1; });
-    leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); forageState.moveDir = -1; }, { passive: false });
-    leftBtn.addEventListener('mouseup',    () => { forageState.moveDir = 0; });
-    leftBtn.addEventListener('touchend',   (e) => { e.preventDefault(); forageState.moveDir = 0; }, { passive: false });
+      let _flDuckTimeout = null;
+      const FL_HOLD_THRESHOLD = 180;
+      let _flHoldStart = 0;
 
-    const rightBtn = document.createElement('button');
-    rightBtn.className = 'dodge-btn';
-    rightBtn.style.cssText = 'background:linear-gradient(135deg,#1565c0,#0d47a1);color:white;font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
-    rightBtn.textContent = 'RIGHT ▶';
-    rightBtn.addEventListener('mousedown',  () => { forageState.moveDir = 1; });
-    rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); forageState.moveDir = 1; }, { passive: false });
-    rightBtn.addEventListener('mouseup',    () => { forageState.moveDir = 0; });
-    rightBtn.addEventListener('touchend',   (e) => { e.preventDefault(); forageState.moveDir = 0; }, { passive: false });
+      function _flStart(e) {
+        if (e) e.preventDefault();
+        if (!forageState.active) return;
+        _flHoldStart = Date.now();
+        _flDuckTimeout = setTimeout(() => {
+          // Stay ducked until release
+          forageState.ducking = true;
+          const w = getActiveWrapper();
+          w.classList.remove('dodging-jump','dodging-duck','ducked-hold');
+          w.classList.add('ducked-hold');
+          if (fLeaveText) fLeaveText.textContent = '⬇️ DUCKING...';
+        }, FL_HOLD_THRESHOLD);
+      }
+      function _flEnd(e) {
+        if (e) e.preventDefault();
+        clearTimeout(_flDuckTimeout);
+        if (!forageState.active) return;
+        const held = Date.now() - _flHoldStart;
+        if (held < FL_HOLD_THRESHOLD) {
+          doForageJump();
+          if (fLeaveText) fLeaveText.textContent = '⬆️ JUMPING!';
+        } else {
+          // Release hold — stop ducking
+          forageState.ducking = false;
+          getActiveWrapper().classList.remove('ducked-hold');
+        }
+        setTimeout(() => { if (fLeaveText && forageState.active) fLeaveText.textContent = '⬆️ Tap to JUMP — Hold to DUCK ⬇️'; }, 500);
+      }
+      fLeaveBtn._flStart = _flStart;
+      fLeaveBtn._flEnd   = _flEnd;
+      fLeaveBtn.addEventListener('mousedown',  _flStart);
+      fLeaveBtn.addEventListener('touchstart', _flStart, { passive: false });
+      fLeaveBtn.addEventListener('mouseup',    _flEnd);
+      fLeaveBtn.addEventListener('touchend',   _flEnd,   { passive: false });
+    }
 
-    moveRow.appendChild(leftBtn);
-    moveRow.appendChild(rightBtn);
-    document.body.appendChild(moveRow);
-
-    // Row 2: DUCK / JUMP
-    const dodgeRow = document.createElement('div');
-    dodgeRow.id = 'forageLeavesBtns2';
-    dodgeRow.className = 'dodge-btns';
-
-    const duckBtn = document.createElement('button');
-    duckBtn.className = 'dodge-btn dodge-btn-duck';
-    duckBtn.style.cssText = 'font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
-    duckBtn.textContent = '⬇️ DUCK';
-    duckBtn.addEventListener('mousedown',  () => doForageDuck());
-    duckBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doForageDuck(); }, { passive: false });
-
-    const jumpBtn = document.createElement('button');
-    jumpBtn.className = 'dodge-btn dodge-btn-jump';
-    jumpBtn.style.cssText = 'font-size:clamp(0.85rem,3vw,1rem);padding:clamp(10px,2.5vh,14px) 6px;';
-    jumpBtn.textContent = '⬆️ JUMP';
-    jumpBtn.addEventListener('mousedown',  () => doForageJump());
-    jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doForageJump(); }, { passive: false });
-
-    dodgeRow.appendChild(duckBtn);
-    dodgeRow.appendChild(jumpBtn);
-    document.body.appendChild(dodgeRow);
+    // Movement — drag or tap sides of the scene (same as hay/berries forage)
+    overlay.addEventListener('mousemove',  _onMove);
+    overlay.addEventListener('touchmove',  _onTouch,      { passive: false });
+    overlay.addEventListener('mousedown',  _onDown);
+    overlay.addEventListener('touchstart', _onTouchStart, { passive: false });
+    overlay.addEventListener('mouseup',    _onUp);
+    overlay.addEventListener('touchend',   _onUp);
 
     const countTable = [2,3,5,7,9], speedTable = [1,1.3,1.8,2.5,3.5];
     const spearCount = countTable[lvl-1], baseSpeed = speedTable[lvl-1];
@@ -6272,6 +6733,12 @@ z-index: 10;
     startAttackMusic('caveman');
     setTimeout(() => _forageEndCleanup('asteroidOverlay', foodCaught, ov => {
       document.querySelectorAll('.forage-spear,.forage-caveman').forEach(e => e.remove());
+      ov.removeEventListener('mousemove',  _onMove);
+      ov.removeEventListener('touchmove',  _onTouch);
+      ov.removeEventListener('mousedown',  _onDown);
+      ov.removeEventListener('touchstart', _onTouchStart);
+      ov.removeEventListener('mouseup',    _onUp);
+      ov.removeEventListener('touchend',   _onUp);
     }), 10000);
   }
 
@@ -6451,9 +6918,633 @@ z-index: 10;
     requestAnimationFrame(tick);
   }
 
+  // ── SICK SYSTEM & DR SLOTH MINI-GAME ────────────────────────────
+
+  // Game time constants
+  const REAL_MS_PER_GAME_HOUR = (60 / GAME_MINS_PER_REAL_MS / 1000); // ms per game hour
+  const SICK_THRESHOLD_REAL_MS   = 48 * REAL_MS_PER_GAME_HOUR;  // 48 game hours
+  const EXTINCT_THRESHOLD_REAL_MS = 2 * 24 * 60 * 60 * 1000; // 2 real days
+
+  const sickMsgs = [
+    "I don't feel well... 🤒", "I'm sick! 😷", "I need Forbs! 🌿",
+    "Everything hurts... 😢", "So weak... 🤢", "Help me! 🌿",
+  ];
+
+  function checkSickness() {
+    if (state.sick) {
+      // Already sick — check extinction
+      if (state.extinctTimer > 0) {
+        const elapsed = Date.now() - state.extinctTimer;
+        if (elapsed >= EXTINCT_THRESHOLD_REAL_MS) {
+          triggerExtinction();
+          return;
+        }
+      }
+      // Show sick bubble occasionally
+      if (Math.random() < 0.3) showBubble(sickMsgs[Math.floor(Math.random() * sickMsgs.length)]);
+      return;
+    }
+
+    const now = Date.now();
+
+    // Track how long hunger has been below 20%
+    if (state.hunger < 20) {
+      if (!state.lowHungerSince) { state.lowHungerSince = now; saveProgress(); }
+      if (now - state.lowHungerSince >= SICK_THRESHOLD_REAL_MS) {
+        makeSick('hunger'); return;
+      }
+    } else {
+      if (state.lowHungerSince) { state.lowHungerSince = 0; saveProgress(); }
+    }
+
+    // Track how long happiness has been below 20%
+    if (state.happiness < 20) {
+      if (!state.lowHappySince) { state.lowHappySince = now; saveProgress(); }
+      if (now - state.lowHappySince >= SICK_THRESHOLD_REAL_MS) {
+        makeSick('happy'); return;
+      }
+    } else {
+      if (state.lowHappySince) { state.lowHappySince = 0; saveProgress(); }
+    }
+  }
+
+  function makeSick(cause) {
+    if (state.sick) return;
+    state.sick        = true;
+    state.sickCause   = cause;
+    state.sickSince   = Date.now();
+    state.extinctTimer = Date.now();
+    saveProgress();
+    applySickVisuals();
+    showDrSlothReadyScreen(true); // auto-popup
+  }
+
+  function applySickVisuals() {
+    const wrapper = getActiveWrapper();
+    if (wrapper) wrapper.classList.add('sick');
+    // Highlight the cause stat card
+    document.getElementById('hungerCard').classList.toggle('sick-cause', state.sickCause === 'hunger');
+    document.getElementById('happyCard').classList.toggle('sick-cause',  state.sickCause === 'happy');
+  }
+
+  function clearSickVisuals() {
+    const wrapper = getActiveWrapper();
+    if (wrapper) wrapper.classList.remove('sick');
+    document.getElementById('hungerCard').classList.remove('sick-cause');
+    document.getElementById('happyCard').classList.remove('sick-cause');
+  }
+
+  function healPet() {
+    state.sick        = false;
+    state.sickCause   = null;
+    state.sickSince   = 0;
+    state.extinctTimer = 0;
+    state.lowHungerSince = 0;
+    state.lowHappySince  = 0;
+    state.hunger    = Math.min(100, state.hunger    + 50);
+    state.happiness = Math.min(100, state.happiness + 50);
+    clearSickVisuals();
+    saveProgress();
+    updateStats();
+    showBubble('🌿 Feeling better!! 💚');
+  }
+
+  function onStatCardClick(type) {
+    if (!state.sick || state.sickCause !== type) return;
+    if (drSlothState.active || drSlothState.readyScreen) return;
+    showDrSlothReadyScreen(false);
+  }
+
+  function triggerExtinction() {
+    // Stop everything
+    state.sick = false;
+    const name = state.mammothName || (state.animalType === 'rhino' ? 'Rhino' : 'Mammoth');
+    document.getElementById('extinctMsg').textContent =
+      `${name} couldn't recover in time and has gone extinct. Start a new adventure?`;
+    document.getElementById('extinctScreen').classList.add('show');
+  }
+
+  function extinctReset() {
+    document.getElementById('extinctScreen').classList.remove('show');
+    // Trigger the reset flow
+    resetGame();
+  }
+
+  // Sickness onset check — runs every real minute
+  setInterval(checkSickness, 60000);
+
+  // ── DR SLOTH READY SCREEN ──────────────────────────────────────
+
+  function showDrSlothReadyScreen(autoTriggered) {
+    // Cancel any pending attack mini-game that was about to pop up
+    if (pendingAttackTimeout) { clearTimeout(pendingAttackTimeout); pendingAttackTimeout = null; }
+    // Also reset cooldowns so they don't block future rolls
+    asteroidState.cooldown = false;
+    tigerState.cooldown    = false;
+    cavemanState.cooldown  = false;
+    drSlothState.readyScreen = true;
+    drSlothState.intensity   = Math.floor(Math.random() * 5) + 1;
+    drSlothState.tries       = 2;
+    const lvl = drSlothState.intensity;
+    // Map lvl 1-5 → jumps needed (max 3)
+    const jumpsNeeded = lvl <= 1 ? 1 : lvl <= 2 ? 2 : lvl <= 4 ? 3 : 4;
+    const jumpLabels  = ['1 jump','2 jumps','3 jumps','4 jumps'];
+    const jumpLabel   = jumpLabels[jumpsNeeded - 1];
+    const colors    = ['#88dd44','#ffcc00','#ff8800','#ff4400','#ff0044'];
+
+    const existing = document.getElementById('drSlothScreen');
+    if (existing) existing.remove();
+
+    const screen = document.createElement('div');
+    screen.id = 'drSlothScreen';
+    screen.style.cssText = 'display:flex;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:rgba(5,15,5,0.95);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+
+    const skipNote = autoTriggered
+      ? '<div class="drs-info">💡 If you skip now, tap the <strong>red flashing stat card</strong> to come back to this screen anytime.</div>'
+      : '';
+
+    screen.innerHTML = `
+      <div class="drs-box">
+        <span class="drs-emoji">🦥</span>
+        <h2>DR. SLOTH TO THE RESCUE!</h2>
+        <div class="drs-sub">Your ${state.animalType === 'rhino' ? 'rhino' : 'mammoth'} is sick and needs Forbs! Help Dr. Sloth reach them!</div>
+        <div class="drs-info">
+          <span>⬆️ <strong>Hold JUMP</strong> to charge power — release to leap</span>
+          <span>❤️ <strong style="color:${colors[lvl-1]}">${jumpLabel} needed</strong> — you have <strong>2 tries</strong></span>
+          <span>🌿 Land between bogs to reach the Forbs</span>
+          <span>🫧 Watch for tar bubbles mid-jump!</span>
+          <span>💚 Success = +50% hunger & happiness!</span>
+        </div>
+        ${skipNote}
+        <div class="drs-cost">💰 Cost: 1,000 points (you have ${Math.floor(state.score)})</div>
+        <div class="drs-btns">
+          <button class="drs-play-btn" id="drSlothPlayBtn">🦥 Play! (−1000 pts)</button>
+          <button class="drs-skip-btn" id="drSlothSkipBtn">✖ Skip</button>
+        </div>
+      </div>`;
+    document.body.appendChild(screen);
+
+    // Use addEventListener so iOS passive touch doesn't block
+    const playBtn = screen.querySelector('#drSlothPlayBtn');
+    const skipBtn = screen.querySelector('#drSlothSkipBtn');
+    const doPlay = () => launchDrSloth();
+    const doSkip = () => closeDrSlothScreen();
+    playBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doPlay(); }, { passive: false });
+    playBtn.addEventListener('mousedown', doPlay);
+    skipBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doSkip(); }, { passive: false });
+    skipBtn.addEventListener('mousedown', doSkip);
+  }
+
+  function closeDrSlothScreen() {
+    const s = document.getElementById('drSlothScreen');
+    if (s) s.remove();
+    drSlothState.readyScreen = false;
+  }
+
+  function launchDrSloth() {
+    if (state.score < 1000) {
+      showBubble('😢 Not enough points!');
+      return;
+    }
+    state.score -= 1000;
+    updateStats();
+    const s = document.getElementById('drSlothScreen');
+    if (s) s.remove();
+    // Keep readyScreen=true until startDrSlothGame sets active=true — no gap
+    startDrSlothGame();
+  }
+
+  // ── DR SLOTH MINI-GAME ──────────────────────────────────────────
+
+  function startDrSlothGame() {
+    if (drSlothState.active) return;
+    drSlothState.active      = true;
+    drSlothState.readyScreen = false; // clear now that game is running
+    playSlothMusic();
+    drSlothState.bogsCleared = 0;
+    drSlothState.jumping     = false;
+    drSlothState.jumpPower   = 0;
+    drSlothState.jumpHeld    = false;
+    drSlothState.hitCooldown = false;
+
+    const scene  = document.querySelector('.mammoth-scene');
+    const overlay = document.getElementById('drSlothOverlay');
+    const sceneW  = scene.getBoundingClientRect().width;
+    const lvl     = drSlothState.intensity;
+
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+
+    // Warning banner
+    const warn = document.createElement('div');
+    warn.className = 'asteroid-warning';
+    warn.style.color = '#88ff88';
+    warn.style.textAlign = 'center';
+    warn.style.lineHeight = '1.4';
+    warn.innerHTML = '🦥 Dr. Sloth<br><span style="font-size:0.78em;opacity:0.9;">Hold &amp; Release Jump Button for Desired Power</span>';
+    overlay.appendChild(warn);
+    const hint = document.createElement('div');
+    hint.className = 'asteroid-controls-hint';
+    hint.style.color = '#aaffaa';
+    hint.style.bottom = '8px';
+    hint.id = 'slothHint';
+    hint.textContent = `${drSlothState.tries} tries • Jump the bogs to reach the Forbs!`;
+    overlay.appendChild(hint);
+
+    // ── Geometry — 4 bogs, fixed original-feel sizing ────────────
+    // BOG_W=70, GAP_W=80 gives roomy ovals with clear landing zones
+    // On 375px scene: 10 + 60 + 4*(70+80) + 36 + 10 = 716 → too wide.
+    // Scale proportionally so everything fits.
+    const SLOTH_W   = 60;
+    const START_PAD = 8;
+    const END_PAD   = 8;
+    const FORBS_W   = 36;
+    const BOG_COUNT = 4;
+    const RAW_BOG   = 70;
+    const RAW_GAP   = 80;
+    const rawTotal  = START_PAD + SLOTH_W + BOG_COUNT * (RAW_BOG + RAW_GAP) + FORBS_W + END_PAD;
+    const scale     = sceneW / rawTotal;
+    const BOG_W     = Math.floor(RAW_BOG * scale);
+    const GAP_W     = Math.floor(RAW_GAP * scale);
+
+    const bogPositions = [];
+    let x = START_PAD + SLOTH_W;
+    for (let i = 0; i < BOG_COUNT; i++) {
+      bogPositions.push(x);
+      x += BOG_W + GAP_W;
+    }
+
+    // Map intensity 1-5 → forbs after bog index 0-3 (max 4 jumps)
+    const forbsBogIdx = lvl <= 1 ? 0 : lvl <= 2 ? 1 : lvl <= 4 ? 2 : 3;
+    const forbsX = bogPositions[forbsBogIdx] + BOG_W + Math.round(GAP_W * 0.35);
+
+    drSlothState.bogPositions = bogPositions;
+    drSlothState.forbsX       = forbsX;
+    drSlothState.bogWidth     = BOG_W;
+    drSlothState.gapWidth     = GAP_W;
+
+    const jumpCount = forbsBogIdx + 1;
+    hint.textContent = `${drSlothState.tries} tries • ${jumpCount} jump${jumpCount>1?'s':''} to reach the Forbs!`;
+
+    // Direction: random
+    const goRight = Math.random() < 0.5;
+    drSlothState.moveDir = goRight ? 1 : -1;
+
+    function mirrorX(px) {
+      return goRight ? px : sceneW - px - SLOTH_W;
+    }
+    function mirrorBogX(px) {
+      return goRight ? px : sceneW - px - BOG_W;
+    }
+
+    // Starting X for sloth
+    drSlothState.slothX = goRight ? 8 : sceneW - SLOTH_W - 8;
+
+    // Draw bogs (ovals) + start bubbling
+    bogPositions.forEach((bx, i) => {
+      const bogEl = document.createElement('div');
+      bogEl.className = 'tar-bog';
+      bogEl.id = `bog_${i}`;
+      const mx   = mirrorBogX(bx);
+      const bogH = 22 + Math.round(Math.random() * 10);
+      // Simple tar oval with sheen
+      bogEl.innerHTML = `<svg width="${BOG_W}" height="${bogH}" viewBox="0 0 ${BOG_W} ${bogH}" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="${BOG_W/2}" cy="${bogH/2}" rx="${BOG_W/2}"   ry="${bogH/2}"   fill="#0d0700"/>
+        <ellipse cx="${BOG_W/2}" cy="${bogH/2}" rx="${BOG_W/2-3}" ry="${bogH/2-3}" fill="#1e0f00"/>
+        <ellipse cx="${BOG_W/2-BOG_W*0.12}" cy="${bogH*0.32}" rx="${BOG_W*0.18}" ry="${bogH*0.15}" fill="#3a2200" opacity="0.55"/>
+      </svg>`;
+      bogEl.style.cssText = `position:absolute;bottom:22px;left:${mx}px;pointer-events:none;z-index:26;`;
+      bogEl._left  = mx;
+      bogEl._width = BOG_W;
+      scene.appendChild(bogEl);
+      _startTarBubble(scene, mx, BOG_W, bogH, i);
+    });
+
+    // Draw Forbs
+    const forbs = document.createElement('div');
+    forbs.className = 'forbs-bundle';
+    forbs.id = 'forbsBundle';
+    forbs.textContent = '🌿';
+    const forbsMirror = goRight ? forbsX : sceneW - forbsX - 32;
+    forbs.style.cssText = `position:absolute;bottom:38px;left:${forbsMirror}px;font-size:36px;pointer-events:none;z-index:27;animation:forbsSway 1s ease-in-out infinite alternate;`;
+    scene.appendChild(forbs);
+    drSlothState.forbsMirrorX = forbsMirror;
+
+    // Draw Dr Sloth
+    _renderDrSloth(scene, drSlothState.slothX, false);
+
+    // ── Hijack snowball button as JUMP button ──────────────────────
+    const snowballBtn  = document.getElementById('snowballBtn');
+    const snowballText = document.getElementById('snowballBtnText');
+    const powerFill    = document.getElementById('powerBarFill');
+    if (snowballBtn) {
+      snowballBtn.classList.add('charging');
+      snowballBtn.style.background  = 'linear-gradient(135deg,#1a5c2a,#0d3a1a)';
+      snowballBtn.style.borderColor = 'rgba(80,220,100,0.6)';
+      if (snowballText) snowballText.textContent = '🦥 Hold to JUMP!';
+      if (powerFill) { powerFill.style.width = '0%'; powerFill.style.background = 'linear-gradient(90deg,#22cc44,#ffdd00,#ff4422)'; }
+
+      drSlothState._snowBtn  = snowballBtn;
+      drSlothState._snowText = snowballText;
+      drSlothState._snowFill = powerFill;
+
+      let held = false, power = 0, interval = null;
+
+      function slothJumpStart(e) {
+        if (e) e.preventDefault();
+        if (!drSlothState.active || drSlothState.jumping || held) return;
+        held = true; power = 0;
+        interval = setInterval(() => {
+          if (!held) { clearInterval(interval); return; }
+          power = Math.min(100, power + 1.8);
+          if (powerFill) powerFill.style.width = power + '%';
+          if (snowballText) {
+            snowballText.textContent = power < 25 ? '🦥 Hold...'
+              : power < 50 ? '🦥 Getting there...'
+              : power < 75 ? '🦥 Good power!'
+              : power < 90 ? '🦥 Too much!'
+              : '🦥 RELEASE NOW!';
+          }
+          if (power >= 100) slothJumpRelease();
+        }, 40);
+      }
+      function slothJumpRelease(e) {
+        if (e) e.preventDefault();
+        if (!held) return;
+        held = false; clearInterval(interval);
+        if (powerFill) powerFill.style.width = '0%';
+        if (snowballText) snowballText.textContent = '🦥 Hold to JUMP!';
+        if (!drSlothState.active) return;
+        const p = power; power = 0;
+        _doSlothJump(p);
+      }
+
+      snowballBtn._slothStart   = slothJumpStart;
+      snowballBtn._slothRelease = slothJumpRelease;
+      snowballBtn.addEventListener('mousedown',  slothJumpStart);
+      snowballBtn.addEventListener('touchstart', slothJumpStart,   { passive: false });
+      snowballBtn.addEventListener('mouseup',    slothJumpRelease);
+      snowballBtn.addEventListener('touchend',   slothJumpRelease, { passive: false });
+    }
+  }
+
+  function _renderDrSloth(scene, xPx, jumping) {
+    if (!scene || !scene.isConnected) return;
+    let el = document.getElementById('drSlothEl');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'drSlothEl';
+      el.style.cssText = 'position:absolute;bottom:30px;pointer-events:none;z-index:27;transition:none;';
+      scene.appendChild(el);
+    }
+    el.style.left = xPx + 'px';
+    el.style.transform = `scaleX(${drSlothState.moveDir})`;
+    el.innerHTML = `<svg width="60" height="80" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="30" cy="78" rx="20" ry="4" fill="rgba(0,0,0,0.3)"/>
+      <ellipse cx="30" cy="52" rx="18" ry="16" fill="#7a9a5a"/>
+      <ellipse cx="30" cy="56" rx="12" ry="10" fill="#b8c890" opacity="0.7"/>
+      <path d="M12 44 Q2 38 0 28" stroke="#7a9a5a" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M48 44 Q55 38 58 30" stroke="#7a9a5a" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="28" x2="-4" y2="22" stroke="#5a7a3a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="0" y1="28" x2="2" y2="20" stroke="#5a7a3a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="0" y1="28" x2="5" y2="23" stroke="#5a7a3a" stroke-width="3" stroke-linecap="round"/>
+      <rect x="18" y="64" width="10" height="16" rx="5" fill="#7a9a5a"/>
+      <rect x="32" y="65" width="10" height="15" rx="5" fill="#6a8a4a"/>
+      <ellipse cx="23" cy="79" rx="8" ry="4" fill="#5a7a3a"/>
+      <ellipse cx="37" cy="78" rx="7" ry="4" fill="#5a7a3a"/>
+      <ellipse cx="30" cy="28" rx="16" ry="14" fill="#8aaa6a"/>
+      <rect x="16" y="6" width="28" height="14" rx="3" fill="white"/>
+      <rect x="12" y="16" width="36" height="4" rx="2" fill="white"/>
+      <rect x="26" y="7" width="8" height="12" rx="1" fill="#ff4444"/>
+      <rect x="24" y="9" width="12" height="2" rx="1" fill="#ff4444"/>
+      <circle cx="24" cy="27" r="3.5" fill="white"/>
+      <circle cx="36" cy="27" r="3.5" fill="white"/>
+      <circle cx="25" cy="27" r="2" fill="#1a1a00"/>
+      <circle cx="37" cy="27" r="2" fill="#1a1a00"/>
+      <circle cx="25.5" cy="26.2" r="0.7" fill="white"/>
+      <circle cx="37.5" cy="26.2" r="0.7" fill="white"/>
+      <path d="M24 34 Q30 37 36 34" stroke="#5a7a3a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M35 42 Q42 44 44 50 Q46 54 42 56" stroke="#cc4444" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="41" cy="56" r="3" fill="none" stroke="#cc4444" stroke-width="1.5"/>
+      <rect x="40" y="54" width="16" height="12" rx="3" fill="white" stroke="#cccccc" stroke-width="1"/>
+      <rect x="44" y="51" width="8" height="5" rx="2" fill="white" stroke="#cccccc" stroke-width="1"/>
+      <rect x="46" y="56" width="4" height="8" rx="1" fill="#ff4444"/>
+      <rect x="44" y="58" width="8" height="4" rx="1" fill="#ff4444"/>
+    </svg>`;
+  }
+
+  let _slothJumpInterval = null; // kept for legacy reference
+
+  function _doSlothJump(power) {
+    if (drSlothState.jumping) return;
+    drSlothState.jumping = true;
+    const scene  = document.querySelector('.mammoth-scene');
+    const sceneW = scene ? scene.getBoundingClientRect().width : 375;
+    const el     = document.getElementById('drSlothEl');
+    if (!el || !scene) { drSlothState.jumping = false; return; }
+
+    const BOG_W     = drSlothState.bogWidth  || 40;
+    const GAP_W     = drSlothState.gapWidth  || 50;
+
+    // Always face and jump toward Forbs — recalculate direction from current position
+    const slothMid = drSlothState.slothX + 30;
+    const forbsMid = (drSlothState.forbsMirrorX || 0) + 16;
+    drSlothState.moveDir = forbsMid >= slothMid ? 1 : -1;
+    el.style.transform = `scaleX(${drSlothState.moveDir})`;
+
+    const totalSpan = 4 * (BOG_W + GAP_W);
+    const maxJump   = totalSpan * 1.05;
+    const jumpDist  = (power / 100) * maxJump * drSlothState.moveDir;
+
+    const startX    = drSlothState.slothX;
+    const endX      = Math.max(0, Math.min(sceneW - 60, startX + jumpDist));
+    const peakY     = 75 * Math.min(1, power / 60);
+    const duration  = 350 + power * 3.5;
+    const startTime = performance.now();
+
+    function animJump(now) {
+      const p = Math.min(1, (now - startTime) / duration);
+      const x = startX + (endX - startX) * p;
+      const y = -peakY * Math.sin(p * Math.PI);
+      el.style.left   = x + 'px';
+      el.style.bottom = (30 - y) + 'px';
+      if (p < 1) { requestAnimationFrame(animJump); return; }
+      drSlothState.slothX = endX;
+      el.style.bottom = '30px';
+      drSlothState.jumping = false;
+      _checkSlothLanding(endX, scene, sceneW);
+    }
+    requestAnimationFrame(animJump);
+  }
+
+  function _checkSlothLanding(landX, scene, sceneW) {
+    const slothMid  = landX + 30;
+    const BOG_W     = drSlothState.bogWidth || Math.round(sceneW * 0.10);
+    let inBog = false;
+
+    drSlothState.bogPositions.forEach((bx, i) => {
+      const bogEl = document.getElementById(`bog_${i}`);
+      const bLeft = bogEl ? parseFloat(bogEl.style.left) : bx;
+      if (slothMid > bLeft && slothMid < bLeft + BOG_W) inBog = true;
+    });
+
+    if (inBog) {
+      drSlothState.tries--;
+      const el = document.getElementById('drSlothEl');
+      if (el) {
+        el.style.filter = 'brightness(0.3) sepia(1)';
+        setTimeout(() => { if (el) el.style.filter = ''; }, 500);
+      }
+      showBubble(`💀 Tar bog! ${drSlothState.tries} tr${drSlothState.tries===1?'y':'ies'} left`);
+      const hint = document.getElementById('slothHint');
+      if (hint) hint.textContent = `💀 ${drSlothState.tries} tr${drSlothState.tries===1?'y':'ies'} left — jump again!`;
+
+      if (drSlothState.tries <= 0) {
+        setTimeout(() => endDrSlothGame(false), 900);
+        return;
+      }
+      // Reset sloth to start — recalculate facing toward Forbs
+      drSlothState.slothX = drSlothState.moveDir === 1 ? 8 : sceneW - 68;
+      const resetMid = drSlothState.slothX + 30;
+      const forbsMidR = (drSlothState.forbsMirrorX || 0) + 16;
+      drSlothState.moveDir = forbsMidR >= resetMid ? 1 : -1;
+      _renderDrSloth(scene, drSlothState.slothX, false);
+      return;
+    }
+
+    // Check if reached Forbs
+    const fX = drSlothState.forbsMirrorX;
+    if (fX !== undefined && slothMid > fX - 20 && slothMid < fX + 52) {
+      const forbs = document.getElementById('forbsBundle');
+      if (forbs) {
+        forbs.style.transition = 'all 0.3s';
+        forbs.style.fontSize = '56px';
+        forbs.style.opacity  = '0';
+        setTimeout(() => forbs.remove(), 400);
+      }
+      showBubble('🌿 Got the Forbs!! 🦥');
+      setTimeout(() => endDrSlothGame(true), 600);
+      return;
+    }
+
+    // Show progress — how many bogs cleared
+    const cleared = drSlothState.bogPositions.filter((bx, i) => {
+      const bogEl  = document.getElementById(`bog_${i}`);
+      const bLeft  = bogEl ? parseFloat(bogEl.style.left) : bx;
+      const bRight = bLeft + BOG_W;
+      return drSlothState.moveDir === 1 ? slothMid > bRight : slothMid < bLeft;
+    }).length;
+    drSlothState.bogsCleared = cleared;
+    if (cleared > 0) showBubble(`🦥 ${cleared} bog${cleared>1?'s':''} cleared!`);
+  }
+
+  function _startTarBubble(scene, bogLeft, bogW, bogH, bogIdx) {
+    function spawnBubble() {
+      if (!drSlothState.active) return;
+      // Guard: scene must still be in DOM
+      if (!scene.isConnected) return;
+
+      const size   = 10 + Math.random() * 14;
+      const xOff   = Math.random() * Math.max(1, bogW - size);
+      const bubble = document.createElement('div');
+      bubble.className = 'tar-bubble';
+      const bottomStart = 22 + bogH;
+      bubble.style.cssText = `width:${size}px;height:${size}px;left:${bogLeft + xOff}px;bottom:${bottomStart}px;opacity:0;`;
+      try { scene.appendChild(bubble); } catch(e) { return; }
+
+      const riseMs  = 1000 + Math.random() * 800;
+      const peakH   = bottomStart + 50 + Math.random() * 40;
+      const start   = performance.now();
+
+      function tickBubble(now) {
+        if (!drSlothState.active || !bubble.isConnected) { try { bubble.remove(); } catch(e){} return; }
+        const p = Math.min(1, (now - start) / riseMs);
+        const curBottom = bottomStart + p * (peakH - bottomStart);
+        const opacity   = p < 0.15 ? p / 0.15 : p > 0.8 ? Math.max(0, (1 - p) / 0.2) : 1;
+        bubble.style.bottom  = curBottom + 'px';
+        bubble.style.opacity = opacity;
+
+        // Hit check — only when sloth is mid-jump and we have tries left
+        if (!drSlothState.hitCooldown && drSlothState.jumping && drSlothState.tries > 0) {
+          const slothEl = document.getElementById('drSlothEl');
+          if (slothEl && slothEl.isConnected && bubble.isConnected) {
+            try {
+              const sr = slothEl.getBoundingClientRect();
+              const br = bubble.getBoundingClientRect();
+              const hit = !(br.right < sr.left || br.left > sr.right || br.bottom < sr.top || br.top > sr.bottom);
+              if (hit) {
+                drSlothState.hitCooldown = true;
+                drSlothState.tries = Math.max(0, drSlothState.tries - 1);
+                showBubble(`💀 Tar bubble! ${drSlothState.tries} tr${drSlothState.tries===1?'y':'ies'} left`);
+                const hintEl = document.getElementById('slothHint');
+                if (hintEl) hintEl.textContent = `💀 ${drSlothState.tries} tr${drSlothState.tries===1?'y':'ies'} left — time your jumps!`;
+                try { bubble.remove(); } catch(e) {}
+                if (drSlothState.tries <= 0) {
+                  setTimeout(() => { if (drSlothState.active) endDrSlothGame(false); }, 800);
+                } else {
+                  setTimeout(() => { drSlothState.hitCooldown = false; }, 1500);
+                }
+                return;
+              }
+            } catch(e) { /* getBoundingClientRect can throw on detached nodes */ }
+          }
+        }
+
+        if (p < 1) { requestAnimationFrame(tickBubble); }
+        else { try { bubble.remove(); } catch(e) {} }
+      }
+      requestAnimationFrame(tickBubble);
+
+      if (drSlothState.active) {
+        setTimeout(spawnBubble, 1500 + Math.random() * 3000);
+      }
+    }
+    setTimeout(spawnBubble, 500 + bogIdx * 400 + Math.random() * 1000);
+  }
+
+  function endDrSlothGame(won) {
+    if (!drSlothState.active) return;
+    drSlothState.active = false;
+    clearInterval(_slothJumpInterval);
+
+    // Cleanup scene
+    document.querySelectorAll('[id^="bog_"],.forbs-bundle,#drSlothEl').forEach(e => e.remove());
+    const overlay = document.getElementById('drSlothOverlay');
+    if (overlay) { overlay.innerHTML = ''; overlay.classList.remove('active'); }
+
+    // Remove jump row if any
+    const jr = document.getElementById('slothJumpRow');
+    if (jr) jr.remove();
+
+    // Restore snowball button
+    stopSlothMusic();
+    const btn  = drSlothState._snowBtn;
+    const text = drSlothState._snowText;
+    const fill = drSlothState._snowFill;
+    if (btn) {
+      btn.style.background  = '';
+      btn.style.borderColor = '';
+      btn.classList.remove('charging');
+      if (btn._slothStart)   { btn.removeEventListener('mousedown',  btn._slothStart);   btn.removeEventListener('touchstart', btn._slothStart); }
+      if (btn._slothRelease) { btn.removeEventListener('mouseup',    btn._slothRelease); btn.removeEventListener('touchend',   btn._slothRelease); }
+      btn._slothStart = null; btn._slothRelease = null;
+    }
+    if (text) text.textContent = '❄️ Hold to Throw Snowball';
+    if (fill) { fill.style.width = '0%'; fill.style.background = ''; }
+
+    if (won) {
+      healPet();
+      showBubble('🌿 HEALED! Dr. Sloth saves the day! 🦥');
+    } else {
+      showBubble('😢 Dr. Sloth failed! Try again...');
+      setTimeout(() => { if (state.sick) showDrSlothReadyScreen(false); }, 2000);
+    }
+  }
+
   // ── ASTEROID MINI-GAME ────────────────────────────────────────────────────────────────
 
   function showAsteroidReadyScreen() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     asteroidState.readyScreen = true;
 
     // Roll intensity 1-5
@@ -6488,9 +7579,11 @@ z-index: 10;
   }
 
   function startAsteroidField() {
+    if (drSlothState.active || drSlothState.readyScreen || state.sick) return;
     if (asteroidState.active || state.isAnimating) return;
     asteroidState.active = true;
     asteroidState.hitCooldown = false;
+    asteroidState.possiblePoints = 100 * Math.pow(2, asteroidState.intensity - 1);
 
     const overlay = document.getElementById('asteroidOverlay');
     const scene   = document.querySelector('.mammoth-scene');
@@ -6690,6 +7783,7 @@ z-index: 10;
     // Score penalty
     state.score = Math.max(0, state.score - 50);
     state.hunger = Math.max(0, state.hunger - 10);
+    asteroidState.possiblePoints = Math.max(0, (asteroidState.possiblePoints || 0) - 25);
 
     // Float text
     const txt = document.createElement('div');
@@ -6716,6 +7810,7 @@ z-index: 10;
 
   // ── SAFETY: always fully restores animal position/visibility ──
   function forceRestoreAnimal() {
+    state.isAnimating = false; // always clear so idle activities can resume
     ['mammothSizer','rhinoSizer'].forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -6749,7 +7844,7 @@ z-index: 10;
       const el = document.getElementById(id);
       if (!el) return;
       el.style.filter = '';
-      el.classList.remove('skating','falling','getup','jumping','dancing');
+      el.classList.remove('skating','falling','getup','jumping','dancing','ducked-hold','dodging-duck','dodging-jump');
     });
     applyMammothSize();
   }
@@ -6774,9 +7869,10 @@ z-index: 10;
     lastAttackEndTime = Date.now();
 
     if (survived) {
-      showBubble('🎉 Survived!');
-      state.score += 30;
+      const pts = asteroidState.possiblePoints || 0;
+      state.score += pts;
       state.happiness = Math.min(100, state.happiness + 10);
+      showBubble(pts > 0 ? `🎉 +${pts} pts!` : '😅 Survived!');
       updateStats();
     }
 
